@@ -14,7 +14,7 @@ An unofficial fan-made Overwatch stats website: hero meta for Competitive Role Q
 | Trend lines and patch impact | The same Action saves one daily copy of Blizzard's public hero-rate tables in `data/history/` | Public, Blizzard-wide averages only. No player or visitor data |
 | Meta by rank, hero-by-rank charts, tier lists | The Action saves today's public table for each rank (`data/ranks/`) and each map (`data/map-stats/`), so these pages open instantly | Public averages only |
 | Google-visible pages (`/heroes/…`, `/maps/…`, `/tier-list/…`) | Built by the Action from the files above, with preview cards for Discord/X and a `sitemap.xml` | Public content only |
-| Favorites, logged matches, viewed-profile rank history | The visitor's own browser (localStorage) | Only on that visitor's device. OverScope never sees it |
+| Favorites, viewed-profile rank history | The visitor's own browser (localStorage) | Only on that visitor's device. OverScope never sees it |
 
 Visitors' browsers contact OverFast and Blizzard's image servers directly, so those services see the visitor's IP address and what they look up, as with any website that loads outside content.
 

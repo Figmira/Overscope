@@ -272,7 +272,6 @@ async function renderMap() {
   <p class="fine">Hero rates <b>on</b> a map are not the same as how often the map is played. Blizzard does not publish map appearance rates. <a href="#/maps">Maps & modes ${icon('i-arrow')}</a></p>`;
 
   const facts = $('#mapFacts');
-  if (state.mapQueue === 'open') { facts.innerHTML = `<dl><dt>Mode</dt><dd>${esc(modeName)}</dd><dt>Hero data</dt><dd class="na-b">No Open Queue source</dd><dt>Map appearance</dt><dd class="na-b">Not published</dd></dl>`; return; }
   const key = state.mapQueue + ':' + m.key + ':' + prefs.platform + prefs.region;
   try {
     let s = mapStatsCache.get(key);
@@ -285,7 +284,6 @@ async function renderMap() {
       <dt>Mode</dt><dd>${esc(modeName)}</dd>
       <dt>Most-picked hero here</dt><dd class="hero-dd">${heroPortrait(rows[0].hero, 'mini')}${esc(heroInfo(rows[0].hero).name)} <b>${pct(rows[0].pickrate)}</b></dd>
       <dt>Best win rate here</dt><dd class="hero-dd">${heroPortrait(best.hero, 'mini')}${esc(heroInfo(best.hero).name)} <b>${pct(best.winrate)}</b></dd>
-      <dt>Map appearance rate</dt><dd class="na-b" title="Blizzard does not publish how often each map is played">Not published</dd>
     </dl><small class="muted">${esc(QUEUE_SHORT[state.mapQueue])} · ${esc(REGION_NAME[prefs.region])} · ${prefs.platform.toUpperCase()} · all ranks</small>`;
   } catch (e) {
     facts.innerHTML = `<dl><dt>Mode</dt><dd>${esc(modeName)}</dd></dl><p class="muted small">Map-specific hero rates unavailable: ${esc(e.message)}</p>`;
