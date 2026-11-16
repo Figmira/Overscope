@@ -164,8 +164,8 @@ await step('News: items link to Blizzard', async () => {
 await step('Players: nonexistent BattleTag handled', async () => {
   await page.goto(base + '/#/players/ThisPlayerDoesNotExist-99999');
   await page.waitForSelector('#pProfile .state', { timeout: 30000 });
-  const t = await page.textContent('#pProfile'); if (!/not found/i.test(t)) throw new Error(t.slice(0, 120));
-  return 'shows "Player not found"';
+  const t = await page.textContent('#pProfile'); if (!/no public profile|not found/i.test(t)) throw new Error(t.slice(0, 120));
+  return 'explains there is no public profile';
 });
 await step('Meta by rank: heatmap shows one column per rank', async () => {
   await page.goto(base + '/#/competitive?view=ranks'); await page.waitForSelector('.heat .hm', { timeout: 60000 });

@@ -78,8 +78,7 @@ async function updateHistory() {
     const hist = await readJSON(file, { queue, platform, region, note: 'Daily copy of Blizzard\'s public hero-rate table (all ranks, all roles, all maps). Public aggregate data only.', snapshots: [] });
     if (hist.snapshots.some(s => s.day === today)) continue;
     try {
-      const raw = await get(`${OVERFAST}/heroes/stats?platform=${platform}&gamemode=${queue}&region=${region}`);
-      const rows = (Array.isArray(raw) ? raw : []).map(x => ({ hero: x.hero, pickrate: x.pickrate ?? null, winrate: x.winrate ?? null, banrate: x.banrate ?? null })).filter(x => x.hero && Number.isFinite(x.pickrate) && Number.isFinite(x.winrate));
+      const rows = await statRows({ platform, gamemode: queue, region });
       if (rows.length < 20) throw new Error(`only ${rows.length} rows`);
       hist.snapshots.push({ day: today, rows });
       hist.snapshots = hist.snapshots.slice(-400);
@@ -93,6 +92,15 @@ async function updateHistory() {
 const RANKS = ['bronze', 'silver', 'gold', 'platinum', 'emerald', 'diamond', 'master', 'grandmaster'];
 const RANKED_MODES = ['control', 'escort', 'hybrid', 'push', 'flashpoint', 'clash'];
 const cleanRows = raw => (Array.isArray(raw) ? raw : []).map(x => ({ hero: x.hero, pickrate: x.pickrate ?? null, winrate: x.winrate ?? null, banrate: x.banrate ?? null })).filter(x => x.hero && Number.isFinite(x.pickrate) && Number.isFinite(x.winrate));
+// OverFast sometimes caches an empty answer for one spelling of a URL for up to an hour.
+// Asking with the parameters in a different order reaches a different cache entry.
+async function statRows(params) {
+  const ask = order => get(`${OVERFAST}/heroes/stats?${order.map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&')}`);
+  const pairs = Object.entries(params).filter(([, v]) => v);
+  let rows = cleanRows(await ask(pairs));
+  if (rows.length < 20) rows = cleanRows(await ask([...pairs].reverse()));
+  return rows;
+}
 const sameDay = f => f?.fetchedAt && f.fetchedAt.slice(0, 10) === today;
 
 async function updateRanks() {
@@ -102,7 +110,7 @@ async function updateRanks() {
     const out = { queue: 'competitive', platform, region, note: 'Blizzard\'s public hero-rate table for each rank (all roles, all maps). Public aggregate data only.', fetchedAt: new Date().toISOString(), divisions: {} };
     try {
       await pool(RANKS, 2, async d => {
-        const rows = cleanRows(await get(`${OVERFAST}/heroes/stats?platform=${platform}&gamemode=competitive&region=${region}&competitive_division=${d}`));
+        const rows = await statRows({ platform, gamemode: 'competitive', region, competitive_division: d });
         if (rows.length < 20) throw new Error(`${d}: only ${rows.length} rows`);
         out.divisions[d] = rows;
       });
@@ -145,7 +153,7 @@ async function updateMapStats(catalog) {
   const maps = (catalog?.maps || []).filter(m => m.gamemodes.some(g => RANKED_MODES.includes(g)));
   const out = { queue: 'competitive', platform: 'pc', region: 'americas', note: 'Blizzard\'s public hero-rate table for each map (all ranks). Public aggregate data only.', fetchedAt: new Date().toISOString(), maps: {} };
   await pool(maps, 2, async m => {
-    try { const rows = cleanRows(await get(`${OVERFAST}/heroes/stats?platform=pc&gamemode=competitive&region=americas&map=${m.key}`)); if (rows.length >= 20) out.maps[m.key] = rows; }
+    try { const rows = await statRows({ platform: 'pc', gamemode: 'competitive', region: 'americas', map: m.key }); if (rows.length >= 20) out.maps[m.key] = rows; }
     catch (e) { log(`✗ map stats ${m.key}: ${e.message}`); }
   });
   if (Object.keys(out.maps).length) { await writeJSON(file, out); log(`✓ map stats: ${Object.keys(out.maps).length} maps saved`); }

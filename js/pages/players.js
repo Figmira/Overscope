@@ -4,7 +4,7 @@ import { lines, ROLE_COLOR, OPEN_COLOR } from '../charts.js';
 
 // Blizzard's public profile holds Competitive stats for the CURRENT season only; Quick Play is lifetime.
 const seasonOf = p => (p?.competitive?.[p?.stats?.competitive?.platform] || p?.competitive?.pc || p?.competitive?.console)?.season;
-const modeLabel = (m, p) => (m === 'competitive' ? `Competitive · ${seasonOf(p) ? 'Season ' + seasonOf(p) : 'this season'}${p?.stats?.competitive?.platform && p.compPlatforms?.length ? ' · ' + (p.stats.competitive.platform === 'pc' ? 'Mouse & Keyboard' : 'Controller') : ''}` : 'Quick Play · lifetime');
+const modeLabel = (m, p) => (m === 'competitive' ? `Competitive · ${seasonOf(p) ? 'Season ' + seasonOf(p) : 'this season'}${p?.stats?.competitive?.platform && p.compPlatforms?.length ? ' · ' + (p.stats.competitive.platform === 'pc' ? 'PC' : 'Console') : ''}` : 'Quick Play · lifetime');
 const hours = s => (s == null ? '—' : s >= 3600 ? (s / 3600).toFixed(1) + ' h' : Math.round(s / 60) + ' min');
 const num = (v, d = 0) => (v == null ? '—' : Number(v).toLocaleString('en-US', { maximumFractionDigits: d }));
 const ROLE_STYLE = { tank: { color: ROLE_COLOR.tank, shape: 'square', dash: '' }, damage: { color: ROLE_COLOR.damage, shape: 'triangle', dash: '6 3' }, support: { color: ROLE_COLOR.support, shape: 'circle', dash: '2 3' }, open: { color: OPEN_COLOR, shape: 'diamond', dash: '9 3 2 3' } };
@@ -63,7 +63,7 @@ async function drawVsRank() {
   const season = ranks.season ? `Season ${ranks.season}` : 'this season';
   el.hidden = false;
   el.innerHTML = `<header class="panel-head"><h2>${icon('i-laurel')}You vs your rank<small>— Role Queue</small></h2>
-      <div class="toolbar tight0">${plats.length > 1 ? `<label class="sel"><span>Input</span><select id="vsPlat">${plats.map(x => `<option value="${x}" ${x === vs.platform ? 'selected' : ''}>${x === 'pc' ? 'Mouse &amp; Keyboard' : 'Controller'}</option>`).join('')}</select></label>` : ''}
+      <div class="toolbar tight0">${plats.length > 1 ? `<label class="sel"><span>Platform</span><select id="vsPlat">${plats.map(x => `<option value="${x}" ${x === vs.platform ? 'selected' : ''}>${x === 'pc' ? 'PC' : 'Console'}</option>`).join('')}</select></label>` : ''}
       <label class="sel"><span>Region</span><select id="vsRegion">${['americas', 'europe', 'asia'].map(x => `<option value="${x}" ${x === vs.region ? 'selected' : ''}>${cap(x)}</option>`).join('')}</select></label></div></header>
     <div class="table vs-rank"><div class="tr th"><span>Hero</span><span>Your games</span><span>Your win rate</span><span>Average at your rank</span><span>Difference</span></div>
     ${rows.map(r => `<div class="tr hero-row" tabindex="0" data-hero="${esc(r.hero)}"><span class="who">${heroPortrait(r.hero, 'portrait')}<span><b>${esc(heroInfo(r.hero).name)}</b><small>${roleIcon(r.role)}${esc(cap(r.rk.division))} ${esc(r.rk.tier ?? '')}</small></span></span>
@@ -139,7 +139,7 @@ async function profile(id) {
     </section>
     ${p.privacy !== 'public' ? `<div class="state unavailable"><b>This profile looks private (or has no stats yet)</b><p>Blizzard only exposes career data for public profiles. In Overwatch: Options → Social → Career Profile Visibility → Public. Data refreshes after the next match.</p></div>` : ''}
     <section class="panel"><header class="panel-head"><h2>${icon('i-laurel')}Competitive ranks${comp?.season ? `<small>— season ${comp.season}</small>` : ''}</h2></header>
-      ${comp ? p.compPlatforms.map(pl => `${p.compPlatforms.length > 1 ? `<h3 class="rank-input">${(pl === 'pc' ? 'Mouse & Keyboard' : 'Controller')}</h3>` : `<p class="rank-input muted">${(pl === 'pc' ? 'Mouse & Keyboard' : 'Controller')}</p>`}<div class="ranks">${['tank', 'damage', 'support', 'open'].filter(r => r !== 'open' || p.competitive[pl][r]).map(r => rankCell(r, p.competitive[pl][r])).join('')}</div>`).join('') : emptyBox('No competitive ranks visible', 'This player has no public ranks this season.')}</section>
+      ${comp ? p.compPlatforms.map(pl => `${p.compPlatforms.length > 1 ? `<h3 class="rank-input">${(pl === 'pc' ? 'PC' : 'Console')}</h3>` : `<p class="rank-input muted">${(pl === 'pc' ? 'PC' : 'Console')}</p>`}<div class="ranks">${['tank', 'damage', 'support', 'open'].filter(r => r !== 'open' || p.competitive[pl][r]).map(r => rankCell(r, p.competitive[pl][r])).join('')}</div>`).join('') : emptyBox('No competitive ranks visible', 'This player has no public ranks this season.')}</section>
     <section class="panel" id="vsRank" hidden></section>
     <section class="panel" id="histPanel">${loadingBox(3)}</section>
     <div class="toolbar"><div class="seg" id="modeTabs"></div></div>
@@ -160,7 +160,7 @@ function drawStats() {
   const s = current.stats[mode];
   const el = $('#pStats');
   if (mode === 'competitive' && s?.noSeason) { el.innerHTML = emptyBox('No Competitive games this season', "This profile has no current-season Competitive record. Blizzard's profile only keeps the last season played on each platform, so older seasons are left out instead of being shown as this season."); return; }
-  const compPick = mode === 'competitive' && current.compPlatforms.length > 1 ? `<div class="seg sm comp-plat">${current.compPlatforms.map(pl => `<button class="${pl === s.platform ? 'on' : ''}" data-compplat="${pl}">${pl === 'pc' ? 'Mouse &amp; Keyboard' : 'Controller'}</button>`).join('')}</div>` : '';
+  const compPick = mode === 'competitive' && current.compPlatforms.length > 1 ? `<div class="seg sm comp-plat">${current.compPlatforms.map(pl => `<button class="${pl === s.platform ? 'on' : ''}" data-compplat="${pl}">${pl === 'pc' ? 'PC' : 'Console'}</button>`).join('')}</div>` : '';
   if (!s || s.error) { el.innerHTML = s?.status === 404 ? emptyBox('No career stats', 'Nothing public for this mode.') : errorBox(s?.error || 'No data'); return; }
   const g = s.general;
   if (!g || !g.gamesPlayed) { el.innerHTML = emptyBox('No career stats for this mode', 'Either the profile is private or no games have been played in this mode.'); return; }
@@ -196,7 +196,7 @@ async function drawHistory() {
     }) : '';
     el.innerHTML = head + `<div class="hist">
       <div class="chart-wrap">${snaps.length < 2 ? `<div class="state empty small"><b>First snapshot saved ${esc(latest.day)}</b><p>Each day you open this profile, this browser saves one point. Nothing is sent to or stored by OverScope.</p></div>` : (rankChart || emptyBox('No ranked roles', 'No competitive ranks were visible on the saved days.'))}</div>
-      <div class="table mini-table hist-table"><div class="tr th"><span>Day</span><span>Ranks (${plat === 'pc' ? 'Mouse & Keyboard' : 'Controller'})</span><span>Comp games</span><span>Comp win rate</span></div>
+      <div class="table mini-table hist-table"><div class="tr th"><span>Day</span><span>Ranks (${plat === 'pc' ? 'PC' : 'Console'})</span><span>Comp games</span><span>Comp win rate</span></div>
       ${[...snaps].reverse().slice(0, 8).map(s => `<div class="tr"><span>${esc(s.day)}</span><span>${['tank', 'damage', 'support', 'open'].map(r => s.comp[plat]?.[r] ? `${r === 'open' ? 'Open' : ROLE_NAME[r]} ${rankLabel(s.comp[plat][r].value)}` : '').filter(Boolean).join(' · ') || '—'}</span><span>${num(s.stats.competitive?.gamesPlayed)}</span><span>${pct(s.stats.competitive?.winrate)}</span></div>`).join('')}</div></div>
       <p class="source-note">Blizzard only shows a profile as it is now, so this history is built from the days this profile was opened <b>in this browser</b>. It is stored only on this device (clearing browsing data removes it). ${snaps.length} day${snaps.length === 1 ? '' : 's'} recorded since ${esc(snaps[0].day)}.</p>`;
   } catch (e) { el.innerHTML = head + errorBox(e); }
@@ -219,9 +219,9 @@ async function drawDeep() {
     const order = ['average', 'hero_specific', 'best', 'combat', 'game', 'assists', 'match_awards', 'miscellaneous'];
     groups.sort((a, b) => (order.indexOf(a.key) + 99) % 99 - (order.indexOf(b.key) + 99) % 99);
     const fmt = (k, v) => /time|played/.test(k) && v > 300 ? hours(v) : /accuracy|percentage|win_percentage/.test(k) ? pct(v, 0) : num(v, v % 1 ? 2 : 0);
-    const platPick = usable.length > 1 ? `<div class="seg sm deep-plat">${usable.map(t => `<button class="${t.platform === deep.platform ? 'on' : ''}" data-deepplat="${t.platform}">${t.platform === 'pc' ? 'Mouse &amp; Keyboard' : 'Controller'}</button>`).join('')}</div>` : '';
+    const platPick = usable.length > 1 ? `<div class="seg sm deep-plat">${usable.map(t => `<button class="${t.platform === deep.platform ? 'on' : ''}" data-deepplat="${t.platform}">${t.platform === 'pc' ? 'PC' : 'Console'}</button>`).join('')}</div>` : '';
     out.innerHTML = `${platPick}<div class="deep">${heroPortrait(hero, 'deep-portrait')}<div class="deep-groups">${groups.map(g => `<div class="deep-group"><h3>${esc(cap(g.label))}</h3><dl>${g.stats.slice(0, 12).map(s => `<dt>${esc(cap(s.label))}</dt><dd>${esc(fmt(s.key, s.value))}</dd>`).join('')}</dl></div>`).join('')}</div></div>
-      <p class="source-note">Blizzard career statistics for ${esc(heroInfo(hero).name)} (${esc(modeLabel(mode, current))}, ${deep.platform === 'pc' ? 'Mouse & Keyboard' : 'Controller'}) via OverFast.${mode === 'competitive' ? ' Competitive includes both Role Queue and Open Queue games; Blizzard does not separate them.' : ''}</p>`;
+      <p class="source-note">Blizzard career statistics for ${esc(heroInfo(hero).name)} (${esc(modeLabel(mode, current))}, ${deep.platform === 'pc' ? 'PC' : 'Console'}) via OverFast.${mode === 'competitive' ? ' Competitive includes both Role Queue and Open Queue games; Blizzard does not separate them.' : ''}</p>`;
   } catch (e) { out.innerHTML = errorBox(e); }
 }
 
@@ -234,27 +234,12 @@ async function compare(a, b) {
   if (bad) { el.innerHTML = bad.error.status === 404 ? emptyBox('Player not found', `No profile exists for <strong>${esc(bad.id)}</strong>.`) : errorBox(bad.error); return; }
   const [A, B] = res;
   const plat = p => p.stats.competitive?.platform || (p.competitive.pc ? 'pc' : p.competitive.console ? 'console' : null);
-  const inputName = pl => (pl === 'pc' ? 'Mouse & Keyboard' : pl === 'console' ? 'Controller' : '—');
+  const inputName = pl => (pl === 'pc' ? 'PC' : pl === 'console' ? 'Console' : '—');
   const rk = (p, r) => { const c = p.competitive[plat(p)]?.[r]; return c ? `${cap(c.division)} ${c.tier}` : '—'; };
   const row = (label, va, vb, better) => {
     const w = better && va != null && vb != null && va !== vb ? (better(va, vb) ? 'a' : 'b') : '';
     return `<div class="tr"><span class="${w === 'a' ? 'win' : ''}">${va ?? '—'}</span><span class="mid">${label}</span><span class="${w === 'b' ? 'win' : ''}">${vb ?? '—'}</span></div>`;
   };
-  const g = (p, m) => p.stats[m]?.general || {};
-  const hi = (x, y) => x > y;
-  const blocks = ['competitive', 'quickplay'].map(m => {
-    const ga = g(A, m), gb = g(B, m);
-    return `<section class="panel"><header class="panel-head"><h2>${icon('i-bars')}${m === 'competitive' ? 'Competitive · current season' : 'Quick Play · lifetime'}</h2></header><div class="table vs-table">
-      ${row('Games', ga.gamesPlayed, gb.gamesPlayed)}
-      ${row('Win rate', ga.winrate != null ? pct(ga.winrate) : null, gb.winrate != null ? pct(gb.winrate) : null)}${''}
-      ${row('KDA', ga.kda, gb.kda)}
-      ${row('Time played', ga.timePlayed != null ? hours(ga.timePlayed) : null, gb.timePlayed != null ? hours(gb.timePlayed) : null)}
-      ${row('Elims / 10 min', ga.average?.eliminations, gb.average?.eliminations)}
-      ${row('Deaths / 10 min', ga.average?.deaths, gb.average?.deaths)}
-      ${row('Damage / 10 min', ga.average?.damage != null ? num(ga.average.damage) : null, gb.average?.damage != null ? num(gb.average.damage) : null)}
-      ${row('Healing / 10 min', ga.average?.healing != null ? num(ga.average.healing) : null, gb.average?.healing != null ? num(gb.average.healing) : null)}
-    </div></section>`;
-  }).join('');
   // highlight the higher value where "higher is better" without guessing for others
   const top = p => (p.stats.competitive?.heroes?.length ? p.stats.competitive.heroes : p.stats.quickplay?.heroes || []).slice(0, 5);
   const shared = top(A).map(h => h.hero).filter(k => top(B).some(x => x.hero === k));
@@ -262,7 +247,69 @@ async function compare(a, b) {
       ${[A, B].map((p, i) => `<a class="vs-card ${i ? 'b' : 'a'}" href="#/players/${encodeURIComponent(p.id)}">${p.avatar ? `<img src="${esc(relay(p.avatar))}" alt="" width="72" height="72">` : '<span class="avatar-ph"></span>'}<span><b>${esc(p.username)}</b><small>${esc(p.title || '')}</small></span></a>`).join('<span class="vs-big">VS</span>')}
     </div>
     <section class="panel"><header class="panel-head"><h2>${icon('i-laurel')}Competitive ranks</h2><small class="muted">${esc(inputName(plat(A)))} vs ${esc(inputName(plat(B)))}</small></header><div class="table vs-table">${['tank', 'damage', 'support', 'open'].map(r => row(r === 'open' ? 'Open Queue' : ROLE_NAME[r], rk(A, r), rk(B, r))).join('')}</div></section>
-    <div class="two">${blocks}</div>
+    <section class="panel" id="h2h"></section>
     <section class="panel"><header class="panel-head"><h2>${icon('i-mask')}Most played heroes</h2>${shared.length ? `<small class="muted">Both play: ${shared.map(k => esc(heroInfo(k).name)).join(', ')}</small>` : ''}</header><div class="two tight">${[A, B].map(p => `<div class="table mini-table vs-heroes"><div class="tr th"><span>${esc(p.username)}</span><span>Time</span><span>Win rate</span></div>${top(p).map(h => `<div class="tr hero-row" data-hero="${esc(h.hero)}"><span class="who">${heroPortrait(h.hero, 'portrait')}<b>${esc(heroInfo(h.hero).name)}</b></span><span>${hours(h.timePlayed)}</span><span>${(h.gamesPlayed ? pct(h.winrate) : '—')}</span></div>`).join('') || '<p class="muted small">No public hero data</p>'}</div>`).join('')}</div></section>
-    <p class="source-note">Both profiles from Blizzard via OverFast. Competitive: current season (Role Queue and Open Queue combined, as Blizzard reports it). Quick Play: lifetime. Neither player is marked "better" — numbers are shown side by side.</p>`;
+    <p class="source-note">Both profiles from Blizzard via OverFast. Competitive: current season (Role Queue and Open Queue combined, as Blizzard reports it). Quick Play: lifetime. A stat is highlighted, and counted toward who leads, only when both players have ${H2H_MIN}+ games in what is being compared.</p>`;
+  h2h.key = '';
+  drawH2H(A, B);
+  $('#h2h').addEventListener('click', e => {
+    const b = e.target.closest('[data-h2h]'); if (!b) return;
+    const [k, v] = b.dataset.h2h.split(':');
+    h2h[k] = v; if (k !== 'key') h2h.key = '';
+    drawH2H(A, B);
+  });
+  $('#h2h').addEventListener('change', e => { if (e.target.id === 'h2hKey') { h2h.key = e.target.value; drawH2H(A, B); } });
+}
+
+// ---------- head to head: overall, one role or one exact hero, in Competitive or Quick Play ----------
+const H2H_MIN = 5;
+const h2h = { mode: 'competitive', by: 'hero', key: '' };
+const H2H_STATS = [
+  ['Win rate', b => (b?.gamesPlayed ? b.winrate : null), v => pct(v), 1],
+  ['KDA', b => b?.kda ?? null, v => num(v, 2), 1],
+  ['Elims / 10 min', b => b?.average?.eliminations ?? null, v => num(v, 1), 1],
+  ['Assists / 10 min', b => b?.average?.assists ?? null, v => num(v, 1), 1],
+  ['Deaths / 10 min', b => b?.average?.deaths ?? null, v => num(v, 1), -1],
+  ['Damage / 10 min', b => b?.average?.damage ?? null, v => num(v), 1],
+  ['Healing / 10 min', b => b?.average?.healing ?? null, v => num(v), 1],
+];
+function drawH2H(A, B) {
+  const box = $('#h2h'); if (!box) return;
+  const m = h2h.mode;
+  const sA = A.stats[m], sB = B.stats[m];
+  const heroMap = s => new Map((s?.heroes || []).map(h => [h.hero, h]));
+  const hA = heroMap(sA), hB = heroMap(sB);
+  // heroes: both played first, then most combined time
+  const heroKeys = [...new Set([...hA.keys(), ...hB.keys()])]
+    .sort((x, y) => ((hB.has(y) && hA.has(y)) - (hB.has(x) && hA.has(x))) || ((hA.get(y)?.timePlayed || 0) + (hB.get(y)?.timePlayed || 0)) - ((hA.get(x)?.timePlayed || 0) + (hB.get(x)?.timePlayed || 0)));
+  const roleKeys = ['tank', 'damage', 'support'].filter(r => sA?.roles?.[r] || sB?.roles?.[r]);
+  if (h2h.by === 'hero' && !heroKeys.includes(h2h.key)) h2h.key = heroKeys[0] || '';
+  if (h2h.by === 'role' && !roleKeys.includes(h2h.key)) h2h.key = roleKeys[0] || '';
+  const pick = s => (h2h.by === 'overall' ? s?.general : h2h.by === 'role' ? s?.roles?.[h2h.key] : (s?.heroes || []).find(h => h.hero === h2h.key)) || null;
+  const a = pick(sA), b = pick(sB);
+  const what = h2h.by === 'overall' ? 'all heroes' : h2h.by === 'role' ? ROLE_NAME[h2h.key] || '' : heroInfo(h2h.key).name;
+  const ga = a?.gamesPlayed || 0, gb = b?.gamesPlayed || 0;
+  const enough = ga >= H2H_MIN && gb >= H2H_MIN;
+  let leadA = 0, leadB = 0, counted = 0;
+  const rows = H2H_STATS.map(([label, get, fmt, dir]) => {
+    const va = get(a), vb = get(b);
+    if (label.startsWith('Healing') && !va && !vb) return '';
+    let w = '';
+    if (enough && va != null && vb != null) { counted++; if (va !== vb) { w = (va - vb) * dir > 0 ? 'a' : 'b'; if (w === 'a') leadA++; else leadB++; } }
+    return `<div class="tr"><span class="${w === 'a' ? 'win' : ''}">${va == null ? '—' : fmt(va)}</span><span class="mid">${label}</span><span class="${w === 'b' ? 'win' : ''}">${vb == null ? '—' : fmt(vb)}</span></div>`;
+  }).join('');
+  const seg = (k, opts) => `<div class="seg sm">${opts.map(([v, t]) => `<button class="${h2h[k] === v ? 'on' : ''}" data-h2h="${k}:${v}">${t}</button>`).join('')}</div>`;
+  const keySel = h2h.by === 'hero' ? (heroKeys.length ? `<label class="sel"><span>Hero</span><select id="h2hKey">${heroKeys.map(k => `<option value="${esc(k)}" ${k === h2h.key ? 'selected' : ''}>${esc(heroInfo(k).name)}${hA.has(k) && hB.has(k) ? ' · both' : hA.has(k) ? ' · ' + esc(A.username) + ' only' : ' · ' + esc(B.username) + ' only'}</option>`).join('')}</select></label>` : '')
+    : h2h.by === 'role' ? seg('key', roleKeys.map(r => [r, ROLE_NAME[r]])) : '';
+  const verdict = !a && !b ? '' : !enough
+    ? `<p class="h2h-note">Not enough games to call it: ${esc(A.username)} ${num(ga)}, ${esc(B.username)} ${num(gb)} on ${esc(what)}. Highlights start once both have ${H2H_MIN}+ games.</p>`
+    : `<p class="h2h-verdict">${leadA === leadB ? `Even — each leads ${leadA} of ${counted} stats` : `<b>${esc(leadA > leadB ? A.username : B.username)}</b> leads ${Math.max(leadA, leadB)} of ${counted} stats`} on ${esc(what)}.</p>`;
+  const platNote = m === 'competitive' ? ` · Competitive this season (${esc(INPUT_NAME[sA?.platform] || '—')} vs ${esc(INPUT_NAME[sB?.platform] || '—')})` : ' · Quick Play lifetime';
+  box.innerHTML = `<header class="panel-head"><h2>${icon('i-group')}Head to head</h2><small class="muted">${esc(what)}${platNote}</small></header>
+    <div class="toolbar h2h-tools">${seg('mode', [['competitive', 'Competitive'], ['quickplay', 'Quick Play']])}${seg('by', [['hero', 'Hero'], ['role', 'Role'], ['overall', 'Overall']])}${keySel}</div>
+    ${(!sA || sA.error || sA.noSeason) && (!sB || sB.error || sB.noSeason) ? emptyBox('No data for this mode', m === 'competitive' ? 'Neither player has a Competitive season on record.' : 'Neither profile has Quick Play stats.')
+      : `${verdict}<div class="table vs-table h2h-table"><div class="tr th"><span>${esc(A.username)}</span><span class="mid">${h2h.by === 'hero' && h2h.key ? heroPortrait(h2h.key, 'portrait') : ''}</span><span>${esc(B.username)}</span></div>
+        <div class="tr"><span>${a ? num(ga) : '—'}</span><span class="mid">Games</span><span>${b ? num(gb) : '—'}</span></div>
+        <div class="tr"><span>${a ? hours(a.timePlayed) : '—'}</span><span class="mid">Time played</span><span>${b ? hours(b.timePlayed) : '—'}</span></div>
+        ${rows}</div>`}`;
 }

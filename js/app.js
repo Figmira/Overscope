@@ -1,11 +1,12 @@
 // OverScope client: hash router + shared loaders.
-import { $, $$, api, loadManifest, setRoster, toast, getManifest, esc, heroCutout } from './lib.js';
+import { $, $$, api, loadManifest, setRoster, toast, getManifest, esc, heroCutout, prefs } from './lib.js';
 
 const pages = {
   home: () => import('./pages/home.js'),
   heroes: () => import('./pages/heroes.js'),
   competitive: () => import('./pages/competitive.js'),
   'tier-list': () => import('./pages/tierlist.js'),
+  'open-queue': () => import('./pages/openqueue.js'),
   stadium: () => import('./pages/stadium.js'),
   maps: () => import('./pages/maps.js'),
   players: () => import('./pages/players.js'),
@@ -40,9 +41,11 @@ async function render() {
   // nav highlighting
   const active = route.page === 'news' && route.query.get('kind') === 'patch' ? 'patches'
     : route.page === 'competitive' && ['compare', 'ranks', 'patch'].includes(route.query.get('view')) ? route.query.get('view')
-    : route.page === 'players' && route.param === 'compare' ? 'pvp' : route.page;
+    : route.page === 'players' && route.param === 'compare' ? 'pvp'
+    : route.page === 'competitive' && (route.query.get('queue') || prefs.queue) === 'quickplay' ? 'quickplay' : route.page;
   $$('[data-route]').forEach(a => a.classList.toggle('on', a.dataset.route === active));
-  $$('[data-sub]').forEach(a => a.classList.toggle('on', route.page === 'competitive' && (route.query.get('queue') || '') === a.dataset.sub));
+  $$('[data-sub]').forEach(a => a.classList.toggle('on', a.dataset.sub === 'open-queue' ? route.page === 'open-queue' : route.page === 'competitive' && !['compare', 'ranks', 'patch'].includes(route.query.get('view')) && (route.query.get('queue') || prefs.queue) === a.dataset.sub));
+  $$('[data-route="competitive"]').forEach(a => { if (route.page === 'open-queue') a.classList.add('on'); });
   $('#sidebar').classList.remove('open');
   $('#menuBtn').setAttribute('aria-expanded', 'false');
   try {

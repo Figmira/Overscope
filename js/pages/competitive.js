@@ -14,7 +14,11 @@ export async function render({ main, route, signal }) {
   const draw = () => (view === 'compare' ? drawCompare() : view === 'ranks' ? drawRanks() : view === 'patch' ? drawPatch(route.query.get('date')) : drawTable());
   await loadHeroes().catch(() => {});
   main.innerHTML = `<div class="page">
-    <header class="page-top"><p class="eyebrow">Competitive · game modes</p><h1>Queue-specific <em>intelligence</em></h1><p>Blizzard's official hero pick, win and ban rates for Role Queue (Competitive and Quick Play), covering games since the start of the current patch. Every queue is its own dataset — switching queue re-queries the source.</p></header>
+    ${view === 'table' && prefs.queue === 'quickplay'
+      ? `<header class="page-top"><p class="eyebrow">Quick Play · Role Queue</p><h1>Quick Play <em>hero meta</em></h1><p>Blizzard's official hero pick and win rates for Quick Play (Role Queue), covering games since the start of the current patch. Blizzard publishes no ban rates or rank split for Quick Play.</p></header>`
+      : view === 'table'
+        ? `<header class="page-top"><p class="eyebrow">Competitive · Role Queue</p><h1>Competitive <em>hero meta</em></h1><p>Blizzard's official hero pick, win and ban rates for Competitive Role Queue, covering games since the start of the current patch. Open Queue has no published hero rates; see <a href="#/open-queue">Open Queue</a> for player stats.</p></header>`
+        : `<header class="page-top"><p class="eyebrow">Hero meta · Role Queue</p><h1>Meta <em>analysis</em></h1><p>Blizzard's official hero rates for Role Queue (Competitive and Quick Play), covering games since the start of the current patch. Each queue is its own dataset.</p></header>`}
     <div class="toolbar"><div class="seg big" role="tablist">${views.map(([k, v]) => `<button class="${view === k ? 'on' : ''}" data-view="${k}">${v}</button>`).join('')}</div></div>
     <div id="compBody"></div></div>`;
   main.addEventListener('click', e => {
@@ -55,7 +59,7 @@ async function drawTable() {
       <span class="num"><b class="${r.winrate >= 52 ? 'good' : r.winrate <= 48 ? 'bad' : ''}">${pct(r.winrate)}</b><span class="meter green"><i style="width:${Math.max(2, Math.min(100, (r.winrate - 40) * 5))}%"></i></span></span>
       ${s.hasBanRate ? `<span class="num">${r.banrate != null ? `<b>${pct(r.banrate)}</b><span class="meter pink"><i style="width:${Math.min(100, r.banrate * 3)}%"></i></span>` : '—'}</span>` : ''}</div>`; }).join('')}</div>
     ${sourceNote(s)}`;
-  $('#scatterPanel').innerHTML = `<header class="panel-head"><h2>${icon('i-chart')}Pick vs win</h2></header><div class="chart-wrap">${scatter(rows.length ? rows : s.rows, { height: 240 })}${legend()}</div>`;
+  $('#scatterPanel').innerHTML = `<header class="panel-head"><h2>${icon('i-chart')}Pick vs win</h2></header><div class="chart-wrap">${scatter(rows.length ? rows : s.rows, { height: 240 })}${legend({ rings: true })}</div>`;
 }
 
 function explain() {

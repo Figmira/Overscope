@@ -136,7 +136,7 @@ ${body}
 </html>
 `;
 }
-const updated = day => `<p class="source-note">Updated ${esc(fmtDay(day))} from Blizzard's official hero rates (via OverFast) · Competitive · Role Queue · Mouse &amp; Keyboard · Americas. Numbers cover games since the current patch started; Blizzard does not publish game counts, and its top table covers Grandmaster and Champion together. <a href="#/sources">Sources &amp; method</a></p>`;
+const updated = day => `<p class="source-note">Updated ${esc(fmtDay(day))} from Blizzard's official hero rates (via OverFast) · Competitive · Role Queue · PC · Americas. Numbers cover games since the current patch started; Blizzard does not publish game counts, and its top table covers Grandmaster and Champion together. <a href="#/sources">Sources &amp; method</a></p>`;
 const portrait = (k, size = 40) => { const a = media.heroes[k]; return a ? `<img class="portrait" src="${esc(a.url)}" width="${size}" height="${size}" alt="" loading="lazy" decoding="async">` : `<span class="img-fallback portrait role-${esc(roleOf(k) || 'none')}"><b>${esc(nameOf(k)[0])}</b></span>`; };
 const heroLink = k => `<a class="tier-hero role-${esc(roleOf(k))}" href="heroes/${esc(k)}/">${portrait(k, 36)}<span><b>${esc(nameOf(k))}</b><small>${esc(ROLE[roleOf(k)] || '')}</small></span></a>`;
 const tierBadge = t => `<span class="tier-chip t-${esc(t)}">${esc(t)}</span>`;
@@ -160,7 +160,7 @@ function tierListPage(rank) {
     title: `Overwatch Tier List — ${label} (Competitive Role Queue) | OverScope`,
     description: `Overwatch hero tier list for ${label}, updated ${fmtDay(day)} from Blizzard's official pick and win rates. S tier: ${top}.`,
     image: media.heroArt[groups[0].heroes[0]?.hero] ? sized(media.heroArt[groups[0].heroes[0].hero].url, 1200) : '',
-    body: `<header class="page-top"><p class="eyebrow">Tier list · ${esc(label)}</p><h1>Overwatch tier list <em>${esc(label)}</em></h1><p>Every hero graded S to D from Blizzard's own pick and win rates in Competitive Role Queue (Mouse &amp; Keyboard · Americas). <a href="#/tier-list?rank=${esc(rank || '')}">Open the live tier list</a> to change input, region or queue.</p></header>
+    body: `<header class="page-top"><p class="eyebrow">Tier list · ${esc(label)}</p><h1>Overwatch tier list <em>${esc(label)}</em></h1><p>Every hero graded S to D from Blizzard's own pick and win rates in Competitive Role Queue (PC · Americas). <a href="#/tier-list?rank=${esc(rank || '')}">Open the live tier list</a> to change platform, region or queue.</p></header>
       <nav class="chips rank-nav" aria-label="Tier list by rank"><a class="chip ${rank ? '' : 'on'}" href="tier-list/">All ranks</a>${RANKS.map(r => `<a class="chip ${r === rank ? 'on' : ''}" href="tier-list/${r}/">${RANK_LABEL(r)}</a>`).join('')}</nav>
       <section class="panel tier-panel"><div class="tiers">${groups.map(g => `<div class="tier-row t-${g.tier}"><div class="tier-badge"><b>${g.tier}</b><small>${esc(g.label)}</small></div><div class="tier-heroes">${g.heroes.map(tile).join('') || '<span class="muted">—</span>'}</div></div>`).join('')}</div>${updated(day)}</section>
       <section class="panel"><div class="prose"><h2>How this tier list is made</h2><p>${esc(METHOD)}</p></div></section>`,
@@ -181,7 +181,7 @@ for (const k of heroKeys) {
   const mapName = mk => rankedMaps.find(m => m.key === mk)?.name || mk;
   const art = media.heroArt[k];
   const hp = h.hitpoints || {};
-  const desc = `${h.name} Overwatch stats: ${cRow ? `${pct(cRow.winrate)} win rate and ${pct(cRow.pickrate)} pick rate in Competitive Role Queue (Mouse & Keyboard, Americas)` : 'official hero rates'}${compTier ? `, ${compTier} tier` : ''}, win rate at every rank, best maps and abilities.`;
+  const desc = `${h.name} Overwatch stats: ${cRow ? `${pct(cRow.winrate)} win rate and ${pct(cRow.pickrate)} pick rate in Competitive Role Queue (PC, Americas)` : 'official hero rates'}${compTier ? `, ${compTier} tier` : ''}, win rate at every rank, best maps and abilities.`;
   add(`heroes/${k}/`, page({
     rel: '../../', canonical: `heroes/${k}/`, active: 'heroes',
     title: `${h.name} Overwatch Stats — Win Rate, Pick Rate & Tier by Rank | OverScope`,
@@ -195,12 +195,12 @@ for (const k of heroKeys) {
         <section class="panel"><header class="panel-head"><h2>${esc(h.name)} win rate by rank</h2></header>
           ${byRank.length ? `<table class="static-table"><thead><tr><th scope="col">Rank</th><th scope="col">Win rate</th><th scope="col">Pick rate</th><th scope="col">Tier</th></tr></thead><tbody>${byRank.map(x => `<tr><th scope="row"><a href="tier-list/${x.d}/">${RANK_LABEL(x.d)}</a></th><td>${pct(x.r?.winrate)}</td><td>${pct(x.r?.pickrate)}</td><td>${x.tier ? tierBadge(x.tier) : '—'}</td></tr>`).join('')}
           <tr class="sum"><th scope="row"><a href="tier-list/">All ranks</a></th><td>${pct(cRow?.winrate)}</td><td>${pct(cRow?.pickrate)}</td><td>${compTier ? tierBadge(compTier) : '—'}</td></tr></tbody></table>` : '<p class="muted pad">Rank tables are not available yet.</p>'}
-          ${qRow ? `<p class="pad">Quick Play (Role Queue, all players, Mouse &amp; Keyboard · Americas): ${pct(qRow.winrate)} win rate · ${pct(qRow.pickrate)} pick rate.</p>` : ''}
+          ${qRow ? `<p class="pad">Quick Play (Role Queue, all players, PC · Americas): ${pct(qRow.winrate)} win rate · ${pct(qRow.pickrate)} pick rate.</p>` : ''}
           ${updated(ranks?.fetchedAt?.slice(0, 10) || comp?.day)}</section>
         <section class="panel"><header class="panel-head"><h2>Best maps for ${esc(h.name)}</h2></header>
           ${bestMaps.length ? `<table class="static-table"><thead><tr><th scope="col">Map</th><th scope="col">Win rate</th><th scope="col">Pick rate</th></tr></thead><tbody>${bestMaps.map(x => `<tr><th scope="row"><a href="maps/${esc(x.mk)}/">${esc(mapName(x.mk))}</a></th><td>${pct(x.r.winrate)}</td><td>${pct(x.r.pickrate)}</td></tr>`).join('')}</tbody></table>
           ${worstMaps.length ? `<p class="pad muted">Toughest maps: ${worstMaps.map(x => `<a href="maps/${esc(x.mk)}/">${esc(mapName(x.mk))}</a> (${pct(x.r.winrate)})`).join(', ')}.</p>` : ''}
-          <p class="source-note">${esc(h.name)}'s win rate while playing on each map, all ranks, Competitive Role Queue · Mouse &amp; Keyboard · Americas. Maps where ${esc(h.name)}'s pick rate is under 1% are left out.</p>` : '<p class="muted pad">Map data is not available yet.</p>'}</section>
+          <p class="source-note">${esc(h.name)}'s win rate while playing on each map, all ranks, Competitive Role Queue · PC · Americas. Maps where ${esc(h.name)}'s pick rate is under 1% are left out.</p>` : '<p class="muted pad">Map data is not available yet.</p>'}</section>
       </div>
       <section class="panel"><header class="panel-head"><h2>${esc(h.name)} abilities</h2></header><ul class="abilities">${h.abilities.map(a => `<li><div><b>${esc(a.name)}</b><p>${esc(a.description)}</p></div></li>`).join('')}</ul></section>`,
   }), 0.8);

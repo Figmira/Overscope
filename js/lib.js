@@ -10,9 +10,9 @@ export const QUEUE_KEYS = ['competitive', 'quickplay'];
 // Blizzard's hero rates cover Role Queue only: 'Competitive - Role Queue' and 'Quick Play - Role Queue'.
 export const QUEUE_NAME = { competitive: 'Competitive · Role Queue', quickplay: 'Quick Play · Role Queue' };
 export const QUEUE_SHORT = { competitive: 'Competitive', quickplay: 'Quick Play' };
-// Blizzard splits stats by INPUT device, not by platform: 'pc' = Mouse & Keyboard, 'console' = Controller.
-export const INPUT_NAME = { pc: 'Mouse & Keyboard', console: 'Controller' };
-export const INPUT_SHORT = { pc: 'M&K', console: 'Controller' };
+// Platform names shown to users. (Blizzard's filter is technically by input device.)
+export const INPUT_NAME = { pc: 'PC', console: 'Console' };
+export const INPUT_SHORT = { pc: 'PC', console: 'Console' };
 // Blizzard's top rank table is 'Grandmaster and Champion' combined.
 export const RANK_LABEL = d => (d === 'grandmaster' ? 'Grandmaster & Champion' : d ? d[0].toUpperCase() + d.slice(1) : 'All ranks');
 export const RANK_SHORT = d => (d === 'grandmaster' ? 'GM & Champ' : d === 'platinum' ? 'Plat' : d ? d[0].toUpperCase() + d.slice(1) : 'All');
@@ -69,6 +69,7 @@ export const imageFailures = new Set();
 function fallback(label, role, cls) {
   return `<span class="img-fallback ${esc(cls)} role-${esc(role || 'none')}" role="img" aria-label="${esc(label)} (artwork not cached)"><b>${esc((label || '?').slice(0, 1))}</b></span>`;
 }
+export const portraitUrl = key => manifest.heroes[key]?.url || '';
 export function heroPortrait(key, cls = 'portrait') {
   const h = heroInfo(key); const a = manifest.heroes[key];
   if (!a) return fallback(h.name, h.role, cls);
@@ -139,7 +140,7 @@ export function fmtDate(iso) {
 export function sourceNote(stats) {
   if (!stats?.source) return '';
   const s = stats.source;
-  return `<p class="source-note">${s.stale ? `<b class="warn">Showing the last saved copy (${esc(timeAgo(s.fetchedAt))}) — live refresh failed: ${esc(s.error)}.</b> ` : ''}Source: ${esc(s.provider)} · ${esc(QUEUE_NAME[stats.queue])} · ${esc(INPUT_NAME[stats.filters.platform] || stats.filters.platform)} · ${esc(REGION_NAME[stats.filters.region])} · ${esc(stats.filters.division === 'all' || !stats.filters.division ? 'all ranks' : RANK_LABEL(stats.filters.division))} · ${stats.rows.length} heroes · fetched ${esc(timeAgo(s.fetchedAt))}. Blizzard's numbers cover games since the start of the current patch; it does not publish game counts. <a href="${esc(s.endpoint)}" target="_blank" rel="noopener">Raw data ${icon('i-ext')}</a></p>`;
+  return `<p class="source-note">${s.stale ? `<b class="warn">Showing OverScope's saved daily copy (${esc(timeAgo(s.fetchedAt))}) — ${esc(s.error)}.</b> ` : ''}Source: ${esc(s.provider)} · ${esc(QUEUE_NAME[stats.queue])} · ${esc(INPUT_NAME[stats.filters.platform] || stats.filters.platform)} · ${esc(REGION_NAME[stats.filters.region])} · ${esc(stats.filters.division === 'all' || !stats.filters.division ? 'all ranks' : RANK_LABEL(stats.filters.division))} · ${stats.rows.length} heroes · fetched ${esc(timeAgo(s.fetchedAt))}. Blizzard's numbers cover games since the start of the current patch; it does not publish game counts. <a href="${esc(s.endpoint)}" target="_blank" rel="noopener">Raw data ${icon('i-ext')}</a></p>`;
 }
 
 export function toast(msg) {
@@ -171,7 +172,7 @@ export function roleTabs(active) {
 export function filterSelects({ showRank = true } = {}) {
   const sel = (id, label, opts, val) => `<label class="sel"><span>${label}</span><select data-pref="${id}">${opts.map(([k, v]) => `<option value="${k}" ${k === val ? 'selected' : ''}>${v}</option>`).join('')}</select></label>`;
   return [
-    sel('platform', 'Input', [['pc', 'Mouse & Keyboard'], ['console', 'Controller']], prefs.platform),
+    sel('platform', 'Platform', [['pc', 'PC'], ['console', 'Console']], prefs.platform),
     sel('region', 'Region', Object.entries(REGION_NAME), prefs.region),
     showRank && prefs.queue === 'competitive' ? sel('division', 'Rank', [['', 'All ranks'], ...['bronze', 'silver', 'gold', 'platinum', 'emerald', 'diamond', 'master', 'grandmaster'].map(d => [d, RANK_LABEL(d)])], prefs.division) : '',
   ].join('');

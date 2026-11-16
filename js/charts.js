@@ -1,7 +1,7 @@
 // Small hand-built SVG charts (no library). Role colours were validated for the
 // dark surface with the dataviz palette checker; roles also carry a distinct
 // marker SHAPE (tank ■, damage ▲, support ●) so colour is never the only cue.
-import { esc, pct, heroInfo, ROLE_NAME, showTip, hideTip } from './lib.js';
+import { esc, pct, heroInfo, ROLE_NAME, showTip, hideTip, portraitUrl } from './lib.js';
 
 export const ROLE_COLOR = { tank: '#4f8fef', damage: '#ec4f6c', support: '#bf8a1a' };
 
@@ -11,8 +11,8 @@ function marker(role, x, y, r = 5) {
   if (role === 'damage') return `<path d="M${x} ${y - r - 1}L${x + r + 1} ${y + r}H${x - r - 1}Z" fill="${c}" stroke="#121628" stroke-width="2" stroke-linejoin="round"/>`;
   return `<circle cx="${x}" cy="${y}" r="${r}" fill="${c}" stroke="#121628" stroke-width="2"/>`;
 }
-export function legend() {
-  return `<div class="legend">${Object.keys(ROLE_COLOR).map(r => `<span><svg width="14" height="14" viewBox="0 0 14 14">${marker(r, 7, 7, 4.5)}</svg>${ROLE_NAME[r]}</span>`).join('')}</div>`;
+export function legend({ rings = false } = {}) {
+  return `<div class="legend">${Object.keys(ROLE_COLOR).map(r => `<span><svg width="14" height="14" viewBox="0 0 14 14">${rings ? `<circle cx="7" cy="7" r="5.2" fill="none" stroke="${ROLE_COLOR[r]}" stroke-width="2"/>` : marker(r, 7, 7, 4.5)}</svg>${ROLE_NAME[r]}</span>`).join('')}</div>`;
 }
 
 const niceTicks = (min, max, n = 4) => {
@@ -24,9 +24,9 @@ const niceTicks = (min, max, n = 4) => {
 };
 
 /** Pick rate (x) vs win rate (y) for the current dataset. */
-export function scatter(rows, { width = 360, height = 220, highlight = [] } = {}) {
+export function scatter(rows, { width = 360, height = 260, highlight = [] } = {}) {
   if (!rows?.length) return '';
-  const pad = { l: 34, r: 10, t: 18, b: 26 };
+  const pad = { l: 34, r: 14, t: 22, b: 26 };
   const xs = rows.map(r => r.pickrate), ys = rows.map(r => r.winrate);
   const x0 = 0, x1 = Math.max(...xs) * 1.08;
   const y0 = Math.min(...ys) - 1, y1 = Math.max(...ys) + 1;
@@ -43,7 +43,11 @@ export function scatter(rows, { width = 360, height = 220, highlight = [] } = {}
   const pts = sorted.map(r => {
     const h = heroInfo(r.hero);
     const tipHtml = `<b>${esc(h.name)}</b> · ${esc(ROLE_NAME[h.role] || '')}<br>Pick rate ${pct(r.pickrate)}<br>Win rate ${pct(r.winrate)}${r.banrate != null ? `<br>Ban rate ${pct(r.banrate)}` : ''}`;
-    return `<g class="pt" data-tip="${esc(tipHtml)}" data-hero="${esc(r.hero)}"><circle cx="${X(r.pickrate)}" cy="${Y(r.winrate)}" r="11" fill="transparent"/>${marker(h.role, X(r.pickrate), Y(r.winrate), 4.5)}${labels.has(r.hero) && canLabel(X(r.pickrate), Y(r.winrate)) ? (X(r.pickrate) > width * 0.7 ? `<text x="${X(r.pickrate) - 7}" y="${Y(r.winrate) - 6}" class="lbl" text-anchor="end">${esc(h.name)}</text>` : `<text x="${X(r.pickrate) + 7}" y="${Y(r.winrate) - 6}" class="lbl">${esc(h.name)}</text>`) : ''}</g>`;
+    const cx = X(r.pickrate), cy = Y(r.winrate), src = portraitUrl(r.hero), R = 8.5;
+    const face = src
+      ? `<clipPath id="sc-${esc(r.hero)}"><circle cx="${cx}" cy="${cy}" r="${R}"/></clipPath><circle cx="${cx}" cy="${cy}" r="${R}" class="face-bg"/><image href="${esc(src)}" x="${cx - R}" y="${cy - R}" width="${R * 2}" height="${R * 2}" clip-path="url(#sc-${esc(r.hero)})" preserveAspectRatio="xMidYMid slice"/><circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${ROLE_COLOR[h.role] || '#9aa'}" stroke-width="1.6"/>`
+      : marker(h.role, cx, cy, 4.5);
+    return `<g class="pt" data-tip="${esc(tipHtml)}" data-hero="${esc(r.hero)}" aria-label="${esc(h.name)}"><circle cx="${cx}" cy="${cy}" r="12" fill="transparent"/>${face}${labels.has(r.hero) && canLabel(X(r.pickrate), Y(r.winrate)) ? (cx > width * 0.7 ? `<text x="${cx - 11}" y="${cy - 10}" class="lbl" text-anchor="end">${esc(h.name)}</text>` : `<text x="${cx + 11}" y="${cy - 10}" class="lbl">${esc(h.name)}</text>`) : ''}</g>`;
   }).join('');
   return `<svg class="chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="Scatter chart of hero pick rate against win rate">${grid}${fifty}<text x="${width - pad.r}" y="${height - 2}" class="axis-title" text-anchor="end">Pick rate →</text><text x="4" y="9" class="axis-title">Win rate ↑</text>${pts}</svg>`;
 }

@@ -17,7 +17,7 @@ export async function render({ main, signal }) {
     <div class="banner-copy">
       <p class="eyebrow">Overwatch analytics</p>
       <h1>THE COMPLETE<br>OVERWATCH <em>INSIGHTS HUB</em></h1>
-      <p>Player stats. Hero meta for Role Queue 5v5 and Quick Play. Stadium powers. Maps and official patch notes. All in one place.</p>
+      <p>Player stats, including Open Queue. Hero meta for Competitive Role Queue and Quick Play. Stadium powers. Maps and official patch notes. All in one place.</p>
       <div class="cta"><a class="btn primary" href="#/competitive">${icon('i-bars')}Explore meta${icon('i-arrow')}</a><a class="btn ghost" href="#/stadium">${icon('i-stadium')}View Stadium${icon('i-arrow')}</a></div>
     </div>
     <a class="patch-card" href="#/news?kind=patch" id="patchCard">
@@ -33,7 +33,7 @@ export async function render({ main, signal }) {
       <div class="mode-bar comp"><h2>${icon('i-laurel')}Competitive</h2><div id="queueTabs"></div></div>
       <div class="mode-bar stad"><h2>${icon('i-stadium')}Stadium</h2>
         <div class="mode-tools">
-          <label class="sel"><span>Input</span><select data-pref="platform"><option value="pc">Mouse &amp; Keyboard</option><option value="console">Controller</option></select></label>
+          <label class="sel"><span>Platform</span><select data-pref="platform"><option value="pc">PC</option><option value="console">Console</option></select></label>
           <label class="sel"><span>Region</span><select data-pref="region">${Object.entries(REGION_NAME).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}</select></label>
         </div></div>
     </div>
@@ -193,7 +193,7 @@ function renderChart() {
     el.innerHTML = head(`Meta trend <small>— pick rate on ${days} saved days since ${esc(fmtDate(trendData.days[0]))}</small>`) + `<div class="chart-wrap">${trend(trendData.snapshots, top)}</div>`;
     return;
   }
-  el.innerHTML = head('Meta snapshot <small>— pick vs win</small>') + `<div class="chart-wrap">${scatter(stats.rows)}${legend()}</div>`;
+  el.innerHTML = head('Meta snapshot <small>— pick vs win</small>') + `<div class="chart-wrap">${scatter(stats.rows)}${legend({ rings: true })}</div>`;
 }
 
 async function loadNewsPanels() {

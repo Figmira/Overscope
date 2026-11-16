@@ -50,5 +50,5 @@ async function draw() {
   const slug = prefs.queue === 'competitive' ? (prefs.division || 'all-ranks') : '';
   $('#tlShare').innerHTML = slug && prefs.platform === 'pc' && prefs.region === 'americas'
     ? `<div class="prose"><h3>Share this tier list</h3><p>A shareable page with a preview card for Discord and X is published every day for this rank.</p><p><a class="btn sm" href="tier-list/${slug === 'all-ranks' ? '' : slug + '/'}">Open shareable page ${icon('i-arrow')}</a></p></div>`
-    : `<div class="prose"><h3>Share this tier list</h3><p class="muted">Shareable pages are published for Competitive · Mouse &amp; Keyboard · Americas. Copy this page's address to share the current filters.</p></div>`;
+    : `<div class="prose"><h3>Share this tier list</h3><p class="muted">Shareable pages are published for Competitive · PC · Americas. Copy this page's address to share the current filters.</p></div>`;
 }

@@ -12,7 +12,7 @@ export const REGIONS = ['americas', 'europe', 'asia'];
 // divisions accepted by the official hero-rate filter (verified upstream)
 export const STAT_DIVISIONS = ['bronze', 'silver', 'gold', 'platinum', 'emerald', 'diamond', 'master', 'grandmaster'];
 const PLAYER_DIVS = [...STAT_DIVISIONS, 'champion'];
-export const QUEUES = { competitive: { gamemode: 'competitive', label: 'Competitive · 5v5 Role Queue' }, quickplay: { gamemode: 'quickplay', label: 'Quick Play · Role Queue' } };
+export const QUEUES = { competitive: { gamemode: 'competitive', label: 'Competitive · Role Queue' }, quickplay: { gamemode: 'quickplay', label: 'Quick Play · Role Queue' } };
 
 export class ApiError extends Error { constructor(msg, status = 0) { super(msg); this.status = status; } }
 const str = v => (typeof v === 'string' ? v : v == null ? '' : String(v));
@@ -138,14 +138,43 @@ export async function statsFor({ queue, platform = 'pc', region = 'americas', di
   if (division && (!STAT_DIVISIONS.includes(division) || queue !== 'competitive')) throw new ApiError('Rank filter only applies to Competitive', 400);
   if (role && !ROLES.has(role)) throw new ApiError('Unknown role', 400);
   if (map && !/^[a-z0-9-_]{2,40}$/.test(map)) throw new ApiError('Unknown map', 400);
-  const url = of('/heroes/stats', { platform, gamemode: q.gamemode, region, competitive_division: division || undefined, role: role || undefined, map: map || undefined });
-  const r = await getJSON(url, 30 * 60_000, opts);
-  const rows = normaliseStats(r.data);
+  const params = { platform, gamemode: q.gamemode, region, competitive_division: division || undefined, role: role || undefined, map: map || undefined };
+  const url = of('/heroes/stats', params);
+  let r = await getJSON(url, 30 * 60_000, opts);
+  let rows = normaliseStats(r.data);
+  let endpoint = url;
+  if (!rows.length) {
+    // OverFast sometimes caches an empty answer for one spelling of the URL. The same question
+    // with the parameters in another order reaches a different cache entry.
+    endpoint = of('/heroes/stats', Object.fromEntries(Object.entries(params).reverse()));
+    r = await getJSON(endpoint, 30 * 60_000, opts).catch(() => r);
+    rows = normaliseStats(r.data);
+  }
+  let stale = false; let error = '';
+  if (!rows.length && !map) {
+    // Last resort: the copy saved by the site's daily GitHub job.
+    const saved = await savedRows({ queue, platform, region, division }).catch(() => null);
+    if (saved?.rows.length) {
+      rows = role ? saved.rows.filter(x => (heroRoles.get(x.hero) || role) === role) : saved.rows;
+      r = { fetchedAt: saved.fetchedAt }; stale = true; error = "Blizzard's live feed answered with an empty table";
+    }
+  }
   return {
     available: true, queue, label: q.label, rows, hasBanRate: rows.some(x => x.banrate !== null),
     filters: { platform, region, division: division || 'all', role: role || 'all', map: map || 'all' },
-    source: { provider: 'Blizzard official hero statistics, relayed by OverFast API', endpoint: url, fetchedAt: r.fetchedAt, stale: false },
+    source: { provider: 'Blizzard official hero statistics, relayed by OverFast API', endpoint, fetchedAt: r.fetchedAt, stale, error },
   };
+}
+const heroRoles = new Map();
+async function savedRows({ queue, platform, region, division }) {
+  if (!heroRoles.size) { try { for (const h of (await heroes()).data) heroRoles.set(h.key, h.role); } catch { /* roles unknown */ } }
+  if (division) {
+    const f = (await getJSON(site(`data/ranks/competitive-${platform}-${region}.json`), 30 * 60_000)).data;
+    return { rows: normaliseStats(f?.divisions?.[division] || []), fetchedAt: Date.parse(f.fetchedAt) };
+  }
+  const f = (await getJSON(site(`data/history/${queue}-${platform}-${region}.json`), 30 * 60_000)).data;
+  const last = f?.snapshots?.at(-1);
+  return { rows: normaliseStats(last?.rows || []), fetchedAt: last ? Date.parse(last.day + 'T12:00:00Z') : Date.now() };
 }
 export async function statsByRank({ platform = 'pc', region = 'americas', live = false } = {}) {
   // Fast path: the GitHub Action saves these 8 public tables once a day.
