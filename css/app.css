@@ -668,3 +668,4 @@ html[data-page=home] #banner-slot{display:block;height:clamp(260px,18.5vw,300px)
   #pStats .mini-table .th span{font-size:10px}
 }
 .deep-plat{margin:10px 14px 0}
+.comp-plat{margin:0 0 12px}

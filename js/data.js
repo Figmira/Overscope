@@ -240,13 +240,24 @@ export async function playerProfile(rawId) {
     const c = s.competitive?.[plat];
     if (c) p.competitive[plat] = { season: num(c.season), tank: normaliseRank(c.tank), damage: normaliseRank(c.damage), support: normaliseRank(c.support), open: normaliseRank(c.open) };
   }
-  await Promise.all(['competitive', 'quickplay'].map(async gamemode => {
-    try {
-      const d = (await getJSON(of(`/players/${encodeURIComponent(id)}/stats/summary`, { gamemode }), 5 * 60_000)).data || {};
-      const heroesList = Object.entries(d.heroes || {}).map(([k, v]) => ({ hero: k, ...normaliseBlock(v) })).filter(h => h.timePlayed >= 60).sort((a, b) => b.timePlayed - a.timePlayed); // under a minute = no real data
-      p.stats[gamemode] = { general: normaliseBlock(d.general), roles: Object.fromEntries(Object.entries(d.roles || {}).map(([k, v]) => [k, normaliseBlock(v)])), heroes: heroesList };
-    } catch (e) { p.stats[gamemode] = { error: e.message, status: e.status }; }
-  }));
+  const block = d => ({
+    general: normaliseBlock(d.general),
+    roles: Object.fromEntries(Object.entries(d.roles || {}).map(([k, v]) => [k, normaliseBlock(v)])),
+    heroes: Object.entries(d.heroes || {}).map(([k, v]) => ({ hero: k, ...normaliseBlock(v) })).filter(h => h.timePlayed >= 60).sort((a, b) => b.timePlayed - a.timePlayed), // under a minute = no real data
+  });
+  // Quick Play: lifetime, so both platforms together is correct.
+  // Competitive: Blizzard keeps the LAST season played on each platform, which can be years old
+  // (e.g. PC from an Overwatch 1 season). Only platforms with a current-season record are used.
+  p.compPlatforms = PLATFORMS.filter(pl => p.competitive[pl]);
+  p.statsByPlatform = {};
+  await Promise.all([
+    getJSON(of(`/players/${encodeURIComponent(id)}/stats/summary`, { gamemode: 'quickplay' }), 5 * 60_000)
+      .then(r => { p.stats.quickplay = block(r.data || {}); }, e => { p.stats.quickplay = { error: e.message, status: e.status }; }),
+    ...p.compPlatforms.map(pl => getJSON(of(`/players/${encodeURIComponent(id)}/stats/summary`, { gamemode: 'competitive', platform: pl }), 5 * 60_000)
+      .then(r => { p.statsByPlatform[pl] = { ...block(r.data || {}), platform: pl }; }, e => { p.statsByPlatform[pl] = { error: e.message, status: e.status, platform: pl }; })),
+  ]);
+  const comp = p.compPlatforms.map(pl => p.statsByPlatform[pl]).filter(x => x && !x.error).sort((a, b) => (b.general?.timePlayed || 0) - (a.general?.timePlayed || 0));
+  p.stats.competitive = comp[0] || (p.compPlatforms.length ? p.statsByPlatform[p.compPlatforms[0]] : { noSeason: true });
   if (!Object.values(p.stats).some(x => x.general?.gamesPlayed) && !Object.keys(p.competitive).length) p.privacy = 'private-or-empty';
   saveLocalSnapshot(p);
   return { data: p, fetchedAt: sum.fetchedAt };

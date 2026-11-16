@@ -3,8 +3,8 @@ import { heroes as loadHeroes, go } from '../app.js';
 import { lines, ROLE_COLOR, OPEN_COLOR } from '../charts.js';
 
 // Blizzard's public profile holds Competitive stats for the CURRENT season only; Quick Play is lifetime.
-const seasonOf = p => (p?.competitive?.pc || p?.competitive?.console)?.season;
-const modeLabel = (m, p) => (m === 'competitive' ? `Competitive · ${seasonOf(p) ? 'Season ' + seasonOf(p) : 'this season'}` : 'Quick Play · lifetime');
+const seasonOf = p => (p?.competitive?.[p?.stats?.competitive?.platform] || p?.competitive?.pc || p?.competitive?.console)?.season;
+const modeLabel = (m, p) => (m === 'competitive' ? `Competitive · ${seasonOf(p) ? 'Season ' + seasonOf(p) : 'this season'}${p?.stats?.competitive?.platform && p.compPlatforms?.length ? ' · ' + (p.stats.competitive.platform === 'pc' ? 'PC' : 'console') : ''}` : 'Quick Play · lifetime');
 const hours = s => (s == null ? '—' : s >= 3600 ? (s / 3600).toFixed(1) + ' h' : Math.round(s / 60) + ' min');
 const num = (v, d = 0) => (v == null ? '—' : Number(v).toLocaleString('en-US', { maximumFractionDigits: d }));
 const ROLE_STYLE = { tank: { color: ROLE_COLOR.tank, shape: 'square', dash: '' }, damage: { color: ROLE_COLOR.damage, shape: 'triangle', dash: '6 3' }, support: { color: ROLE_COLOR.support, shape: 'circle', dash: '2 3' }, open: { color: OPEN_COLOR, shape: 'diamond', dash: '9 3 2 3' } };
@@ -73,6 +73,7 @@ async function drawVsRank() {
 }
 
 async function onClick(e) {
+  const cp = e.target.closest('[data-compplat]'); if (cp) { current.stats.competitive = current.statsByPlatform[cp.dataset.compplat]; return drawStats(); }
   const dp = e.target.closest('[data-deepplat]'); if (dp) { deep.platform = dp.dataset.deepplat; return drawDeep(); }
   const h = e.target.closest('[data-hero]'); if (h) return go('#/heroes/' + h.dataset.hero);
   const t = e.target.closest('[data-mode]'); if (t) { $('#main').dataset.mode = t.dataset.mode; return drawStats(); }
@@ -158,11 +159,13 @@ function drawStats() {
   $('#modeTabs').innerHTML = ['competitive', 'quickplay'].map(m => `<button class="${m === mode ? 'on' : ''}" data-mode="${m}">${esc(modeLabel(m, current))}</button>`).join('');
   const s = current.stats[mode];
   const el = $('#pStats');
+  if (mode === 'competitive' && s?.noSeason) { el.innerHTML = emptyBox('No Competitive games this season', "This profile has no current-season Competitive record. Blizzard's profile only keeps the last season played on each platform, so older seasons are left out instead of being shown as this season."); return; }
+  const compPick = mode === 'competitive' && current.compPlatforms.length > 1 ? `<div class="seg sm comp-plat">${current.compPlatforms.map(pl => `<button class="${pl === s.platform ? 'on' : ''}" data-compplat="${pl}">${pl === 'pc' ? 'PC' : 'Console'}</button>`).join('')}</div>` : '';
   if (!s || s.error) { el.innerHTML = s?.status === 404 ? emptyBox('No career stats', 'Nothing public for this mode.') : errorBox(s?.error || 'No data'); return; }
   const g = s.general;
   if (!g || !g.gamesPlayed) { el.innerHTML = emptyBox('No career stats for this mode', 'Either the profile is private or no games have been played in this mode.'); return; }
   const roles = Object.entries(s.roles || {}).filter(([, v]) => v?.timePlayed);
-  el.innerHTML = `<div class="stat-tiles">
+  el.innerHTML = `${compPick}<div class="stat-tiles">
       <div class="tile"><small>Games</small><b>${num(g.gamesPlayed)}</b></div>
       <div class="tile"><small>Won · Lost</small><b>${num(g.gamesWon)} · ${num(g.gamesLost)}</b></div>
       <div class="tile"><small>Win rate</small><b>${pct(g.winrate)}</b></div>
@@ -206,7 +209,8 @@ async function drawDeep() {
   out.innerHTML = loadingBox(3);
   try {
     // Detailed stats are kept per platform; load both and use the one(s) this hero was actually played on.
-    const tries = await Promise.all(['pc', 'console'].map(platform => api(`/api/players/${encodeURIComponent(current.id)}/career?` + qs({ gamemode: mode, hero, platform })).then(r => ({ platform, groups: r.data[hero] || [] }), () => ({ platform, groups: [] }))));
+    const platsFor = mode === 'competitive' ? current.compPlatforms : ['pc', 'console'];
+    const tries = await Promise.all(platsFor.map(platform => api(`/api/players/${encodeURIComponent(current.id)}/career?` + qs({ gamemode: mode, hero, platform })).then(r => ({ platform, groups: r.data[hero] || [] }), () => ({ platform, groups: [] }))));
     const played = g => g.find(x => x.key === 'game')?.stats.find(s => s.key === 'time_played')?.value || 0;
     const usable = tries.filter(t => t.groups.length && played(t.groups) > 0).sort((a, b) => played(b.groups) - played(a.groups));
     if (!usable.length) { out.innerHTML = emptyBox(`No ${mode === 'competitive' ? 'Competitive' : 'Quick Play'} data for ${esc(heroInfo(hero).name)}`, 'This hero has not been played in this mode, or the profile hides it.'); return; }
