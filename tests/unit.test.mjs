@@ -124,3 +124,37 @@ test('head to head: even band, lower-is-better, minimum games and weighted verdi
   assert.equal(close.winner, 'close');
   assert.match(writeSummary(close, 'Iso', 'Kenobi', 'Ana'), /^Too close to call on Ana/);
 });
+
+test('head to head: role focus, off-role stats, records, fingerprint, scoreboard, duo fit', async () => {
+  const { careerMetrics, records, fingerprint, scoreboard, duoFit, bestHero, summaryParts, compareMetrics } = await import('../js/h2h.js');
+  const groups = (heal, fb) => [
+    { key: 'game', stats: [{ key: 'games_played', value: 20 }, { key: 'win_percentage', value: 50 }] },
+    { key: 'average', stats: [{ key: 'healing_done_avg_per_10_min', value: heal }, { key: 'final_blows_avg_per_10_min', value: fb }, { key: 'deaths_avg_per_10_min', value: 6 }] },
+    { key: 'best', stats: [{ key: 'eliminations_most_in_game', value: 30 }, { key: 'kill_streak_best', value: 12 }] },
+    { key: 'hero_specific', stats: [{ key: 'enemies_slept_most_in_game', value: 9 }, { key: 'enemies_slept', value: 400 }] },
+  ];
+  const dps = careerMetrics(groups(500, 8), 'damage');
+  assert.ok(!dps.healing_done_avg_per_10_min, 'healing is not judged for damage heroes');
+  assert.equal(dps.final_blows_avg_per_10_min.group, 'focus');
+  const sup = careerMetrics(groups(5000, 3), 'support');
+  assert.equal(sup.healing_done_avg_per_10_min.group, 'focus');
+  const rec = records(groups(1, 1));
+  assert.equal(rec.eliminations_most_in_game.label, 'Most eliminations in a game');
+  assert.equal(rec.kill_streak_best.label, 'Best kill streak');
+  assert.ok(rec.enemies_slept_most_in_game && !rec.enemies_slept, 'only records, not totals');
+  const fp = fingerprint(sup, careerMetrics(groups(2500, 6), 'support'));
+  const healAxis = fp.find(x => x.label === 'Healing');
+  assert.deepEqual([healAxis.a, healAxis.b], [1, 0.5]);
+  const heroesA = [{ hero: 'ana', gamesPlayed: 20, winrate: 55 }, { hero: 'mercy', gamesPlayed: 3, winrate: 60 }];
+  const heroesB = [{ hero: 'ana', gamesPlayed: 20, winrate: 40 }, { hero: 'mercy', gamesPlayed: 30, winrate: 50 }];
+  const sb = scoreboard(heroesA, heroesB, { ana: groups(5000, 3) }, { ana: groups(5000, 3) }, () => 'support');
+  assert.equal(sb.rows.length, 1, 'only heroes both have 5+ games on');
+  assert.equal(sb.rows[0].winner, 'a'); // only the x2 win rate differs (55 vs 40)
+  assert.equal(bestHero(heroesB).hero, 'mercy');
+  const duo = duoFit({ tank: { gamesPlayed: 50, gamesWon: 30 }, damage: { gamesPlayed: 50, gamesWon: 20 } }, { tank: { gamesPlayed: 50, gamesWon: 35 }, support: { gamesPlayed: 50, gamesWon: 26 } });
+  assert.deepEqual([duo[0].roleA, duo[0].roleB], ['tank', 'support']);
+  assert.ok(!duo.some(o => o.roleA === 'tank' && o.roleB === 'tank'), 'two players cannot both tank');
+  const parts = summaryParts(compareMetrics(dps, careerMetrics(groups(500, 4), 'damage')), 'Iso', 'Kenobi', 'Soldier: 76', 'damage');
+  assert.match(parts.points.join(' '), /finishes more kills/);
+  assert.match(parts.points.join(' '), /matters most for a damage/);
+});

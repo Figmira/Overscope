@@ -1,6 +1,6 @@
 # Browser check results
 
-Run 2026-11-16T22:58:17.004Z in Chromium via Playwright. The static site was served exactly as GitHub Pages serves it (under /overscope/); all data was fetched live by the browser.
+Run 2026-11-16T23:29:05.588Z in Chromium via Playwright. The static site was served exactly as GitHub Pages serves it (under /overscope/); all data was fetched live by the browser.
 
 ## Pages
 
@@ -19,7 +19,7 @@ Run 2026-11-16T22:58:17.004Z in Chromium via Playwright. The static site was ser
 | desktop | news | 0/0 | 0 | 15 | 0 | 12 | 12 | 0 | screenshots/desktop-news.png |
 | desktop | sources | 0/0 | 0 | 0 | 0 | 1 | 0 | 1 | screenshots/desktop-sources.png |
 | desktop | meta-by-rank | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-meta-by-rank.png |
-| desktop | player-vs-player | 11/11 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-player-vs-player.png |
+| desktop | player-vs-player | 17/17 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-player-vs-player.png |
 | desktop | tier-list | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-tier-list.png |
 | desktop | static-tierlist | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-static-tierlist.png |
 | desktop | static-tier-gold | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-static-tier-gold.png |
@@ -40,7 +40,7 @@ Run 2026-11-16T22:58:17.004Z in Chromium via Playwright. The static site was ser
 | mobile | news | 0/0 | 0 | 15 | 0 | 12 | 12 | 0 | screenshots/mobile-news.png |
 | mobile | sources | 0/0 | 0 | 0 | 0 | 1 | 0 | 1 | screenshots/mobile-sources.png |
 | mobile | meta-by-rank | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-meta-by-rank.png |
-| mobile | player-vs-player | 11/11 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-player-vs-player.png |
+| mobile | player-vs-player | 17/17 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-player-vs-player.png |
 | mobile | tier-list | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-tier-list.png |
 | mobile | static-tierlist | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-static-tierlist.png |
 | mobile | static-tier-gold | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-static-tier-gold.png |
@@ -62,7 +62,7 @@ Run 2026-11-16T22:58:17.004Z in Chromium via Playwright. The static site was ser
 - PASS — Players: nonexistent BattleTag handled: explains there is no public profile
 - PASS — Meta by rank: heatmap shows one column per rank: 8 ranks, 432 cells
 - PASS — Patch impact: hidden until a patch has before/after data, shown once it does: hidden (no before/after data yet)
-- PASS — Privacy: the site makes no requests except to OverFast, Blizzard media and its own files: hosts contacted: 127.0.0.1:36527, overfast-api.tekrop.fr, blz-contentstack-images.akamaized.net, d15f34w2p8l1cc.cloudfront.net, bnetcmsus-a.akamaihd.net, static.playoverwatch.com
+- PASS — Privacy: the site makes no requests except to OverFast, Blizzard media and its own files: hosts contacted: 127.0.0.1:40015, overfast-api.tekrop.fr, blz-contentstack-images.akamaized.net, d15f34w2p8l1cc.cloudfront.net, bnetcmsus-a.akamaihd.net, static.playoverwatch.com
 - PASS — Favorites: star a player, see them on the Players page, then un-star: listed: TeKrop (then removed)
 - PASS — Favorites: star a hero and filter the roster: Favorites filter → Winston
 - PASS — Player profile: rank history + hero deep dive render: deep-dive groups: Per 10 minutes, Hero-specific, Best in a game / life, Combat totals, Games, Assists, Match awards · history: Rank & stat historysaved in this browser only First snapshot saved 2026-11-16Eac
