@@ -1,6 +1,15 @@
 {
- "checkedAt": "2026-11-16T16:00:36.817Z",
+ "checkedAt": "2026-11-16T18:49:35.903Z",
  "patches": [
+  {
+   "kind": "patch",
+   "title": "Overwatch Retail Patch Notes – November 16, 2026",
+   "date": "2026-11-16",
+   "summary": "Covers: Hotfix Update · Competitive Play Updates",
+   "url": "https://overwatch.blizzard.com/en-us/news/patch-notes/#patch-2026-11-16",
+   "image": "",
+   "source": "Blizzard · Patch notes"
+  },
   {
    "kind": "patch",
    "title": "Overwatch Retail Patch Notes – November 5, 2026",
@@ -196,23 +205,23 @@
  "sources": [
   {
    "url": "https://overwatch.blizzard.com/en-us/news/patch-notes/",
-   "items": 2,
-   "fetchedAt": 1794844839525
+   "items": 3,
+   "fetchedAt": 1794854976516
   },
   {
    "url": "https://overwatch.blizzard.com/en-us/news/patch-notes/live/2026/10/",
    "items": 3,
-   "fetchedAt": 1794844840317
+   "fetchedAt": 1794854976562
   },
   {
    "url": "https://overwatch.blizzard.com/en-us/news/patch-notes/live/2026/09/",
    "items": 4,
-   "fetchedAt": 1794844840736
+   "fetchedAt": 1794854976881
   },
   {
    "url": "https://overwatch.blizzard.com/en-us/news/",
    "items": 12,
-   "fetchedAt": 1794844841183
+   "fetchedAt": 1794854977285
   }
  ],
  "errors": [],
