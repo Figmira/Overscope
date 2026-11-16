@@ -182,6 +182,10 @@ export async function trend({ queue, platform = 'pc', region = 'americas', divis
   if (perRank) snaps = snaps.map(x => ({ day: x.day, rows: x.rows.map(([hero, pickrate, winrate, banrate]) => ({ hero, pickrate, winrate, banrate })) }));
   return { available: true, queue, division: perRank ? division : 'all', days: snaps.map(x => x.day), snapshots: snaps };
 }
+/** Maps Blizzard publishes hero rates for (from the daily saved map tables). */
+export async function ratedMaps() {
+  try { return Object.keys((await getJSON(site('data/map-stats/competitive-pc-americas.json'), 6 * 3600_000)).data?.maps || {}); } catch { return []; }
+}
 /** How many saved days each history file holds (written by the GitHub Action). */
 export async function historyIndex() {
   try { return (await getJSON(site('data/history-index.json'), 30 * 60_000)).data; } catch { return { allRanks: {}, ranks: {} }; }
@@ -329,6 +333,7 @@ export async function route(path, { fresh = false } = {}) {
   switch (seg[0]) {
     case 'heroes': return seg[1] ? heroDetail(seg[1]) : p.gamemode === 'stadium' ? stadiumHeroes() : heroes();
     case 'stats': return seg[1] === 'by-rank' ? statsByRank({ ...p, live: fresh || p.live === '1' }) : statsFor(p, { fresh });
+    case 'rated-maps': return ratedMaps();
     case 'trend': return seg[1] === 'index' ? historyIndex() : trend({ ...p, days: Number(p.days) || 14 });
     case 'maps': return maps();
     case 'news': return news({ fresh });

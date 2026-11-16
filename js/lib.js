@@ -7,8 +7,15 @@ export const pct = (n, d = 1) => (n === null || n === undefined || !Number.isFin
 export const ROLE_NAME = { tank: 'Tank', damage: 'Damage', support: 'Support' };
 // Only queues with published data are offered (no Open Queue: nobody publishes its hero rates).
 export const QUEUE_KEYS = ['competitive', 'quickplay'];
-export const QUEUE_NAME = { competitive: 'Competitive · 5v5 Role Queue', quickplay: 'Quick Play' };
-export const QUEUE_SHORT = { competitive: 'Role Queue 5v5', quickplay: 'Quick Play' };
+// Blizzard's hero rates cover Role Queue only: 'Competitive - Role Queue' and 'Quick Play - Role Queue'.
+export const QUEUE_NAME = { competitive: 'Competitive · Role Queue', quickplay: 'Quick Play · Role Queue' };
+export const QUEUE_SHORT = { competitive: 'Competitive', quickplay: 'Quick Play' };
+// Blizzard splits stats by INPUT device, not by platform: 'pc' = Mouse & Keyboard, 'console' = Controller.
+export const INPUT_NAME = { pc: 'Mouse & Keyboard', console: 'Controller' };
+export const INPUT_SHORT = { pc: 'M&K', console: 'Controller' };
+// Blizzard's top rank table is 'Grandmaster and Champion' combined.
+export const RANK_LABEL = d => (d === 'grandmaster' ? 'Grandmaster & Champion' : d ? d[0].toUpperCase() + d.slice(1) : 'All ranks');
+export const RANK_SHORT = d => (d === 'grandmaster' ? 'GM & Champ' : d === 'platinum' ? 'Plat' : d ? d[0].toUpperCase() + d.slice(1) : 'All');
 export const REGION_NAME = { americas: 'Americas', europe: 'Europe', asia: 'Asia' };
 
 // ---------- persistent view preferences ----------
@@ -132,7 +139,7 @@ export function fmtDate(iso) {
 export function sourceNote(stats) {
   if (!stats?.source) return '';
   const s = stats.source;
-  return `<p class="source-note">${s.stale ? `<b class="warn">Showing the last saved copy (${esc(timeAgo(s.fetchedAt))}) — live refresh failed: ${esc(s.error)}.</b> ` : ''}Source: ${esc(s.provider)} · ${esc(QUEUE_NAME[stats.queue])} · ${esc(stats.filters.platform.toUpperCase())} · ${esc(REGION_NAME[stats.filters.region])} · rank: ${esc(stats.filters.division)} · ${stats.rows.length} heroes · fetched ${esc(timeAgo(s.fetchedAt))}. Blizzard does not publish sample sizes for these tables. <a href="${esc(s.endpoint)}" target="_blank" rel="noopener">Raw data ${icon('i-ext')}</a></p>`;
+  return `<p class="source-note">${s.stale ? `<b class="warn">Showing the last saved copy (${esc(timeAgo(s.fetchedAt))}) — live refresh failed: ${esc(s.error)}.</b> ` : ''}Source: ${esc(s.provider)} · ${esc(QUEUE_NAME[stats.queue])} · ${esc(INPUT_NAME[stats.filters.platform] || stats.filters.platform)} · ${esc(REGION_NAME[stats.filters.region])} · ${esc(stats.filters.division === 'all' || !stats.filters.division ? 'all ranks' : RANK_LABEL(stats.filters.division))} · ${stats.rows.length} heroes · fetched ${esc(timeAgo(s.fetchedAt))}. Blizzard's numbers cover games since the start of the current patch; it does not publish game counts. <a href="${esc(s.endpoint)}" target="_blank" rel="noopener">Raw data ${icon('i-ext')}</a></p>`;
 }
 
 export function toast(msg) {
@@ -164,9 +171,9 @@ export function roleTabs(active) {
 export function filterSelects({ showRank = true } = {}) {
   const sel = (id, label, opts, val) => `<label class="sel"><span>${label}</span><select data-pref="${id}">${opts.map(([k, v]) => `<option value="${k}" ${k === val ? 'selected' : ''}>${v}</option>`).join('')}</select></label>`;
   return [
-    sel('platform', 'Platform', [['pc', 'PC'], ['console', 'Console']], prefs.platform),
+    sel('platform', 'Input', [['pc', 'Mouse & Keyboard'], ['console', 'Controller']], prefs.platform),
     sel('region', 'Region', Object.entries(REGION_NAME), prefs.region),
-    showRank && prefs.queue === 'competitive' ? sel('division', 'Rank', [['', 'All ranks'], ...['bronze', 'silver', 'gold', 'platinum', 'emerald', 'diamond', 'master', 'grandmaster'].map(d => [d, d[0].toUpperCase() + d.slice(1)])], prefs.division) : '',
+    showRank && prefs.queue === 'competitive' ? sel('division', 'Rank', [['', 'All ranks'], ...['bronze', 'silver', 'gold', 'platinum', 'emerald', 'diamond', 'master', 'grandmaster'].map(d => [d, RANK_LABEL(d)])], prefs.division) : '',
   ].join('');
 }
 export function openQueueUnavailable(reason) {

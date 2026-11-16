@@ -1,4 +1,4 @@
-import { favorites, relay, safeLink } from '../lib.js';
+import { favorites, relay, safeLink , INPUT_NAME, INPUT_SHORT, RANK_LABEL, RANK_SHORT } from '../lib.js';
 import { $, $$, esc, pct, api, prefs, setPref, statsPath, qs, heroInfo, heroPortrait, heroArt, heroCutout, hasCutout, mapImage, getManifest, icon, roleIcon, badge, errorBox, loadingBox, emptyBox, fmtDate, timeAgo, ROLE_NAME, QUEUE_NAME, QUEUE_SHORT, REGION_NAME, sourceNote, openQueueUnavailable, toast } from '../lib.js';
 import { heroes as loadHeroes, maps as loadMaps, news as loadNews, go } from '../app.js';
 import { scatter, trend, legend, ring } from '../charts.js';
@@ -33,7 +33,7 @@ export async function render({ main, signal }) {
       <div class="mode-bar comp"><h2>${icon('i-laurel')}Competitive</h2><div id="queueTabs"></div></div>
       <div class="mode-bar stad"><h2>${icon('i-stadium')}Stadium</h2>
         <div class="mode-tools">
-          <label class="sel"><span>Platform</span><select data-pref="platform"><option value="pc">PC</option><option value="console">Console</option></select></label>
+          <label class="sel"><span>Input</span><select data-pref="platform"><option value="pc">Mouse &amp; Keyboard</option><option value="console">Controller</option></select></label>
           <label class="sel"><span>Region</span><select data-pref="region">${Object.entries(REGION_NAME).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}</select></label>
         </div></div>
     </div>
@@ -52,10 +52,10 @@ export async function render({ main, signal }) {
     <div class="promo-row">
       <a class="promo compare" href="#/competitive?view=compare">
         <span class="promo-ic">${icon('i-laurel')}</span>
-        <div><h3>Queue comparison</h3><p>Role Queue vs Quick Play — the same heroes, side by side, each from its own dataset.</p></div>
+        <div><h3>Queue comparison</h3><p>Competitive vs Quick Play (both Role Queue) — the same heroes, side by side, each from its own dataset.</p></div>
         <span class="duo"><span class="duo-a">${hasCutout('tracer') ? heroCutout('tracer', 'duo-cut', 300) : heroPortrait('tracer', 'duo-img')}<b>Role Queue</b></span><i>VS</i><span class="duo-b">${hasCutout('zarya') ? heroCutout('zarya', 'duo-cut', 300) : heroPortrait('zarya', 'duo-img')}<b>Quick Play</b></span></span>
       </a>
-      <a class="promo stadium" href="#/stadium"><span class="promo-ic">${icon('i-stadium')}</span><div><h3>Stadium insights</h3><p>Every hero's Stadium powers and items. Draft, share and export a build.</p></div><span class="promo-art">${heroCutout('junker-queen', 'promo-cut', 300)}</span>${icon('i-arrow', 'ic go')}</a>
+      <a class="promo stadium" href="#/stadium"><span class="promo-ic">${icon('i-stadium')}</span><div><h3>Stadium insights</h3><p>Every hero's official Stadium powers. Pick 4, then share or export the build.</p></div><span class="promo-art">${heroCutout('junker-queen', 'promo-cut', 300)}</span>${icon('i-arrow', 'ic go')}</a>
       <section class="promo quick" aria-label="Quick player lookup">
         <span class="promo-ic">${icon('i-user')}</span>
         <form id="quickPlayer"><h3>Player lookup</h3><div class="inline"><input placeholder="BattleTag e.g. Name-1234" aria-label="BattleTag" required><button class="btn sm primary">Search</button></div><div id="quickOut" class="quick-out">${favorites().players.slice(0, 3).map(p => `<a class="qp" href="#/players/${encodeURIComponent(p.id)}">${p.avatar ? `<img src="${esc(relay(p.avatar))}" alt="" width="28" height="28">` : ''}<b>★ ${esc(p.name)}</b><small>favorite</small></a>`).join('')}</div></form>
@@ -123,7 +123,7 @@ function roleTabs() {
 
 function trendDelta(hero) {
   const s = trendData?.snapshots;
-  if (!s || s.length < 2) return null;
+  if (!s || s.length < 3) return null;
   const a = s[0].rows.find(r => r.hero === hero)?.pickrate, b = s[s.length - 1].rows.find(r => r.hero === hero)?.pickrate;
   return a == null || b == null ? null : b - a;
 }
@@ -136,9 +136,9 @@ function renderMeta() {
   const rows = stats.rows.filter(r => !state.role || heroInfo(r.hero).role === state.role).sort((a, b) => b.pickrate - a.pickrate).slice(0, 8);
   const maxPick = Math.max(...stats.rows.map(r => r.pickrate), 1);
   const bar = (v, max, cls) => `<span class="meter ${cls}"><i style="width:${Math.max(2, Math.min(100, (v / max) * 100))}%"></i></span>`;
-  const hasTrend = (trendData?.snapshots?.length || 0) >= 2;
-  el.innerHTML = metaHead() + `<div class="table meta-table" role="table" aria-label="Top heroes by pick rate">
-    <div class="tr th" role="row"><span>#</span><span>Hero</span><span>Pick rate</span><span>Win rate</span><span>${stats.hasBanRate ? 'Ban rate' : 'Ban rate'}</span><span title="Change in pick rate since the first stored daily snapshot">Trend</span></div>
+  const hasTrend = (trendData?.snapshots?.length || 0) >= 3;
+  el.innerHTML = metaHead() + `<div class="table meta-table ${hasTrend ? '' : 'no-trend'} ${stats.hasBanRate ? '' : 'no-ban'}" role="table" aria-label="Top heroes by pick rate">
+    <div class="tr th" role="row"><span>#</span><span>Hero</span><span>Pick rate</span><span>Win rate</span>${stats.hasBanRate ? '<span>Ban rate</span>' : ''}${hasTrend ? `<span title="Change in pick rate since ${hasTrend ? esc(fmtDate(trendData.days[0])) : 'the first saved day'}">Since ${esc(fmtDate(trendData.days[0]).replace(/, \d{4}$/, ''))}</span>` : ''}</div>
     ${rows.map((r, i) => {
       const h = heroInfo(r.hero); const d = trendDelta(r.hero);
       return `<div class="tr hero-row" role="row" tabindex="0" data-hero="${esc(r.hero)}" aria-label="${esc(h.name)}: pick ${pct(r.pickrate)}, win ${pct(r.winrate)}">
@@ -146,16 +146,16 @@ function renderMeta() {
         <span class="who">${heroPortrait(r.hero, 'portrait')}<span><b>${esc(h.name)}</b><small>${roleIcon(h.role)}${esc(ROLE_NAME[h.role] || '')}</small></span></span>
         <span class="num"><b>${pct(r.pickrate)}</b>${bar(r.pickrate, maxPick, 'cyan')}</span>
         <span class="num"><b>${pct(r.winrate)}</b>${bar(r.winrate - 40, 20, 'green')}</span>
-        <span class="num">${r.banrate != null ? `<b>${pct(r.banrate)}</b>${bar(r.banrate, 30, 'pink')}` : '<span class="na" title="The official table does not include ban rates for this filter">n/a</span>'}</span>
-        <span class="trend-cell">${d == null ? `<span class="na" title="${hasTrend ? 'Not in earliest snapshot' : 'Trend appears once two daily snapshots are stored'}">—</span>` : d > 0.05 ? `<span class="up">▲ ${d.toFixed(1)}</span>` : d < -0.05 ? `<span class="down">▼ ${Math.abs(d).toFixed(1)}</span>` : '<span class="flat">＝</span>'}</span>
+        ${stats.hasBanRate ? `<span class="num">${r.banrate != null ? `<b>${pct(r.banrate)}</b>${bar(r.banrate, 30, 'pink')}` : '<span class="na" title="No ban rate for this hero in the official table">—</span>'}</span>` : ''}
+        ${hasTrend ? `<span class="trend-cell">${d == null ? '<span class="na" title="Not in the earliest saved day">—</span>' : d > 0.05 ? `<span class="up">▲ ${d.toFixed(1)}</span>` : d < -0.05 ? `<span class="down">▼ ${Math.abs(d).toFixed(1)}</span>` : '<span class="flat">＝</span>'}</span>` : ''}
       </div>`;
     }).join('')}
-  </div><footer class="panel-foot"><span class="muted">${esc(REGION_NAME[prefs.region])} · ${prefs.platform.toUpperCase()}${prefs.queue === 'competitive' && prefs.division ? ' · ' + esc(prefs.division) : ''} · official Blizzard rates</span><a href="#/competitive?queue=${prefs.queue}">View full hero meta ${icon('i-arrow')}</a></footer>`;
+  </div><footer class="panel-foot"><span class="muted">${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])}${prefs.queue === 'competitive' && prefs.division ? ' · ' + esc(prefs.division) : ''} · official Blizzard rates</span><a href="#/competitive?queue=${prefs.queue}">View full hero meta ${icon('i-arrow')}</a></footer>`;
 }
 
 function renderKpi() {
   const el = $('#kpiComp');
-  const head = `<div class="kpi-emblem">${icon('i-laurel')}</div><div class="kpi-title"><h2>Competitive overview <small>— ${esc(QUEUE_SHORT[prefs.queue])}</small></h2><p>${esc(REGION_NAME[prefs.region])} · ${prefs.platform.toUpperCase()}${stats?.source ? ' · updated ' + esc(timeAgo(stats.source.fetchedAt)) : ''}</p></div>`;
+  const head = `<div class="kpi-emblem">${icon('i-laurel')}</div><div class="kpi-title"><h2>Competitive overview <small>— ${esc(QUEUE_SHORT[prefs.queue])}</small></h2><p>${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])}${stats?.source ? ' · updated ' + esc(timeAgo(stats.source.fetchedAt)) : ''}</p></div>`;
   if (statsErr) { el.innerHTML = `<div class="kpi-in">${head}<p class="kpi-msg">Live statistics are unavailable: ${esc(statsErr.message)}</p></div>`; return; }
   if (!stats) return;
   if (!stats.available) { el.innerHTML = `<div class="kpi-in">${head}<p class="kpi-msg">No verified Open Queue dataset exists. Nothing is shown rather than borrowing Role Queue numbers.</p></div>`; return; }
@@ -164,32 +164,33 @@ function renderKpi() {
   const best = [...rows].filter(r => r.pickrate >= 1).sort((a, b) => b.winrate - a.winrate)[0] || top;
   const banned = stats.hasBanRate ? [...rows].sort((a, b) => (b.banrate ?? -1) - (a.banrate ?? -1))[0] : null;
   const above = rows.filter(r => r.winrate > 50).length;
+  const worst = [...rows].sort((a, b) => a.winrate - b.winrate)[0];
   const g = (label, val, max, color, who, shown = pct(val)) => `<div class="gauge">${ring(val, max, color)}<div><small>${label}</small><b>${shown}</b><em>${who}</em></div></div>`;
   const lead = `<div class="kpi-lead">${heroPortrait(top.hero, 'kpi-portrait')}<div><small>Most picked</small><b>${esc(heroInfo(top.hero).name)}</b><em>${pct(top.pickrate)} pick rate</em></div></div>`;
   el.innerHTML = `<div class="kpi-in">${head.replace('</p></div>', '</p>' + lead + '</div>')}
     <div class="gauges">
       ${g('Top win rate', best.winrate, 100, '#69dca9', esc(heroInfo(best.hero).name) + (best.pickrate < 2 ? ' · low pick' : ''))}
       ${banned ? g('Top ban rate', banned.banrate, 100, '#fa68ae', esc(heroInfo(banned.hero).name)) : g('Above 50% win', above, rows.length, '#fa68ae', `${above} of ${rows.length} heroes`, `${above}/${rows.length}`)}
-      ${g('Top pick rate', top.pickrate, Math.max(30, top.pickrate), '#56d9fb', esc(heroInfo(top.hero).name))}
+      ${g('Lowest win rate', worst.winrate, 100, '#56d9fb', esc(heroInfo(worst.hero).name) + (worst.pickrate < 2 ? ' · low pick' : ''))}
     </div></div>`;
 }
 
 function renderChart() {
   const el = $('#chartPanel');
   const days = trendData?.snapshots?.length || 0;
-  const mode = state.chart === 'auto' ? (days >= 2 ? 'trend' : 'snapshot') : state.chart;
+  const mode = state.chart === 'auto' ? (days >= 3 ? 'trend' : 'snapshot') : state.chart;
   const tabs = `<div class="chips tiny"><button class="chip ${mode === 'snapshot' ? 'on' : ''}" data-chart="snapshot">Snapshot</button><button class="chip ${mode === 'trend' ? 'on' : ''}" data-chart="trend">Trend</button></div>`;
   const head = t => `<header class="panel-head"><h2>${icon('i-chart')}${t}</h2>${tabs}</header>`;
   if (statsErr) { el.innerHTML = head('Meta trend') + errorBox(statsErr); return; }
   if (!stats) return;
   if (!stats.available) { el.innerHTML = head('Meta trend') + `<div class="state unavailable small"><b>No Open Queue data</b><p>Charts need a verified dataset.</p></div>`; return; }
   if (mode === 'trend') {
-    if (days < 2) {
+    if (days < 3) {
       el.innerHTML = head('Meta trend') + `<div class="state empty small"><b>Collecting daily snapshots</b><p>${days ? `First snapshot stored ${esc(fmtDate(trendData.days[0]))}.` : 'A snapshot is stored the first time each day the stats load.'} The trend line appears from the second day — no history is invented.</p></div>`;
       return;
     }
     const top = [...stats.rows].sort((a, b) => b.pickrate - a.pickrate).slice(0, 3).map(r => r.hero);
-    el.innerHTML = head(`Meta trend <small>— last ${days} days · pick rate</small>`) + `<div class="chart-wrap">${trend(trendData.snapshots, top)}</div>`;
+    el.innerHTML = head(`Meta trend <small>— pick rate on ${days} saved days since ${esc(fmtDate(trendData.days[0]))}</small>`) + `<div class="chart-wrap">${trend(trendData.snapshots, top)}</div>`;
     return;
   }
   el.innerHTML = head('Meta snapshot <small>— pick vs win</small>') + `<div class="chart-wrap">${scatter(stats.rows)}${legend()}</div>`;
@@ -219,16 +220,16 @@ async function loadNewsPanels() {
 
 async function loadStadium() {
   const el = $('#kpiStad');
-  const head = `<div class="kpi-emblem stad">${icon('i-stadium')}</div><div class="kpi-title"><h2>Stadium overview</h2><p>Hero powers & items · build lab</p></div>`;
+  const head = `<div class="kpi-emblem stad">${icon('i-stadium')}</div><div class="kpi-title"><h2>Stadium overview</h2><p>Official hero powers · build lab</p></div>`;
   let count = null, featured = null, powers = null;
   try { const s = await api('/api/heroes?gamemode=stadium', { ttl: 3600_000 }); if (s.data) { count = s.data.length; featured = s.data.find(h => h.key === 'tracer')?.key || s.data[0]?.key; } } catch { /* optional */ }
   featured = featured || 'tracer';
   try { const d = await api('/api/heroes/' + featured, { ttl: 3600_000 }); powers = d.data.stadium; } catch { /* optional */ }
   const h = heroInfo(featured);
-  const lead = `<div class="kpi-lead small">${heroPortrait(featured, 'kpi-portrait')}<div><small>Build win rates</small><b class="na-b">Not published</b><em>no verified source</em></div></div>`;
+  const lead = `<div class="kpi-lead small">${heroPortrait(featured, 'kpi-portrait')}<div><small>Featured hero</small><b>${esc(h.name)}</b><em>Stadium powers</em></div></div>`;
   el.innerHTML = `<div class="kpi-in">${head.replace('</p></div>', '</p>' + lead + '</div>')}
     <div class="kpi-stat"><small>Stadium heroes</small><b>${count ?? '—'}</b><em>${count ? 'eligible roster' : 'roster filter unavailable'}</em></div>
-    <div class="kpi-stat"><small>${esc(h.name)} powers</small><b>${powers?.powers?.length || '—'}</b><em>${powers?.items?.length ? powers.items.length + ' hero items' : 'from hero detail'}</em></div>
+    <div class="kpi-stat"><small>${esc(h.name)} powers</small><b>${powers?.powers?.length || '—'}</b><em>official powers</em></div>
     <a class="btn sm purple" href="#/stadium/${esc(featured)}">Open lab ${icon('i-arrow')}</a></div>`;
 }
 
@@ -284,7 +285,7 @@ async function renderMap() {
       <dt>Mode</dt><dd>${esc(modeName)}</dd>
       <dt>Most-picked hero here</dt><dd class="hero-dd">${heroPortrait(rows[0].hero, 'mini')}${esc(heroInfo(rows[0].hero).name)} <b>${pct(rows[0].pickrate)}</b></dd>
       <dt>Best win rate here</dt><dd class="hero-dd">${heroPortrait(best.hero, 'mini')}${esc(heroInfo(best.hero).name)} <b>${pct(best.winrate)}</b></dd>
-    </dl><small class="muted">${esc(QUEUE_SHORT[state.mapQueue])} · ${esc(REGION_NAME[prefs.region])} · ${prefs.platform.toUpperCase()} · all ranks</small>`;
+    </dl><small class="muted">${esc(QUEUE_SHORT[state.mapQueue])} · ${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])} · all ranks</small>`;
   } catch (e) {
     facts.innerHTML = `<dl><dt>Mode</dt><dd>${esc(modeName)}</dd></dl><p class="muted small">Map-specific hero rates unavailable: ${esc(e.message)}</p>`;
   }

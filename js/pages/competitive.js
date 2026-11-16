@@ -1,4 +1,4 @@
-import { $, esc, pct, api, prefs, setPref, statsPath, qs, heroInfo, heroPortrait, icon, roleIcon, roleTabs, errorBox, loadingBox, emptyBox, ROLE_NAME, QUEUE_NAME, QUEUE_SHORT, REGION_NAME, queueTabs, filterSelects, sourceNote, openQueueUnavailable, DIVISIONS, cap, fmtDate, timeAgo, safeLink } from '../lib.js';
+import { $, esc, pct, api, prefs, setPref, statsPath, qs, heroInfo, heroPortrait, icon, roleIcon, roleTabs, errorBox, loadingBox, emptyBox, ROLE_NAME, QUEUE_NAME, QUEUE_SHORT, REGION_NAME, queueTabs, filterSelects, sourceNote, openQueueUnavailable, DIVISIONS, cap, fmtDate, timeAgo, safeLink , INPUT_NAME, INPUT_SHORT, RANK_LABEL, RANK_SHORT } from '../lib.js';
 import { news as loadNews } from '../app.js';
 import { heroes as loadHeroes, go } from '../app.js';
 import { scatter, legend } from '../charts.js';
@@ -9,12 +9,12 @@ export async function render({ main, route, signal }) {
   const q = route.query.get('queue');
   if (['competitive', 'quickplay'].includes(q)) setPref('queue', q);
   const patchOff = !!document.querySelector('meta[name=overscope-patch-impact][content=off]');
-  const views = [['table', 'Rankings'], ['compare', 'Role Queue vs Quick Play'], ['ranks', 'Meta by rank'], ...(patchOff ? [] : [['patch', 'Patch impact']])];
+  const views = [['table', 'Rankings'], ['compare', 'Competitive vs Quick Play'], ['ranks', 'Meta by rank'], ...(patchOff ? [] : [['patch', 'Patch impact']])];
   const view = views.some(([k]) => k !== 'table' && k === route.query.get('view')) ? route.query.get('view') : 'table';
   const draw = () => (view === 'compare' ? drawCompare() : view === 'ranks' ? drawRanks() : view === 'patch' ? drawPatch(route.query.get('date')) : drawTable());
   await loadHeroes().catch(() => {});
   main.innerHTML = `<div class="page">
-    <header class="page-top"><p class="eyebrow">Competitive · game modes</p><h1>Queue-specific <em>intelligence</em></h1><p>Official Blizzard hero pick, win and ban rates. Every queue is its own dataset — switching queue re-queries the source.</p></header>
+    <header class="page-top"><p class="eyebrow">Competitive · game modes</p><h1>Queue-specific <em>intelligence</em></h1><p>Blizzard's official hero pick, win and ban rates for Role Queue (Competitive and Quick Play), covering games since the start of the current patch. Every queue is its own dataset — switching queue re-queries the source.</p></header>
     <div class="toolbar"><div class="seg big" role="tablist">${views.map(([k, v]) => `<button class="${view === k ? 'on' : ''}" data-view="${k}">${v}</button>`).join('')}</div></div>
     <div id="compBody"></div></div>`;
   main.addEventListener('click', e => {
@@ -49,22 +49,22 @@ async function drawTable() {
   const maxPick = Math.max(...s.rows.map(r => r.pickrate), 1);
   const th = (k, label) => `<button class="sort ${ui.sort === k ? 'on' : ''}" data-sort="${k}" aria-label="Sort by ${label}">${label}${ui.sort === k ? (ui.dir < 0 ? ' ▾' : ' ▴') : ''}</button>`;
   $('#rankPanel').innerHTML = `<header class="panel-head"><h2>${icon('i-laurel')}Hero rankings<small>— ${esc(QUEUE_NAME[prefs.queue])}</small></h2><span class="badge live">${s.source.stale ? 'SAVED COPY' : 'LIVE'}</span></header>
-    <div class="table rank-table" role="table"><div class="tr th" role="row"><span>#</span>${th('hero', 'Hero')}${th('pickrate', 'Pick rate')}${th('winrate', 'Win rate')}${s.hasBanRate ? th('banrate', 'Ban rate') : '<span title="Not included in the official table for this filter">Ban rate</span>'}</div>
+    <div class="table rank-table${s.hasBanRate ? '' : ' no-ban'}" role="table"><div class="tr th" role="row"><span>#</span>${th('hero', 'Hero')}${th('pickrate', 'Pick rate')}${th('winrate', 'Win rate')}${s.hasBanRate ? th('banrate', 'Ban rate') : ''}</div>
     ${rows.map((r, i) => { const h = heroInfo(r.hero); return `<div class="tr hero-row" role="row" tabindex="0" data-hero="${esc(r.hero)}"><span class="rank">${i + 1}</span><span class="who">${heroPortrait(r.hero, 'portrait')}<span><b>${esc(h.name)}</b><small>${roleIcon(h.role)}${esc(ROLE_NAME[h.role] || '')}</small></span></span>
       <span class="num"><b>${pct(r.pickrate)}</b><span class="meter cyan"><i style="width:${(r.pickrate / maxPick) * 100}%"></i></span></span>
       <span class="num"><b class="${r.winrate >= 52 ? 'good' : r.winrate <= 48 ? 'bad' : ''}">${pct(r.winrate)}</b><span class="meter green"><i style="width:${Math.max(2, Math.min(100, (r.winrate - 40) * 5))}%"></i></span></span>
-      <span class="num">${r.banrate != null ? `<b>${pct(r.banrate)}</b><span class="meter pink"><i style="width:${Math.min(100, r.banrate * 3)}%"></i></span>` : '<span class="na">n/a</span>'}</span></div>`; }).join('')}</div>
+      ${s.hasBanRate ? `<span class="num">${r.banrate != null ? `<b>${pct(r.banrate)}</b><span class="meter pink"><i style="width:${Math.min(100, r.banrate * 3)}%"></i></span>` : '—'}</span>` : ''}</div>`; }).join('')}</div>
     ${sourceNote(s)}`;
   $('#scatterPanel').innerHTML = `<header class="panel-head"><h2>${icon('i-chart')}Pick vs win</h2></header><div class="chart-wrap">${scatter(rows.length ? rows : s.rows, { height: 240 })}${legend()}</div>`;
 }
 
 function explain() {
   return `<div class="prose"><h3>What these numbers mean</h3>
-  <p><b>Pick rate</b> — how often a hero is selected within Blizzard's filtered sample for this queue, platform, region and rank.</p>
-  <p><b>Win rate</b> — share of those games the hero's team won.</p>
+  <p><b>Pick rate</b> — Blizzard's measure of how much a hero is played: that hero's share of total playtime across all heroes, for this queue, input, region and rank.</p>
+  <p><b>Win rate</b> — share of games won while playing the hero (Blizzard's unmirrored win rate).</p>
   <p><b>Ban rate</b> — shown only when the official table includes it.</p>
   <p><b>Not the same as map popularity.</b> How often a <i>map</i> is played is a different metric that Blizzard does not publish. See <a href="#/maps">Maps</a>.</p>
-  <p class="muted">Blizzard does not publish sample sizes or date ranges for these tables; OverScope shows when each copy was fetched.</p></div>`;
+  <p class="muted">Blizzard's numbers cover games since the start of the current patch (it can take up to a day to refresh after a patch). Blizzard does not publish game counts; OverScope shows when each copy was fetched.</p></div>`;
 }
 
 async function drawCompare() {
@@ -76,10 +76,10 @@ async function drawCompare() {
     const A = new Map(a.rows.map(r => [r.hero, r])), B = new Map(b.rows.map(r => [r.hero, r]));
     keys.sort((x, y) => (A.get(y)?.pickrate ?? 0) - (A.get(x)?.pickrate ?? 0));
     const diff = (x, y) => (x == null || y == null) ? '' : `<span class="${y - x > 0.05 ? 'up' : y - x < -0.05 ? 'down' : 'flat'}">${y - x > 0 ? '+' : ''}${(y - x).toFixed(1)}</span>`;
-    $('#cmp').innerHTML = `<header class="panel-head"><h2>${icon('i-bars')}Role Queue vs Quick Play</h2><small class="muted">${esc(REGION_NAME[prefs.region])} · ${prefs.platform.toUpperCase()} · all ranks</small></header>
-    <div class="table cmp-table" role="table"><div class="tr th"><span>Hero</span><span>RQ pick</span><span>QP pick</span><span>Δ pick</span><span>RQ win</span><span>QP win</span><span>Δ win</span></div>
+    $('#cmp').innerHTML = `<header class="panel-head"><h2>${icon('i-bars')}Competitive vs Quick Play</h2><small class="muted">${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])} · all ranks</small></header>
+    <div class="table cmp-table" role="table"><div class="tr th"><span>Hero</span><span>Comp pick</span><span>QP pick</span><span>Δ pick</span><span>Comp win</span><span>QP win</span><span>Δ win</span></div>
     ${keys.map(k => { const x = A.get(k), y = B.get(k), h = heroInfo(k); return `<div class="tr hero-row" tabindex="0" data-hero="${esc(k)}"><span class="who">${heroPortrait(k, 'portrait')}<span><b>${esc(h.name)}</b><small>${roleIcon(h.role)}${esc(ROLE_NAME[h.role] || '')}</small></span></span><span>${pct(x?.pickrate)}</span><span>${pct(y?.pickrate)}</span><span>${diff(x?.pickrate, y?.pickrate)}</span><span>${pct(x?.winrate)}</span><span>${pct(y?.winrate)}</span><span>${diff(x?.winrate, y?.winrate)}</span></div>`; }).join('')}</div>
-    <p class="source-note">Two separate official datasets (gamemode=competitive and gamemode=quickplay) fetched independently. Δ = Quick Play minus Role Queue, in percentage points.</p>`;
+    <p class="source-note">Two separate official datasets (gamemode=competitive and gamemode=quickplay) fetched independently. Δ = Quick Play minus Competitive, in percentage points. Both are Role Queue.</p>`;
   } catch (e) { $('#cmp').innerHTML = errorBox(e); }
 }
 
@@ -102,11 +102,11 @@ async function drawRanks() {
   // sequential, single hue: low = dark navy, high = bright cyan
   const cell = v => { if (v == null) return '<span class="hm na">—</span>'; const t = hi === lo ? 0.5 : (v - lo) / (hi - lo); return `<span class="hm" style="--t:${t.toFixed(3)}" data-tip="${pct(v)}"><b class="${t > 0.55 ? 'dark' : ''}">${v.toFixed(1)}</b></span>`; };
   const label = { pickrate: 'pick rate', winrate: 'win rate', banrate: 'ban rate' }[ui.metric];
-  $('#rankHeat').innerHTML = `<header class="panel-head"><h2>${icon('i-laurel')}Meta by rank<small>— ${label}, Competitive Role Queue</small></h2><small class="muted">${esc(REGION_NAME[prefs.region])} · ${prefs.platform.toUpperCase()} · fetched ${esc(timeAgo(d.fetchedAt))}</small></header>
-    <div class="scroll-x"><div class="heat" style="--cols:${divs.length}"><span class="hh">Hero</span>${divs.map(x => `<span class="hh">${cap(x)}</span>`).join('')}
+  $('#rankHeat').innerHTML = `<header class="panel-head"><h2>${icon('i-laurel')}Meta by rank<small>— ${label}, Competitive Role Queue</small></h2><small class="muted">${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])} · ${d.saved ? 'saved' : 'fetched'} ${esc(timeAgo(d.fetchedAt))}</small></header>
+    <div class="scroll-x"><div class="heat" style="--cols:${divs.length}"><span class="hh">Hero</span>${divs.map(x => `<span class="hh">${esc(RANK_SHORT(x))}</span>`).join('')}
     ${heroes.map(k => `<span class="who hero-row" data-hero="${esc(k)}" tabindex="0">${heroPortrait(k, 'portrait')}<b>${esc(heroInfo(k).name)}</b></span>${divs.map(x => cell(map[x].get(k)?.[ui.metric])).join('')}`).join('')}</div></div>
     <div class="heat-legend"><span>${lo.toFixed(1)}%</span><i></i><span>${hi.toFixed(1)}%</span><small>Darker = lower, brighter = higher. Numbers in every cell.</small></div>
-    <p class="source-note">One official table per rank (competitive_division=bronze … grandmaster) from Blizzard via OverFast. Blizzard does not publish a separate Champion table. Sorted by the average across ranks. Blizzard does not publish how many games each rank's table covers.</p>`;
+    <p class="source-note">One official table per rank from Blizzard via OverFast (saved once a day). Blizzard's top table covers Grandmaster and Champion together. Sorted by the average across ranks. Blizzard does not publish how many games each rank's table covers.</p>`;
 }
 
 // ---------- Patch impact: stored snapshots before vs after a patch ----------
@@ -127,7 +127,7 @@ async function drawPatch(dateParam) {
   const snaps = t.snapshots || [];
   const before = [...snaps].reverse().find(s => s.day < date);
   const after = [...snaps].reverse().find(s => s.day > date);
-  const head = `<header class="panel-head"><h2>${icon('i-clock')}Patch impact<small>— ${esc(fmtDate(date))}</small></h2><small class="muted">${esc(QUEUE_SHORT[ui.patchQueue])} · ${esc(REGION_NAME[prefs.region])} · ${prefs.platform.toUpperCase()}</small></header>`;
+  const head = `<header class="panel-head"><h2>${icon('i-clock')}Patch impact<small>— ${esc(fmtDate(date))}</small></h2><small class="muted">${esc(QUEUE_SHORT[ui.patchQueue])} · ${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])}</small></header>`;
   if (!before || !after) {
     $('#patchOut').innerHTML = head + `<div class="state empty"><b>Not enough history for this patch yet</b><p>Patch impact compares the official rates OverScope saved <b>before</b> ${esc(fmtDate(date))} with the latest copy saved <b>after</b> it. ${snaps.length ? `Saved copies so far: ${esc(snaps[0].day)} → ${esc(snaps[snaps.length - 1].day)} (${snaps.length} day${snaps.length === 1 ? '' : 's'}).` : 'No copies are saved for these filters yet.'} ${!before ? 'There is no copy from before this patch, so it cannot be measured. OverScope saves a copy every day, so patches released from now on can be measured.' : 'The "after" copy is saved automatically on the next day.'}</p></div>`;
     return;

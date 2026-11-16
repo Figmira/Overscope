@@ -669,3 +669,12 @@ html[data-page=home] #banner-slot{display:block;height:clamp(260px,18.5vw,300px)
 }
 .deep-plat{margin:10px 14px 0}
 .comp-plat{margin:0 0 12px}
+/* hide columns that have no data instead of filling them with dashes */
+.meta-table.no-trend .tr{grid-template-columns:20px minmax(150px,1.9fr) repeat(3,minmax(58px,1fr))}
+.meta-table.no-ban .tr{grid-template-columns:20px minmax(150px,1.9fr) repeat(2,minmax(58px,1fr)) 40px}
+.meta-table.no-trend.no-ban .tr{grid-template-columns:20px minmax(150px,1.9fr) repeat(2,minmax(58px,1fr))}
+@media (max-width:560px){.meta-table.no-trend .tr,.meta-table.no-ban .tr,.meta-table.no-trend.no-ban .tr{grid-template-columns:16px minmax(110px,1.7fr) repeat(2,minmax(52px,1fr))}}
+@media (max-width:560px){.meta-table.no-trend.no-ban .tr>:last-child{display:revert}}
+.rank-input{margin:4px 14px 0;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+.rank-table.no-ban .tr{grid-template-columns:30px minmax(150px,2fr) repeat(2,minmax(80px,1fr))}
+@media (max-width:560px){.rank-table.no-ban .tr{grid-template-columns:22px minmax(110px,1.6fr) repeat(2,minmax(50px,1fr))}}

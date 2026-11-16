@@ -1,4 +1,4 @@
-import { $, $$, esc, pct, api, prefs, setPref, statsPath, heroInfo, heroPortrait, heroArt, icon, roleIcon, roleTabs, errorBox, loadingBox, emptyBox, relay, ROLE_NAME, QUEUE_SHORT, REGION_NAME, roster, getManifest, filterSelects, isFavHero, toggleFavHero, starBtn, favorites, toast, qs, DIVISIONS, cap, timeAgo } from '../lib.js';
+import { $, $$, esc, pct, api, prefs, setPref, statsPath, heroInfo, heroPortrait, heroArt, icon, roleIcon, roleTabs, errorBox, loadingBox, emptyBox, relay, ROLE_NAME, QUEUE_SHORT, REGION_NAME, roster, getManifest, filterSelects, isFavHero, toggleFavHero, starBtn, favorites, toast, qs, DIVISIONS, cap, timeAgo , INPUT_NAME, INPUT_SHORT, RANK_LABEL, RANK_SHORT } from '../lib.js';
 import { lines, ROLE_COLOR } from '../charts.js';
 import { computeTiers } from '../tiers.js';
 import { heroes as loadHeroes, maps as loadMaps, news, go } from '../app.js';
@@ -94,7 +94,7 @@ async function detail({ main, route, signal }) {
         return `<div class="qstat"><h3>${QUEUE_SHORT[q]}</h3><div><small>Pick</small><b>${pct(r.pickrate)}</b></div><div><small>Win</small><b>${pct(r.winrate)}</b></div>${r.banrate != null ? `<div><small>Ban</small><b>${pct(r.banrate)}</b></div>` : ''}<p class="muted">#${rows.indexOf(r) + 1} of ${rows.length} by pick rate</p></div>`;
       } catch (e) { return `<div class="qstat na"><h3>${QUEUE_SHORT[q]}</h3><p>${esc(e.message)}</p></div>`; }
     }));
-    $('#hdStatGrid').innerHTML = `<div class="qstats">${out.join('')}</div><p class="source-note">Official Blizzard rates via OverFast · ${esc(REGION_NAME[prefs.region])} · ${prefs.platform.toUpperCase()} · all ranks. Each queue comes from its own dataset.</p>`;
+    $('#hdStatGrid').innerHTML = `<div class="qstats">${out.join('')}</div><p class="source-note">Official Blizzard rates via OverFast · ${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])} · all ranks. Each queue comes from its own dataset.</p>`;
   };
   // how this hero does at each rank (8 official tables, saved daily by the GitHub Action)
   const drawRank = async () => {
@@ -106,16 +106,15 @@ async function detail({ main, route, signal }) {
     const divs = DIVISIONS.filter(x => d.divisions[x]?.length);
     const rowAt = x => d.divisions[x].find(r => r.hero === key);
     if (!divs.length || !divs.some(rowAt)) { el.innerHTML = `<header class="panel-head"><h2>${icon('i-chart')}By rank</h2></header>` + emptyBox('No rank data', 'The official rank tables did not include this hero.'); return; }
-    const SHORT = { platinum: 'Plat', grandmaster: 'GM' };
-    const labels = divs.map(x => SHORT[x] || cap(x));
+    const labels = divs.map(x => RANK_SHORT(x));
     const color = ROLE_COLOR[h.role] || '#56d9fb';
     const win = divs.map(x => rowAt(x)?.winrate ?? null), pick = divs.map(x => rowAt(x)?.pickrate ?? null);
     const tiers = divs.map(x => computeTiers(d.divisions[x], k => heroInfo(k).role).find(r => r.hero === key)?.tier || '—');
     const chart = (vals, label, extra) => lines(labels, [{ name: '', color, values: vals }], { width: 520, height: 210, yFmt: v => v.toFixed(1) + '%', aria: `${h.name} ${label} by rank`, xStep: 1, ...extra });
-    el.innerHTML = `<header class="panel-head"><h2>${icon('i-chart')}${esc(h.name)} by rank<small>— Competitive Role Queue</small></h2><small class="muted">${esc(REGION_NAME[prefs.region])} · ${prefs.platform.toUpperCase()} · ${d.saved ? 'saved' : 'fetched'} ${esc(timeAgo(d.fetchedAt))}</small></header>
-      <div class="tier-strip" aria-label="Tier at each rank">${divs.map((x, i) => `<span class="t-${esc(tiers[i])}" title="${esc(cap(x))}: tier ${esc(tiers[i])}"><b>${esc(tiers[i])}</b><small>${esc(cap(x))}</small></span>`).join('')}</div>
+    el.innerHTML = `<header class="panel-head"><h2>${icon('i-chart')}${esc(h.name)} by rank<small>— Competitive Role Queue</small></h2><small class="muted">${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])} · ${d.saved ? 'saved' : 'fetched'} ${esc(timeAgo(d.fetchedAt))}</small></header>
+      <div class="tier-strip" aria-label="Tier at each rank">${divs.map((x, i) => `<span class="t-${esc(tiers[i])}" title="${esc(RANK_LABEL(x))}: tier ${esc(tiers[i])}"><b>${esc(tiers[i])}</b><small>${esc(RANK_SHORT(x))}</small></span>`).join('')}</div>
       <div class="byrank"><div><h3>Win rate</h3>${chart(win, 'win rate', { ref: 50, refLabel: '50%' })}</div><div><h3>Pick rate</h3>${chart(pick, 'pick rate')}</div></div>
-      <p class="source-note">One official Blizzard table per rank, via OverFast. Tiers use the <a href="#/tier-list">tier list method</a> within each rank. Blizzard does not publish a Champion table or game counts.</p>`;
+      <p class="source-note">One official Blizzard table per rank, via OverFast. Tiers use the <a href="#/tier-list">tier list method</a> within each rank. Blizzard's top table covers Grandmaster and Champion together, and it does not publish game counts.</p>`;
   };
   // win/pick rate over time from the daily saved copies, with patch dates marked.
   // Shown only once at least MIN_DAYS days exist for the chosen queue/rank.
@@ -155,12 +154,12 @@ async function detail({ main, route, signal }) {
     const labels = days.map(fmtDay);
     const chart = (vals, label, extra = {}) => lines(labels, [{ name: '', color, values: vals }], { width: 520, height: 210, yFmt: v => v.toFixed(1) + '%', aria: `${h.name} ${label} over time`, marks, ...extra });
     el.hidden = false;
-    el.innerHTML = `<header class="panel-head"><h2>${icon('i-clock')}${esc(h.name)} over time</h2><small class="muted">${esc(REGION_NAME[prefs.region])} · ${prefs.platform.toUpperCase()} · ${days.length} days saved</small></header>
+    el.innerHTML = `<header class="panel-head"><h2>${icon('i-clock')}${esc(h.name)} over time</h2><small class="muted">${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])} · ${days.length} days saved</small></header>
       <div class="toolbar tight">${queues.length > 1 ? `<div class="seg sm">${queues.map(q => `<button class="${q === hist.queue ? 'on' : ''}" data-histq="${q}">${QUEUE_SHORT[q]}</button>`).join('')}</div>` : ''}
-        ${ranks.length ? `<label class="sel"><span>Rank</span><select id="histRank"><option value="all">All ranks</option>${ranks.map(d => `<option value="${d}" ${d === hist.rank ? 'selected' : ''}>${cap(d)}</option>`).join('')}</select></label>` : ''}</div>
+        ${ranks.length ? `<label class="sel"><span>Rank</span><select id="histRank"><option value="all">All ranks</option>${ranks.map(d => `<option value="${d}" ${d === hist.rank ? 'selected' : ''}>${esc(RANK_LABEL(d))}</option>`).join('')}</select></label>` : ''}</div>
       ${delta}
       <div class="byrank"><div><h3>Win rate</h3>${chart(win, 'win rate', { ref: 50, refLabel: '50%' })}</div><div><h3>Pick rate</h3>${chart(pick, 'pick rate')}</div></div>
-      <p class="source-note">One copy of Blizzard's official rates is saved every day (via OverFast); dashed orange lines mark Blizzard patch days. Blizzard's own page only shows the current patch, so this history starts on the day OverScope began saving.</p>`;
+      <p class="source-note">One copy of Blizzard's official rates is saved every day (via OverFast). Each day's numbers cover the patch so far, so lines move gradually and reset when a new patch starts; dashed orange lines mark patch days. Blizzard's own page only shows the current patch, so this history starts on the day OverScope began saving.</p>`;
   };
   drawStats();
   drawRank();
@@ -174,13 +173,17 @@ async function detail({ main, route, signal }) {
 
   // map-specific performance
   let mapsList = [];
-  try { mapsList = (await loadMaps()).data.filter(m => m.gamemodes.some(g => ['control', 'escort', 'hybrid', 'push', 'flashpoint', 'clash'].includes(g))); } catch { /* handled below */ }
+  try {
+    // only maps Blizzard actually publishes hero rates for (others would return nothing)
+    const [all, rated] = await Promise.all([loadMaps(), api('/api/rated-maps').catch(() => [])]);
+    mapsList = all.data.filter(m => rated.length ? rated.includes(m.key) : m.gamemodes.some(g => ['control', 'escort', 'hybrid', 'push'].includes(g)));
+  } catch { /* handled below */ }
   let mapKey = mapsList[0]?.key || '';
   let mq = prefs.queue === 'quickplay' ? 'quickplay' : 'competitive';
   const drawMap = async () => {
     const el = $('#hdMap');
     el.innerHTML = `<header class="panel-head"><h2>${icon('i-map')}Performance by map</h2></header><div class="toolbar tight">
-      <label class="sel"><span>Queue</span><select id="hmQueue"><option value="competitive" ${mq === 'competitive' ? 'selected' : ''}>Role Queue</option><option value="quickplay" ${mq === 'quickplay' ? 'selected' : ''}>Quick Play</option></select></label>
+      <label class="sel"><span>Queue</span><select id="hmQueue"><option value="competitive" ${mq === 'competitive' ? 'selected' : ''}>Competitive</option><option value="quickplay" ${mq === 'quickplay' ? 'selected' : ''}>Quick Play</option></select></label>
       <label class="sel"><span>Map</span><select id="hmMap">${mapsList.map(m => `<option value="${esc(m.key)}" ${m.key === mapKey ? 'selected' : ''}>${esc(m.name)}</option>`).join('')}</select></label></div><div id="hmOut">${loadingBox(2)}</div>`;
     if (!mapKey) { $('#hmOut').innerHTML = emptyBox('Maps unavailable', 'The map list could not be loaded.'); return; }
     try {

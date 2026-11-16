@@ -1,5 +1,5 @@
 // Tier list: heroes graded from Blizzard's official pick and win rates.
-import { $, esc, pct, api, prefs, setPref, statsPath, heroInfo, heroPortrait, icon, roleIcon, roleTabs, errorBox, loadingBox, emptyBox, ROLE_NAME, QUEUE_NAME, REGION_NAME, queueTabs, filterSelects, sourceNote, openQueueUnavailable, cap } from '../lib.js';
+import { $, esc, pct, api, prefs, setPref, statsPath, heroInfo, heroPortrait, icon, roleIcon, roleTabs, errorBox, loadingBox, emptyBox, ROLE_NAME, QUEUE_NAME, REGION_NAME, queueTabs, filterSelects, sourceNote, openQueueUnavailable, cap , INPUT_NAME, INPUT_SHORT, RANK_LABEL, RANK_SHORT } from '../lib.js';
 import { heroes as loadHeroes } from '../app.js';
 import '../charts.js'; // hover tooltips
 import { computeTiers, groupTiers, METHOD } from '../tiers.js';
@@ -36,19 +36,19 @@ async function draw() {
   if (!s.available) { out.innerHTML = openQueueUnavailable(s.reason); $('#tlShare').innerHTML = ''; return; }
   const scored = computeTiers(s.rows, k => heroInfo(k).role);
   if (!scored.length) { out.innerHTML = emptyBox('No data', 'The official table returned no heroes for these filters.'); return; }
-  const rank = prefs.queue === 'competitive' && prefs.division ? cap(prefs.division) : 'All ranks';
+  const rank = prefs.queue === 'competitive' ? (prefs.division ? RANK_LABEL(prefs.division) : 'All ranks') : '';
   const groups = groupTiers(scored).map(g => ({ ...g, heroes: g.heroes.filter(r => !ui.role || r.role === ui.role) }));
   const tile = r => {
     const h = heroInfo(r.hero);
     const tip = `<b>${esc(h.name)}</b> · ${esc(ROLE_NAME[r.role] || '')}<br>Win ${pct(r.winrate)} · Pick ${pct(r.pickrate)}${r.banrate != null ? ` · Ban ${pct(r.banrate)}` : ''}<br>Score ${r.score > 0 ? '+' : ''}${r.score.toFixed(2)} (win edge ${r.winEdge > 0 ? '+' : ''}${r.winEdge.toFixed(2)}, popularity ${r.popularity > 0 ? '+' : ''}${r.popularity.toFixed(2)})`;
     return `<a class="tier-hero role-${esc(r.role)}" href="#/heroes/${esc(r.hero)}" data-tip="${esc(tip)}" aria-label="${esc(h.name)}, ${esc(r.tier)} tier, win rate ${pct(r.winrate)}, pick rate ${pct(r.pickrate)}">${heroPortrait(r.hero, 'portrait')}<span><b>${esc(h.name)}</b><small>${roleIcon(r.role)}${pct(r.winrate)} win · ${pct(r.pickrate)} pick</small></span></a>`;
   };
-  out.innerHTML = `<header class="panel-head"><h2>${icon('i-laurel')}Tier list<small>— ${esc(QUEUE_NAME[prefs.queue])} · ${esc(rank)}</small></h2><small class="muted">${esc(REGION_NAME[prefs.region])} · ${prefs.platform.toUpperCase()}</small></header>
+  out.innerHTML = `<header class="panel-head"><h2>${icon('i-laurel')}Tier list<small>— ${esc(QUEUE_NAME[prefs.queue])}${rank ? ' · ' + esc(rank) : ''}</small></h2><small class="muted">${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])}</small></header>
     <div class="tiers">${groups.map(g => `<div class="tier-row t-${g.tier}"><div class="tier-badge"><b>${g.tier}</b><small>${esc(g.label)}</small></div><div class="tier-heroes">${g.heroes.length ? g.heroes.map(tile).join('') : '<span class="muted">None in this filter</span>'}</div></div>`).join('')}</div>
     ${sourceNote(s)}`;
   // Shareable, Google-visible version (generated daily for PC · Americas · Role Queue)
   const slug = prefs.queue === 'competitive' ? (prefs.division || 'all-ranks') : '';
   $('#tlShare').innerHTML = slug && prefs.platform === 'pc' && prefs.region === 'americas'
     ? `<div class="prose"><h3>Share this tier list</h3><p>A shareable page with a preview card for Discord and X is published every day for this rank.</p><p><a class="btn sm" href="tier-list/${slug === 'all-ranks' ? '' : slug + '/'}">Open shareable page ${icon('i-arrow')}</a></p></div>`
-    : `<div class="prose"><h3>Share this tier list</h3><p class="muted">Shareable pages are published for Role Queue · PC · Americas. Copy this page's address to share the current filters.</p></div>`;
+    : `<div class="prose"><h3>Share this tier list</h3><p class="muted">Shareable pages are published for Competitive · Mouse &amp; Keyboard · Americas. Copy this page's address to share the current filters.</p></div>`;
 }

@@ -1,4 +1,4 @@
-import { $, esc, pct, api, prefs, setPref, statsPath, heroInfo, heroPortrait, mapImage, icon, roleIcon, errorBox, loadingBox, emptyBox, toast, ROLE_NAME, QUEUE_NAME, QUEUE_SHORT, REGION_NAME, queueTabs, openQueueUnavailable } from '../lib.js';
+import { $, esc, pct, api, prefs, setPref, statsPath, heroInfo, heroPortrait, mapImage, icon, roleIcon, errorBox, loadingBox, emptyBox, toast, ROLE_NAME, QUEUE_NAME, QUEUE_SHORT, REGION_NAME, queueTabs, openQueueUnavailable , INPUT_NAME, INPUT_SHORT, RANK_LABEL, RANK_SHORT } from '../lib.js';
 import { heroes as loadHeroes, maps as loadMaps, go } from '../app.js';
 
 const ui = { q: '', mode: '', queue: 'competitive' };
@@ -55,7 +55,7 @@ async function detail({ main, route, signal }, md) {
     <div class="two">
       <section class="panel"><header class="panel-head"><h2>${icon('i-info')}Objective & scoring</h2></header><div class="prose">
         ${official?.description ? `<p class="lede">${esc(official.description)}</p><p class="muted small">Official mode description (Blizzard, via OverFast).</p>` : ''}
-        ${mech ? `<h3>How it is scored</h3><p>${esc(mech.scoring)}</p>
+        ${mech ? `<h3>How it is scored</h3><p>${esc(mech.scoring)}</p><p class="muted small">Summary written by OverScope from Blizzard's published mode rules.</p>
         <div class="phases">${mech.phases.map((p, i) => `<div><span>${String(i + 1).padStart(2, '0')}</span>${esc(p)}</div>`).join('')}</div>
         <h3>${mech.symmetric ? 'Both teams' : 'Attackers'}</h3><p>${esc(mech.attack)}</p>${mech.symmetric ? '' : `<h3>Defenders</h3><p>${esc(mech.defend)}</p>`}`
         : `<p>This map is used in ${esc(m.gamemodes.join(', '))}, which is outside the core competitive modes.</p>`}
@@ -66,11 +66,13 @@ async function detail({ main, route, signal }, md) {
   const drawHeroes = async () => {
     const el = $('#mdHeroes');
     el.innerHTML = `<header class="panel-head"><h2>${icon('i-laurel')}Hero performance on ${esc(m.name)}</h2></header><div class="toolbar tight">${queueTabs(ui.queue)}</div><div id="mdOut">${loadingBox(5)}</div>`;
+    const rated = await api('/api/rated-maps').catch(() => []);
+    if (rated.length && !rated.includes(m.key)) { $('#mdOut').innerHTML = emptyBox('No hero rates for this map', `Blizzard doesn't publish hero rates for ${esc(m.name)}. Its rates cover the Role Queue maps only.`); return; }
     try {
       const s = await api(statsPath({ queue: ui.queue, map: m.key, division: '' }));
       const rows = [...s.rows].sort((a, b) => b.pickrate - a.pickrate).slice(0, 10);
       $('#mdOut').innerHTML = rows.length ? `<div class="table mini-table"><div class="tr th"><span>#</span><span>Hero</span><span>Pick on map</span><span>Win on map</span></div>${rows.map((r, i) => `<div class="tr hero-row" tabindex="0" data-hero="${esc(r.hero)}"><span class="rank">${i + 1}</span><span class="who">${heroPortrait(r.hero, 'portrait')}<span><b>${esc(heroInfo(r.hero).name)}</b><small>${roleIcon(heroInfo(r.hero).role)}${esc(ROLE_NAME[heroInfo(r.hero).role] || '')}</small></span></span><span class="num"><b>${pct(r.pickrate)}</b></span><span class="num"><b>${pct(r.winrate)}</b></span></div>`).join('')}</div>
-        <p class="source-note">Official hero rates <b>while playing on ${esc(m.name)}</b> · ${esc(QUEUE_NAME[ui.queue])} · ${esc(REGION_NAME[prefs.region])} · ${prefs.platform.toUpperCase()} · all ranks · fetched ${esc(new Date(s.source.fetchedAt).toLocaleString())}. These are not map appearance rates.</p>`
+        <p class="source-note">Official hero rates <b>while playing on ${esc(m.name)}</b> · ${esc(QUEUE_NAME[ui.queue])} · ${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])} · all ranks · fetched ${esc(new Date(s.source.fetchedAt).toLocaleString())}. These are not map appearance rates.</p>`
         : emptyBox('No published data for this map', 'The official table has no hero rates for this map with these filters (common for non-competitive maps).');
     } catch (e) { $('#mdOut').innerHTML = errorBox(e); }
   };

@@ -3,17 +3,18 @@ import { OVERFAST } from '../data.js';
 
 const ROWS = [
   ['Hero roster, roles, portraits', 'OverFast API /heroes (reads Blizzard\'s hero gallery)', 'All heroes', 'Live, cached 6 h in your browser', 'Blizzard-wide', 'Portraits load from Blizzard\'s image server'],
-  ['Hero abilities, description, Stadium powers', 'OverFast /heroes/{key}', '—', 'Live, cached 6 h', 'Official text', 'Stadium items only for some heroes'],
-  ['Competitive Role Queue hero pick / win / ban', 'Blizzard hero statistics via OverFast /heroes/stats?gamemode=competitive', 'PC / console · 3 regions · Bronze → Grandmaster', 'Live, cached 30 min', 'Blizzard-wide', 'No sample sizes or date windows are published'],
-  ['Quick Play hero pick / win', 'Same endpoint, gamemode=quickplay', 'PC / console · 3 regions', 'Live, cached 30 min', 'Blizzard-wide', 'No rank filter'],
+  ['Hero abilities, description, Stadium powers', 'OverFast /heroes/{key} (Blizzard hero pages)', 'All heroes', 'Live, cached 6 h', 'Official text', 'Blizzard publishes no Stadium items or build win rates'],
+  ['Competitive hero pick / win / ban', 'Blizzard hero statistics ("Competitive - Role Queue") via OverFast /heroes/stats', 'Mouse & Keyboard / Controller · 3 regions · Bronze → Grandmaster & Champion', 'Live, cached 30 min', 'Blizzard-wide', 'Covers games since the current patch started; no game counts; Grandmaster and Champion are one table'],
+  ['Quick Play hero pick / win', 'Same source ("Quick Play - Role Queue")', 'Mouse & Keyboard / Controller · 3 regions', 'Live, cached 30 min', 'Blizzard-wide', 'No rank filter and no ban rates'],
+  ['Pick rate (definition)', 'Blizzard', '—', '—', '—', 'A hero\'s share of total playtime across all heroes, not a count of matches'],
   ['Competitive Open Queue hero stats', 'None', '—', '—', '—', 'No verified public source, so OverScope does not offer this queue'],
-  ['Hero rates on a specific map', 'OverFast /heroes/stats?map={key}', 'Role Queue & Quick Play', 'Live', 'Blizzard-wide', 'Hero performance on that map — NOT how often the map is played'],
-  ['Meta by rank', 'One official table per division', 'Role Queue', 'Live', 'Blizzard-wide', 'No Champion table is published'],
-  ['Trend lines & patch impact', 'Daily copy of the official tables saved by the site\'s GitHub Action (data/history)', 'All ranks · per queue, platform, region', 'Daily', 'Blizzard-wide public averages', 'Starts from the first Action run; contains no user data'],
+  ['Hero rates on a specific map', 'OverFast /heroes/stats?map={key}', 'Competitive & Quick Play, Role Queue maps only', 'Live', 'Blizzard-wide', 'Hero performance on that map — NOT how often the map is played'],
+  ['Meta by rank, hero-by-rank, tier lists', 'One official table per rank, saved daily by the site\'s GitHub Action (data/ranks)', 'Competitive · all inputs and regions', 'Daily', 'Blizzard-wide', 'Grandmaster and Champion are one table'],
+  ['Hero history & patch impact', 'Daily copy of the official tables saved by the GitHub Action (data/history, data/history-ranks)', 'All ranks and each rank · per queue, input, region', 'Daily', 'Blizzard-wide public averages', 'Starts on the first day saved; each day covers the patch so far; contains no user data'],
   ['News & patch notes', 'Blizzard news + patch-note pages, read by the GitHub Action (data/news.json)', 'Latest items', 'Every 3 h', 'Official', 'Browsers cannot read Blizzard\'s pages directly, so the Action copies the public list'],
-  ['Player profiles, deep dive', 'OverFast /players…', 'Public profiles', 'Live, cached 5 min', 'Single player', 'Private profiles show little or nothing'],
-  ['Your favorites, match log, viewed-profile history', 'This browser (localStorage)', 'This device', 'Instant', 'Personal — never leaves your device', 'Clearing browsing data removes it'],
-  ['Maps, screenshots, modes', 'OverFast /maps and /gamemodes', 'All maps', 'Live, cached 6 h', 'Official', 'Two maps have no working screenshot upstream'],
+  ['Player profiles, deep dive', 'OverFast /players… (Blizzard career profile)', 'Public profiles', 'Live, cached 5 min', 'Single player', 'Private profiles show nothing. Competitive = current season only, Role Queue and Open Queue combined, per input device. Quick Play = lifetime'],
+  ['Your favorites, viewed-profile history', 'This browser (localStorage)', 'This device', 'Instant', 'Personal — never leaves your device', 'Clearing browsing data removes it'],
+  ['Maps, screenshots, modes', 'OverFast /maps and /gamemodes; scoring summaries written by OverScope', 'All maps', 'Live, cached 6 h', 'Official (summaries labelled)', 'Grímsvötn and Neon Junction have no working screenshot upstream'],
 ];
 
 export async function render({ main, signal }) {
