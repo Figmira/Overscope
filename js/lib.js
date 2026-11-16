@@ -83,7 +83,7 @@ export function heroCutout(key, cls = 'cut', width = 1000) {
   if (!a) return '';
   const [x0, y0, x1, y1] = a.bbox || [0, 0, 1, 1];
   const bw = x1 - x0, bh = y1 - y0;
-  return `<span class="cut ${esc(cls)}" style="aspect-ratio:${Math.round(bw * a.width)}/${Math.round(bh * a.height)}"><img class="os-img" src="${esc(sized(a, width))}" alt="${esc(h.name)} official artwork" decoding="async" data-fallback="${esc(h.name)}" data-role="${esc(h.role)}" style="width:${(100 / bw).toFixed(2)}%;left:${(-x0 / bw * 100).toFixed(2)}%;top:${(-y0 / bh * 100).toFixed(2)}%"></span>`;
+  return `<span class="cut ${esc(cls)}" style="aspect-ratio:${Math.round(bw * a.width)}/${Math.round(bh * a.height)}"><img class="os-img" src="${esc(sized(a, width))}" alt="${esc(h.name)} official artwork" decoding="async" draggable="false" data-fallback="${esc(h.name)}" data-role="${esc(h.role)}" style="width:${(100 / bw).toFixed(2)}%;left:${(-x0 / bw * 100).toFixed(2)}%;top:${(-y0 / bh * 100).toFixed(2)}%"></span>`;
 }
 export const hasCutout = key => !!manifest.cutouts?.[key];
 

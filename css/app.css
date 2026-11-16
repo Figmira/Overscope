@@ -651,3 +651,6 @@ html[data-page=home] #banner-slot{display:block;height:clamp(260px,18.5vw,300px)
 .search-go{flex:none;display:grid;place-items:center;width:32px;height:32px;border:0;border-radius:50%;background:linear-gradient(180deg,#ffb02e,#e67a00);color:#1a1000;cursor:pointer}
 .search-go:hover{filter:brightness(1.1)}
 @media (max-width:560px){.search input{font-size:16px}} /* 16px stops iPhone zooming in on tap */
+/* Decorative artwork must never catch taps or long-presses (iPhone "lifts" images on long-press) */
+.cut,.cut img,.side-art,.side-art *,.banner-bg,.banner-bg img,.hd-art,.st-art{pointer-events:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+@media (max-width:860px){.side-art{display:none}} /* phone menu: no background art, links only */

@@ -72,7 +72,8 @@ async function boot() {
   setRoster(Object.entries(getManifest().heroes).map(([key, v]) => ({ key, name: v.name, role: v.role })));
   heroes().catch(() => {});
   // sidebar artwork: a silhouette of the featured hero (official art, tinted)
-  $('#sideArt').innerHTML = heroCutout('sojourn', 'side-cut', 400) || heroCutout('tracer', 'side-cut', 400);
+  // decorative only, and skipped on phones (the menu there is links only)
+  if (matchMedia('(min-width: 861px)').matches) $('#sideArt').innerHTML = heroCutout('sojourn', 'side-cut', 400) || heroCutout('tracer', 'side-cut', 400);
 
   $('#menuBtn').addEventListener('click', () => {
     const open = $('#sidebar').classList.toggle('open');
