@@ -278,18 +278,34 @@ export async function playerProfile(rawId) {
     roles: Object.fromEntries(Object.entries(d.roles || {}).map(([k, v]) => [k, normaliseBlock(v)])),
     heroes: Object.entries(d.heroes || {}).map(([k, v]) => ({ hero: k, ...normaliseBlock(v) })).filter(h => h.timePlayed >= 60).sort((a, b) => b.timePlayed - a.timePlayed), // under a minute = no real data
   });
-  // Quick Play: lifetime, so both platforms together is correct.
+  // Blizzard keeps every stat per platform, exactly like the in-game and website career pages,
+  // so both modes are loaded per platform and never added together.
+  // Win rates use Blizzard's own "Win Percentage" for each hero (from the career page), not wins ÷ games.
   // Competitive: Blizzard keeps the LAST season played on each platform, which can be years old
   // (e.g. PC from an Overwatch 1 season). Only platforms with a current-season record are used.
+  const load = (mode, pl) => Promise.all([
+    getJSON(of(`/players/${encodeURIComponent(id)}/stats/summary`, { gamemode: mode, platform: pl }), 5 * 60_000),
+    getJSON(of(`/players/${encodeURIComponent(id)}/stats/career`, { gamemode: mode, platform: pl }), 5 * 60_000).catch(() => null),
+  ]).then(([r, c]) => {
+    const b = { ...block(r.data || {}), platform: pl };
+    const career = c?.data || {};
+    for (const h of b.heroes) {
+      const wp = career[h.hero]?.game?.win_percentage;
+      if (Number.isFinite(wp) && h.gamesPlayed) { h.winrate = wp; h.winrateSource = 'blizzard'; }
+    }
+    return b;
+  }, e => ({ error: e.message, status: e.status, platform: pl }));
   p.compPlatforms = PLATFORMS.filter(pl => p.competitive[pl]);
   p.statsByPlatform = {};
+  p.qpByPlatform = {};
   await Promise.all([
-    getJSON(of(`/players/${encodeURIComponent(id)}/stats/summary`, { gamemode: 'quickplay' }), 5 * 60_000)
-      .then(r => { p.stats.quickplay = block(r.data || {}); }, e => { p.stats.quickplay = { error: e.message, status: e.status }; }),
-    ...p.compPlatforms.map(pl => getJSON(of(`/players/${encodeURIComponent(id)}/stats/summary`, { gamemode: 'competitive', platform: pl }), 5 * 60_000)
-      .then(r => { p.statsByPlatform[pl] = { ...block(r.data || {}), platform: pl }; }, e => { p.statsByPlatform[pl] = { error: e.message, status: e.status, platform: pl }; })),
+    ...PLATFORMS.map(pl => load('quickplay', pl).then(b => { p.qpByPlatform[pl] = b; })),
+    ...p.compPlatforms.map(pl => load('competitive', pl).then(b => { p.statsByPlatform[pl] = b; })),
   ]);
-  const comp = p.compPlatforms.map(pl => p.statsByPlatform[pl]).filter(x => x && !x.error).sort((a, b) => (b.general?.timePlayed || 0) - (a.general?.timePlayed || 0));
+  const mostPlayed = list => list.filter(x => x && !x.error && x.general?.timePlayed).sort((a, b) => (b.general?.timePlayed || 0) - (a.general?.timePlayed || 0));
+  p.qpPlatforms = mostPlayed(PLATFORMS.map(pl => p.qpByPlatform[pl])).map(x => x.platform);
+  p.stats.quickplay = p.qpByPlatform[p.qpPlatforms[0]] || p.qpByPlatform.pc || { error: 'No Quick Play stats' };
+  const comp = mostPlayed(p.compPlatforms.map(pl => p.statsByPlatform[pl]));
   p.stats.competitive = comp[0] || (p.compPlatforms.length ? p.statsByPlatform[p.compPlatforms[0]] : { noSeason: true });
   if (!Object.values(p.stats).some(x => x.general?.gamesPlayed) && !Object.keys(p.competitive).length) p.privacy = 'private-or-empty';
   saveLocalSnapshot(p);
