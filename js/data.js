@@ -204,7 +204,7 @@ export async function searchPlayers(name) {
   if (name.length < 2 || name.length > 40) throw new ApiError('Enter 2–40 characters', 400);
   const r = await getJSON(of('/players', { name, limit: 20 }), 5 * 60_000);
   const list = Array.isArray(r.data?.results) ? r.data.results : [];
-  return { total: num(r.data?.total) ?? list.length, results: list.map(p => ({ id: safeDecode(str(p.player_id)), name: str(p.name), avatar: str(p.avatar), title: str(p.title?.en_US ?? p.title ?? ''), isPublic: p.is_public !== false })).filter(p => p.id) };
+  return { total: num(r.data?.total) ?? list.length, results: list.map(p => ({ id: safeDecode(str(p.player_id)), name: str(p.name), avatar: str(p.avatar), title: str(p.title?.en_US ?? p.title ?? ''), isPublic: p.is_public !== false, lastUpdated: num(p.last_updated_at) })).filter(p => p.id) };
 }
 
 function tagVariants(id) {

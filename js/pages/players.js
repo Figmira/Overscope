@@ -115,7 +115,13 @@ async function profile(id) {
   let tracked = false;
   try { const r = await api('/api/players/' + encodeURIComponent(id), { fresh: true }); current = r.data; }
   catch (e) {
-    el.innerHTML = e.status === 404 ? emptyBox('Player not found', `No Overwatch profile exists for <strong>${esc(id)}</strong>. BattleTags need the number (e.g. Name-1234).`) : errorBox(e);
+    if (e.status !== 404) { el.innerHTML = errorBox(e); return; }
+    // Not found by exact BattleTag: show the public players with that name instead (like Blizzard's own search).
+    const name = String(id).replace(/[-#]\d{3,6}$/, '');
+    let same = [];
+    try { same = (await api('/api/players?' + qs({ name }))).results || []; } catch { /* list is optional */ }
+    el.innerHTML = emptyBox('No public profile for this BattleTag', `Blizzard has no public career profile for <strong>${esc(String(id).replace(/-(\d+)$/, '#$1'))}</strong> right now, so there are no stats to show. This happens when a profile is private, when the account hasn't played recently, or when the BattleTag is mistyped.`)
+      + (same.length ? `<section class="panel"><header class="panel-head"><h2>${icon('i-user')}${same.length} public player${same.length === 1 ? '' : 's'} named ${esc(name)}</h2></header><p class="source-note">Blizzard hides the number after the name in its search, so these may be other people with the same name. Check the icon and title.</p><div class="player-list">${same.map(x => `<a href="#/players/${encodeURIComponent(x.id)}" class="player-card">${x.avatar ? `<img src="${esc(relay(x.avatar))}" alt="" width="52" height="52" loading="lazy">` : '<span class="avatar-ph"></span>'}<span><b>${esc(x.name)}</b><small>${esc(x.title || 'Public profile')}${x.lastUpdated ? ` · active ${esc(timeAgo(x.lastUpdated * 1000))}` : ''}</small></span>${icon('i-right')}</a>`).join('')}</div></section>` : '');
     return;
   }
   const p = current;
