@@ -5,15 +5,19 @@ export const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 export const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 export const pct = (n, d = 1) => (n === null || n === undefined || !Number.isFinite(Number(n)) ? '—' : Number(n).toFixed(d) + '%');
 export const ROLE_NAME = { tank: 'Tank', damage: 'Damage', support: 'Support' };
-export const QUEUE_NAME = { competitive: 'Competitive · 5v5 Role Queue', open: 'Competitive · Open Queue', quickplay: 'Quick Play' };
-export const QUEUE_SHORT = { competitive: 'Role Queue 5v5', open: 'Open Queue', quickplay: 'Quick Play' };
+// Only queues with published data are offered (no Open Queue: nobody publishes its hero rates).
+export const QUEUE_KEYS = ['competitive', 'quickplay'];
+export const QUEUE_NAME = { competitive: 'Competitive · 5v5 Role Queue', quickplay: 'Quick Play' };
+export const QUEUE_SHORT = { competitive: 'Role Queue 5v5', quickplay: 'Quick Play' };
 export const REGION_NAME = { americas: 'Americas', europe: 'Europe', asia: 'Asia' };
 
 // ---------- persistent view preferences ----------
 const PREF_KEY = 'overscope.prefs.v1';
 const defaults = { queue: 'competitive', platform: 'pc', region: 'americas', division: '' };
 export const prefs = (() => {
-  try { return { ...defaults, ...JSON.parse(localStorage.getItem(PREF_KEY) || '{}') }; } catch { return { ...defaults }; }
+  let p; try { p = { ...defaults, ...JSON.parse(localStorage.getItem(PREF_KEY) || '{}') }; } catch { p = { ...defaults }; }
+  if (!['competitive', 'quickplay'].includes(p.queue)) p.queue = 'competitive';
+  return p;
 })();
 export function setPref(k, v) {
   prefs[k] = v;
@@ -150,7 +154,7 @@ export const hideTip = () => tip().classList.remove('show');
 
 // queue / filter controls (shared by several pages)
 export function queueTabs(active, attr = 'data-queue') {
-  return `<div class="seg" role="tablist" aria-label="Queue">${['competitive', 'open', 'quickplay'].map(q =>
+  return `<div class="seg" role="tablist" aria-label="Queue">${QUEUE_KEYS.map(q =>
     `<button role="tab" aria-selected="${q === active}" class="${q === active ? 'on' : ''}" ${attr}="${q}">${QUEUE_SHORT[q]}</button>`).join('')}</div>`;
 }
 export function roleTabs(active) {

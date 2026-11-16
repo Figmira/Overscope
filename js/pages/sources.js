@@ -6,7 +6,7 @@ const ROWS = [
   ['Hero abilities, description, Stadium powers', 'OverFast /heroes/{key}', '—', 'Live, cached 6 h', 'Official text', 'Stadium items only for some heroes'],
   ['Competitive Role Queue hero pick / win / ban', 'Blizzard hero statistics via OverFast /heroes/stats?gamemode=competitive', 'PC / console · 3 regions · Bronze → Grandmaster', 'Live, cached 30 min', 'Blizzard-wide', 'No sample sizes or date windows are published'],
   ['Quick Play hero pick / win', 'Same endpoint, gamemode=quickplay', 'PC / console · 3 regions', 'Live, cached 30 min', 'Blizzard-wide', 'No rank filter'],
-  ['Competitive Open Queue hero stats', 'None', '—', '—', '—', 'No verified public source. Shown as unavailable; never substituted'],
+  ['Competitive Open Queue hero stats', 'None', '—', '—', '—', 'No verified public source, so OverScope does not offer this queue'],
   ['Hero rates on a specific map', 'OverFast /heroes/stats?map={key}', 'Role Queue & Quick Play', 'Live', 'Blizzard-wide', 'Hero performance on that map — NOT how often the map is played'],
   ['Meta by rank', 'One official table per division', 'Role Queue', 'Live', 'Blizzard-wide', 'No Champion table is published'],
   ['Trend lines & patch impact', 'Daily copy of the official tables saved by the site\'s GitHub Action (data/history)', 'All ranks · per queue, platform, region', 'Daily', 'Blizzard-wide public averages', 'Starts from the first Action run; contains no user data'],

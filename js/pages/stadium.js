@@ -13,7 +13,7 @@ export async function render({ main, route, signal }) {
   const h = heroInfo(key);
 
   main.innerHTML = `<div class="page">
-    <header class="page-top stadium-top"><p class="eyebrow">Stadium · build lab</p><h1>Build. Compete. <em>Evolve.</em></h1><p>Browse each hero's official Stadium powers and items, draft a build (${MAX_POWERS} powers, ${MAX_ITEMS} items), then share the link or export it.</p></header>
+    <header class="page-top stadium-top"><p class="eyebrow">Stadium · build lab</p><h1>Build. Compete. <em>Evolve.</em></h1><p>Browse each hero's official Stadium powers, pick your ${MAX_POWERS}, then share the build or export it.</p></header>
     <div class="stadium-layout">
       <aside class="panel st-roster"><header class="panel-head"><h2>${icon('i-group')}Stadium roster</h2><small class="muted">${stadiumRoster ? stadiumRoster.length + ' heroes' : 'full roster'}</small></header>
         ${!stadiumRoster ? `<p class="source-note warn">Stadium-only roster filter unavailable${rosterNote ? ' (' + esc(rosterNote) + ')' : ''}; showing all heroes. Some may not be playable in Stadium.</p>` : ''}
@@ -21,16 +21,18 @@ export async function render({ main, route, signal }) {
       <div class="st-main">
         <section class="st-hero role-${esc(h.role)}"><div class="st-art">${heroArt(key, 'st-img')}</div><div class="st-shade"></div><div class="st-copy"><p class="eyebrow">${roleIcon(h.role)} ${esc(ROLE_NAME[h.role] || '')}</p><h2>${esc(h.name)}</h2><div id="buildBox"></div></div></section>
         <section class="panel" id="powers">${loadingBox(6)}</section>
-        <section class="panel" id="items"></section>
-        <section class="panel"><div class="prose"><h3>Data availability</h3><p>Power and item names and descriptions come from the hero detail endpoint of the OverFast API (which reads Blizzard's site). <b>No verified public source publishes Stadium build pick rates or win rates</b>, so OverScope does not show any. Your builds are stored only in the link you share.</p></div></section>
+        <section class="panel" id="items" hidden></section>
+        <section class="panel"><div class="prose"><h3>Data availability</h3><p>Power names and descriptions come from Blizzard's official hero pages (via the OverFast API). Blizzard does not publish Stadium items, or build pick and win rates, so OverScope does not show them. Your builds are stored only in the link you share.</p></div></section>
       </div>
     </div></div>`;
 
   let data = null;
   try { data = (await api('/api/heroes/' + key, { ttl: 3600_000 })).data.stadium; } catch (e) { $('#powers').innerHTML = errorBox(e); }
+  // Items appear only if a verified source ever provides them (none does today).
+  const hasItems = () => !!data?.items?.length;
   const drawBuild = () => {
     $('#buildBox').innerHTML = `<div class="build"><div><small>Powers ${picked.powers.length}/${MAX_POWERS}</small><div class="slots">${Array.from({ length: MAX_POWERS }, (_, i) => `<span class="slot ${picked.powers[i] ? 'full' : ''}">${esc(picked.powers[i] || 'Empty')}</span>`).join('')}</div></div>
-      <div><small>Items ${picked.items.length}/${MAX_ITEMS}</small><div class="slots">${Array.from({ length: MAX_ITEMS }, (_, i) => `<span class="slot ${picked.items[i] ? 'full' : ''}">${esc(picked.items[i] || 'Empty')}</span>`).join('')}</div></div>
+      ${hasItems() ? `<div><small>Items ${picked.items.length}/${MAX_ITEMS}</small><div class="slots">${Array.from({ length: MAX_ITEMS }, (_, i) => `<span class="slot ${picked.items[i] ? 'full' : ''}">${esc(picked.items[i] || 'Empty')}</span>`).join('')}</div></div>` : ''}
       <div class="cta"><button class="btn sm primary" data-act="share">Copy share link</button><button class="btn sm" data-act="text">Copy as text</button><button class="btn sm" data-act="json">Export JSON</button><button class="btn sm ghost" data-act="clear">Clear</button></div></div>`;
   };
   const drawLists = () => {
@@ -38,14 +40,16 @@ export async function render({ main, route, signal }) {
     $('#powers').innerHTML = `<header class="panel-head"><h2>${icon('i-stadium')}Powers<small>— pick up to ${MAX_POWERS}</small></h2></header>` + (data.powers.length
       ? `<div class="power-grid">${data.powers.map((p, i) => `<button class="power ${picked.powers.includes(p.name) ? 'on' : ''}" aria-pressed="${picked.powers.includes(p.name)}" data-power="${esc(p.name)}">${p.icon ? `<img src="${esc(relay(p.icon))}" alt="" width="40" height="40" loading="lazy">` : `<span class="pnum">${String(i + 1).padStart(2, '0')}</span>`}<span><b>${esc(p.name)}</b><span>${esc(p.description)}</span></span></button>`).join('')}</div>`
       : emptyBox('No Stadium powers in the data source', `The hero data for ${esc(h.name)} did not include Stadium powers. This happens if the hero is not in Stadium or the source has not added them yet.`));
-    $('#items').innerHTML = data.items.length ? `<header class="panel-head"><h2>${icon('i-bars')}Hero items<small>— pick up to ${MAX_ITEMS}</small></h2></header><div class="power-grid items">${data.items.map(p => `<button class="power ${picked.items.includes(p.name) ? 'on' : ''}" aria-pressed="${picked.items.includes(p.name)}" data-item="${esc(p.name)}">${p.icon ? `<img src="${esc(relay(p.icon))}" alt="" width="36" height="36" loading="lazy">` : ''}<span><b>${esc(p.name)}${p.cost ? ` <em>${esc(p.cost.toLocaleString())}</em>` : ''}</b><span>${esc(p.description)}</span></span></button>`).join('')}</div>` : '';
+    $('#items').hidden = !hasItems();
+    $('#items').innerHTML = hasItems() ? `<header class="panel-head"><h2>${icon('i-bars')}Hero items<small>— pick up to ${MAX_ITEMS}</small></h2></header><div class="power-grid items">${data.items.map(p => `<button class="power ${picked.items.includes(p.name) ? 'on' : ''}" aria-pressed="${picked.items.includes(p.name)}" data-item="${esc(p.name)}">${p.icon ? `<img src="${esc(relay(p.icon))}" alt="" width="36" height="36" loading="lazy">` : ''}<span><b>${esc(p.name)}${p.cost ? ` <em>${esc(p.cost.toLocaleString())}</em>` : ''}</b><span>${esc(p.description)}</span></span></button>`).join('')}</div>` : '';
   };
   drawBuild(); drawLists();
+  if (!hasItems()) picked.items.length = 0;
 
-  const shareUrl = () => `${location.href.split('#')[0]}#/stadium/${key}?` + new URLSearchParams({ p: picked.powers.join('|'), i: picked.items.join('|') }).toString();
-  const text = () => `OverScope Stadium build — ${h.name}\nPowers: ${picked.powers.join(', ') || '—'}\nItems: ${picked.items.join(', ') || '—'}\n${shareUrl()}`;
+  const shareUrl = () => `${location.href.split('#')[0]}#/stadium/${key}?` + new URLSearchParams({ p: picked.powers.join('|'), ...(picked.items.length ? { i: picked.items.join('|') } : {}) }).toString();
+  const text = () => `OverScope Stadium build — ${h.name}\nPowers: ${picked.powers.join(', ') || '—'}${picked.items.length ? `\nItems: ${picked.items.join(', ')}` : ''}\n${shareUrl()}`;
   const copy = async s => { try { await navigator.clipboard.writeText(s); toast('Copied to clipboard'); } catch { prompt('Copy this:', s); } };
-  const syncUrl = () => history.replaceState(null, '', `#/stadium/${key}?` + new URLSearchParams({ p: picked.powers.join('|'), i: picked.items.join('|'), keep: '1' }).toString());
+  const syncUrl = () => history.replaceState(null, '', `#/stadium/${key}?` + new URLSearchParams({ p: picked.powers.join('|'), ...(picked.items.length ? { i: picked.items.join('|') } : {}), keep: '1' }).toString());
 
   main.addEventListener('click', e => {
     const p = e.target.closest('[data-power]'), it = e.target.closest('[data-item]'), a = e.target.closest('[data-act]');

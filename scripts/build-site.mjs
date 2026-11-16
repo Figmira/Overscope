@@ -75,6 +75,15 @@ if (tipUrl) {
     .replace('· Unofficial fan-made Overwatch analytics</span>', `· <a class="tip-foot" href="${esc(tipUrl)}" target="_blank" rel="noopener">♥ ${esc(tipLabel)}</a> · Unofficial fan-made Overwatch analytics</span>`);
 }
 if (ads.enabled) indexHtml = indexHtml.replace('<footer class="footer">', adSlot + '<footer class="footer">');
+// Patch impact needs a saved copy from before AND after a patch. Until one exists, the
+// feature is hidden everywhere (no empty pages).
+const newsFile = await readJSON('data/news.json', { patches: [] });
+const days = (histComp?.snapshots || []).map(x => x.day);
+const measurable = (newsFile.patches || []).filter(p => days.some(d => d < p.date) && days.some(d => d > p.date)).map(p => p.date);
+if (!measurable.length) {
+  indexHtml = indexHtml.replace(/\s*<a href="#\/competitive\?view=patch"[^\n]*<\/a>/, '')
+    .replace('<meta name="referrer"', '<meta name="overscope-patch-impact" content="off">\n  <meta name="referrer"');
+}
 const between = (a, b) => { const i = indexHtml.indexOf(a), j = indexHtml.indexOf(b, i); if (i < 0 || j < 0) throw new Error(`index.html marker missing: ${a}`); return indexHtml.slice(i, j + b.length); };
 const CSP = withAds(/<meta http-equiv="Content-Security-Policy" content="([^"]+)">/.exec(indexHtml)[1].replace(/ 'sha256-[^']+'/, ''));
 const adHead = ads.enabled ? `\n  <meta name="overscope-ads" content="on">\n  ${ads.headHtml || ''}` : '';
@@ -256,4 +265,4 @@ if (SITE) {
   await fs.writeFile(path.join(OUT, 'robots.txt'), 'User-agent: *\nAllow: /\n');
   console.log('· SITE_URL not set — sitemap.xml skipped, pages have no canonical links');
 }
-console.log(`✓ built _site/: ${pages.length} Google-visible pages + app${SITE ? ' + sitemap.xml' : ''} · tip link ${tipUrl ? 'ON' : 'off'} · ads ${ads.enabled ? 'ON (' + (ads.network || 'network') + ')' : 'off'}`);
+console.log(`✓ built _site/: ${pages.length} Google-visible pages + app${SITE ? ' + sitemap.xml' : ''} · patch impact ${measurable.length ? 'ON' : 'hidden (no before/after data yet)'} · tip link ${tipUrl ? 'ON' : 'off'} · ads ${ads.enabled ? 'ON (' + (ads.network || 'network') + ')' : 'off'}`);

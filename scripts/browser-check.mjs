@@ -41,9 +41,9 @@ const browser = await chromium.launch({ ...(process.env.CHROME_PATH ? { executab
 
 const ROUTES = [
   ['home', '#/'], ['heroes', '#/heroes'], ['hero-tracer', '#/heroes/tracer'], ['competitive', '#/competitive?queue=competitive'],
-  ['quickplay', '#/competitive?queue=quickplay'], ['openqueue', '#/competitive?queue=open'], ['compare', '#/competitive?view=compare'],
+  ['quickplay', '#/competitive?queue=quickplay'], ['compare', '#/competitive?view=compare'],
   ['stadium', '#/stadium/tracer'], ['maps', '#/maps'], ['map-detail', '#/maps/kings-row'], ['players', '#/players/' + encodeURIComponent(PLAYER)],
-  ['news', '#/news'], ['sources', '#/sources'], ['meta-by-rank', '#/competitive?view=ranks'], ['patch-impact', '#/competitive?view=patch'],
+  ['news', '#/news'], ['sources', '#/sources'], ['meta-by-rank', '#/competitive?view=ranks'],
   ['player-vs-player', '#/players/compare?a=' + encodeURIComponent(PLAYER) + '&b=TeKrop-2217'],
   ['tier-list', '#/tier-list'],
   ...(SERVE !== ROOT ? [['static-tierlist', 'tier-list/'], ['static-tier-gold', 'tier-list/gold/'], ['static-hero', 'heroes/tracer/'], ['static-heroes', 'heroes/'], ['static-map', 'maps/kings-row/'], ['static-maps', 'maps/']] : []),
@@ -110,12 +110,10 @@ await step('Home: Quick Play tab re-queries the Quick Play dataset', async () =>
   const label = await page.textContent('#metaPanel .panel-head'); if (!/Quick Play/.test(label)) throw new Error('label not updated');
   return 'browser requested ' + seen.find(u => u.includes('quickplay'));
 });
-await step('Home: Open Queue shows unavailable state, no rows', async () => {
-  await page.click('#queueTabs [data-queue=open]'); await settle(page);
-  const rows = await page.$$('#metaPanel .hero-row'); const t = await page.textContent('#metaPanel');
-  if (rows.length) throw new Error(rows.length + ' rows rendered'); if (!/not available/i.test(t)) throw new Error('no unavailable message');
-  await page.click('#queueTabs [data-queue=competitive]'); await settle(page);
-  return 'unavailable message shown';
+await step('Open Queue is not offered anywhere (no data exists)', async () => {
+  const n = await page.$$eval('[data-queue=open], [data-sub=open], [data-mapqueue=open]', x => x.length);
+  if (n) throw new Error(n + ' Open Queue controls found');
+  return 'no Open Queue tabs or links';
 });
 await step('Home: hero ranking row opens that hero', async () => {
   const key = await page.getAttribute('#metaPanel .hero-row', 'data-hero');
@@ -175,9 +173,13 @@ await step('Meta by rank: heatmap shows one column per rank', async () => {
   if (cols < 7) throw new Error('only ' + cols + ' rank columns');
   return `${cols} ranks, ${cells} cells`;
 });
-await step('Patch impact: honest empty state until before/after snapshots exist', async () => {
-  await page.goto(base + '/#/competitive?view=patch'); await page.waitForSelector('#patchOut .state, #patchOut .cmp-table', { timeout: 60000 });
-  return (await page.textContent('#patchOut')).replace(/\s+/g, ' ').slice(0, 110);
+await step('Patch impact: hidden until a patch has before/after data, shown once it does', async () => {
+  await page.goto(base + '/#/competitive'); await settle(page);
+  const off = await page.$('meta[name=overscope-patch-impact][content=off]');
+  const tab = await page.$('[data-view=patch]'), link = await page.$('#sidebar [data-route=patch]');
+  if (off && (tab || link)) throw new Error('hidden flag set but Patch impact still shown');
+  if (!off && !(tab && link)) throw new Error('data exists but Patch impact missing');
+  return off ? 'hidden (no before/after data yet)' : 'shown (data available)';
 });
 await step('Privacy: the site makes no requests except to OverFast, Blizzard media and its own files', async () => {
   const hosts = new Set(); const p2 = await ctx.newPage(); p2.on('request', r => hosts.add(new URL(r.url()).host));
@@ -220,6 +222,26 @@ await step('Tier list: S–D tiers, every hero once, rank filter re-queries', as
   if (tiers !== 'SABCD') throw new Error('tiers ' + tiers);
   await page.selectOption('select[data-pref=division]', ''); await settle(page);
   return `${n} heroes across ${tiers}; Gold re-queried`;
+});
+await step('Stadium: powers only (no item slots without a source)', async () => {
+  await page.goto(base + '/#/stadium/zenyatta'); await page.waitForSelector('[data-power]', { timeout: 60000 });
+  const itemSlots = await page.$$eval('#buildBox small', s => s.filter(x => /Items/.test(x.textContent)).length);
+  const itemsPanel = await page.$eval('#items', el => el.hidden);
+  if (itemSlots || !itemsPanel) throw new Error('item slots still shown');
+  return `${await page.$$eval('[data-power]', x => x.length)} powers, no item slots`;
+});
+await step('Phone: top search button finds a player; menu links close the menu and open the page', async () => {
+  const m = await browser.newContext({ ignoreHTTPSErrors: !!process.env.HTTPS_PROXY, viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const p = await m.newPage();
+  await p.goto(base + '/#/tier-list'); await settle(p);
+  await p.tap('#menuBtn'); await p.tap('#sidebar a[data-route="tier-list"]'); await p.waitForTimeout(400);
+  if (await p.$eval('#sidebar', el => el.classList.contains('open'))) throw new Error('menu stayed open when tapping the current page');
+  await p.tap('#menuBtn'); await p.tap('#sidebar a[data-route="maps"]'); await p.waitForTimeout(1500);
+  if (!p.url().endsWith('#/maps') || await p.$eval('#sidebar', el => el.classList.contains('open'))) throw new Error('maps link failed: ' + p.url());
+  await p.fill('#topSearchInput', 'Iso#11570'); await p.tap('.search-go');
+  await p.waitForSelector('#pProfile h1', { timeout: 60000 });
+  const name = await p.textContent('#pProfile h1'); await m.close();
+  return `menu OK; search button opened profile "${name}"`;
 });
 await step('Hero page: by-rank chart + tier per rank', async () => {
   await page.goto(base + '/#/heroes/tracer'); await page.waitForSelector('#hdRank .tier-strip', { timeout: 60000 });

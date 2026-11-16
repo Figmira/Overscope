@@ -80,9 +80,19 @@ async function boot() {
   });
   $('#topSearch').addEventListener('submit', e => {
     e.preventDefault();
-    const v = $('#topSearchInput').value.trim();
-    if (!v) return toast('Type a BattleTag, e.g. Name-1234');
+    const input = $('#topSearchInput');
+    const v = input.value.trim();
+    if (!v) { input.focus(); return toast('Type a BattleTag, e.g. Name#1234'); }
+    input.blur(); // closes the phone keyboard so the result is visible
     go('#/players?q=' + encodeURIComponent(v));
+  });
+  // Menu links: always close the menu, and re-show the page even if it is the one already open.
+  $('#sidebar').addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#/"]');
+    if (!a) return;
+    $('#sidebar').classList.remove('open');
+    $('#menuBtn').setAttribute('aria-expanded', 'false');
+    if (!STATIC && a.getAttribute('href') === location.hash) { e.preventDefault(); render(); }
   });
   addEventListener('keydown', e => { if (e.key === 'Escape') $('#sidebar').classList.remove('open'); });
   if (STATIC) return;

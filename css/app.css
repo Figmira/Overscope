@@ -644,3 +644,10 @@ html[data-page=home] #banner-slot{display:block;height:clamp(260px,18.5vw,300px)
 .tip-foot{color:var(--amber)}
 .ad-slot{display:block;max-width:970px;min-height:120px;margin:18px auto 0;padding:6px;text-align:center;border:1px dashed #2b3253;border-radius:8px}
 .ad-label{display:block;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:var(--faint);margin-bottom:4px}
+/* top search: visible button (phones have no obvious way to submit otherwise) */
+.search{padding-right:4px}
+.search input{-webkit-appearance:none;appearance:none}
+.search input::-webkit-search-cancel-button{display:none}
+.search-go{flex:none;display:grid;place-items:center;width:32px;height:32px;border:0;border-radius:50%;background:linear-gradient(180deg,#ffb02e,#e67a00);color:#1a1000;cursor:pointer}
+.search-go:hover{filter:brightness(1.1)}
+@media (max-width:560px){.search input{font-size:16px}} /* 16px stops iPhone zooming in on tap */

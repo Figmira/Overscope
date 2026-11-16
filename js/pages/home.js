@@ -100,7 +100,7 @@ export async function render({ main, signal }) {
 
 let stats = null, statsErr = null, trendData = null;
 async function loadStats() {
-  $('#queueTabs').innerHTML = `<div class="seg big" role="tablist">${['competitive', 'open', 'quickplay'].map(q => `<button role="tab" class="${prefs.queue === q ? 'on' : ''}" aria-selected="${prefs.queue === q}" data-queue="${q}">${QUEUE_SHORT[q]}</button>`).join('')}</div>`;
+  $('#queueTabs').innerHTML = `<div class="seg big" role="tablist">${['competitive', 'quickplay'].map(q => `<button role="tab" class="${prefs.queue === q ? 'on' : ''}" aria-selected="${prefs.queue === q}" data-queue="${q}">${QUEUE_SHORT[q]}</button>`).join('')}</div>`;
   $('#metaPanel').innerHTML = metaHead() + loadingBox(5);
   $('#kpiComp').innerHTML = loadingBox(2);
   stats = null; statsErr = null; trendData = null;
@@ -247,7 +247,7 @@ let mapStatsCache = new Map();
 async function renderMap() {
   const el = $('#mapPanel');
   if (!el) return;
-  const head = `<header class="panel-head"><h2>${icon('i-map')}Map intelligence</h2><div class="seg sm">${['competitive', 'quickplay', 'open'].map(q => `<button class="${state.mapQueue === q ? 'on' : ''}" data-mapqueue="${q}">${QUEUE_SHORT[q]}</button>`).join('')}</div></header>`;
+  const head = `<header class="panel-head"><h2>${icon('i-map')}Map intelligence</h2><div class="seg sm">${['competitive', 'quickplay'].map(q => `<button class="${state.mapQueue === q ? 'on' : ''}" data-mapqueue="${q}">${QUEUE_SHORT[q]}</button>`).join('')}</div></header>`;
   if (mapErr) { el.innerHTML = head + errorBox(mapErr); return; }
   if (!mapData) return;
   const list = competitiveMaps();

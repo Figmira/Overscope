@@ -8,7 +8,7 @@ const ui = { role: '' };
 
 export async function render({ main, route, signal }) {
   const q = route.query.get('queue');
-  if (['competitive', 'quickplay', 'open'].includes(q)) setPref('queue', q);
+  if (['competitive', 'quickplay'].includes(q)) setPref('queue', q);
   const r = route.query.get('rank');
   if (r !== null && ['', 'bronze', 'silver', 'gold', 'platinum', 'emerald', 'diamond', 'master', 'grandmaster'].includes(r)) setPref('division', r);
   await loadHeroes().catch(() => {});
@@ -27,7 +27,7 @@ export async function render({ main, route, signal }) {
 }
 
 async function draw() {
-  $('#tlTools').innerHTML = queueTabs(prefs.queue) + (prefs.queue !== 'open' ? filterSelects() : '');
+  $('#tlTools').innerHTML = queueTabs(prefs.queue) + filterSelects();
   $('#tlRoles').innerHTML = roleTabs(ui.role);
   const out = $('#tlOut');
   out.innerHTML = loadingBox(8);

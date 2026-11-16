@@ -8,7 +8,7 @@ const saveLedger = l => { try { localStorage.setItem(LEDGER, JSON.stringify(l));
 const share = (ledger, queue, key) => { const l = ledger.filter(x => x.queue === queue); const n = l.filter(x => x.map === key).length; return { n, total: l.length, pct: l.length ? (100 * n) / l.length : null }; };
 
 export async function render(ctx) {
-  ui.queue = ['competitive', 'quickplay', 'open'].includes(ctx.route.query.get('queue')) ? ctx.route.query.get('queue') : (prefs.queue || 'competitive');
+  ui.queue = ['competitive', 'quickplay'].includes(ctx.route.query.get('queue')) ? ctx.route.query.get('queue') : (prefs.queue === 'quickplay' ? 'quickplay' : 'competitive');
   await loadHeroes().catch(() => {});
   let md;
   try { md = await loadMaps(); } catch (e) { ctx.main.innerHTML = `<div class="page">${errorBox(e)}</div>`; return; }

@@ -83,7 +83,7 @@ async function detail({ main, route, signal }) {
   const drawStats = async () => {
     const el = $('#hdStats');
     el.innerHTML = `<header class="panel-head"><h2>${icon('i-bars')}Live hero rates</h2></header><div class="toolbar tight">${filterSelects({ showRank: false })}</div><div id="hdStatGrid">${loadingBox(3)}</div>`;
-    const out = await Promise.all(['competitive', 'quickplay', 'open'].map(async q => {
+    const out = await Promise.all(['competitive', 'quickplay'].map(async q => {
       try {
         const s = await api(statsPath({ queue: q, division: '' }));
         if (!s.available) return `<div class="qstat na"><h3>${QUEUE_SHORT[q]}</h3><p>No verified source</p></div>`;

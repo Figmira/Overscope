@@ -7,13 +7,15 @@ const ui = { role: '', sort: 'pickrate', dir: -1, metric: 'pickrate', patchQueue
 
 export async function render({ main, route, signal }) {
   const q = route.query.get('queue');
-  if (['competitive', 'quickplay', 'open'].includes(q)) setPref('queue', q);
-  const view = ['compare', 'ranks', 'patch'].includes(route.query.get('view')) ? route.query.get('view') : 'table';
+  if (['competitive', 'quickplay'].includes(q)) setPref('queue', q);
+  const patchOff = !!document.querySelector('meta[name=overscope-patch-impact][content=off]');
+  const views = [['table', 'Rankings'], ['compare', 'Role Queue vs Quick Play'], ['ranks', 'Meta by rank'], ...(patchOff ? [] : [['patch', 'Patch impact']])];
+  const view = views.some(([k]) => k !== 'table' && k === route.query.get('view')) ? route.query.get('view') : 'table';
   const draw = () => (view === 'compare' ? drawCompare() : view === 'ranks' ? drawRanks() : view === 'patch' ? drawPatch(route.query.get('date')) : drawTable());
   await loadHeroes().catch(() => {});
   main.innerHTML = `<div class="page">
-    <header class="page-top"><p class="eyebrow">Competitive · game modes</p><h1>Queue-specific <em>intelligence</em></h1><p>Official Blizzard hero pick, win and ban rates. Every queue is its own dataset — switching queue re-queries the source, and Open Queue is never filled with Role Queue numbers.</p></header>
-    <div class="toolbar"><div class="seg big" role="tablist">${[['table', 'Rankings'], ['compare', 'Role Queue vs Quick Play'], ['ranks', 'Meta by rank'], ['patch', 'Patch impact']].map(([k, v]) => `<button class="${view === k ? 'on' : ''}" data-view="${k}">${v}</button>`).join('')}</div></div>
+    <header class="page-top"><p class="eyebrow">Competitive · game modes</p><h1>Queue-specific <em>intelligence</em></h1><p>Official Blizzard hero pick, win and ban rates. Every queue is its own dataset — switching queue re-queries the source.</p></header>
+    <div class="toolbar"><div class="seg big" role="tablist">${views.map(([k, v]) => `<button class="${view === k ? 'on' : ''}" data-view="${k}">${v}</button>`).join('')}</div></div>
     <div id="compBody"></div></div>`;
   main.addEventListener('click', e => {
     const v = e.target.closest('[data-view]'); if (v) return go(v.dataset.view === 'table' ? '#/competitive?queue=' + prefs.queue : '#/competitive?view=' + v.dataset.view);
@@ -34,7 +36,7 @@ export async function render({ main, route, signal }) {
 
 async function drawTable() {
   const body = $('#compBody');
-  body.innerHTML = `<div class="toolbar">${queueTabs(prefs.queue)}${prefs.queue !== 'open' ? filterSelects() : ''}</div>
+  body.innerHTML = `<div class="toolbar">${queueTabs(prefs.queue)}${filterSelects()}</div>
     <div class="toolbar">${roleTabs(ui.role)}</div>
     <div class="two wide-left"><section class="panel" id="rankPanel">${loadingBox(8)}</section>
     <div class="col"><section class="panel" id="scatterPanel"></section><section class="panel">${explain()}</section></div></div>`;
@@ -77,7 +79,7 @@ async function drawCompare() {
     $('#cmp').innerHTML = `<header class="panel-head"><h2>${icon('i-bars')}Role Queue vs Quick Play</h2><small class="muted">${esc(REGION_NAME[prefs.region])} · ${prefs.platform.toUpperCase()} · all ranks</small></header>
     <div class="table cmp-table" role="table"><div class="tr th"><span>Hero</span><span>RQ pick</span><span>QP pick</span><span>Δ pick</span><span>RQ win</span><span>QP win</span><span>Δ win</span></div>
     ${keys.map(k => { const x = A.get(k), y = B.get(k), h = heroInfo(k); return `<div class="tr hero-row" tabindex="0" data-hero="${esc(k)}"><span class="who">${heroPortrait(k, 'portrait')}<span><b>${esc(h.name)}</b><small>${roleIcon(h.role)}${esc(ROLE_NAME[h.role] || '')}</small></span></span><span>${pct(x?.pickrate)}</span><span>${pct(y?.pickrate)}</span><span>${diff(x?.pickrate, y?.pickrate)}</span><span>${pct(x?.winrate)}</span><span>${pct(y?.winrate)}</span><span>${diff(x?.winrate, y?.winrate)}</span></div>`; }).join('')}</div>
-    <p class="source-note">Two separate official datasets (gamemode=competitive and gamemode=quickplay) fetched independently. Δ = Quick Play minus Role Queue, in percentage points. Open Queue is excluded because no verified dataset exists.</p>`;
+    <p class="source-note">Two separate official datasets (gamemode=competitive and gamemode=quickplay) fetched independently. Δ = Quick Play minus Role Queue, in percentage points.</p>`;
   } catch (e) { $('#cmp').innerHTML = errorBox(e); }
 }
 

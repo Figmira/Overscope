@@ -86,7 +86,7 @@ async function profile(id) {
     </section>
     ${p.privacy !== 'public' ? `<div class="state unavailable"><b>This profile looks private (or has no stats yet)</b><p>Blizzard only exposes career data for public profiles. In Overwatch: Options → Social → Career Profile Visibility → Public. Data refreshes after the next match.</p></div>` : ''}
     <section class="panel"><header class="panel-head"><h2>${icon('i-laurel')}Competitive ranks${comp?.season ? `<small>— season ${comp.season}${p.competitive.pc ? ' · PC' : ' · console'}</small>` : ''}</h2></header>
-      ${comp ? `<div class="ranks">${['tank', 'damage', 'support', 'open'].map(r => rankCell(r, comp[r])).join('')}</div>` : emptyBox('No competitive ranks visible', 'This player has no public ranks this season.')}</section>
+      ${comp ? `<div class="ranks">${['tank', 'damage', 'support', 'open'].filter(r => r !== 'open' || comp[r]).map(r => rankCell(r, comp[r])).join('')}</div>` : emptyBox('No competitive ranks visible', 'This player has no public ranks this season.')}</section>
     <section class="panel" id="histPanel">${loadingBox(3)}</section>
     <div class="toolbar"><div class="seg" id="modeTabs"></div></div>
     <div id="pStats"></div>

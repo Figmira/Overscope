@@ -86,7 +86,7 @@ docs/                           test results, screenshots, sources
 You don't need to. But if you want to look before uploading, open Terminal in this folder and run `npm run preview`. Then open <http://localhost:8000>.
 
 ## Known limitations
-- **Open Queue hero stats** aren't published by any verified source, so they're shown as unavailable.
+- **Open Queue hero stats** aren't published by any verified source, so the site doesn't offer that queue (a player's own Open Queue rank still shows when they have one).
 - **Global map popularity** isn't published by Blizzard.
 - **Trend lines and patch impact** start on the day the Action first runs, and grow one point per day.
 - **Player rank history** is per browser: it records the days a profile was opened on that device.
