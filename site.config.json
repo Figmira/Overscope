@@ -1,0 +1,19 @@
+{
+  "_help": "Money switches for OverScope. Both are OFF until you fill them in. After editing, commit to GitHub — the Action rebuilds the site. See README → 'Turning on tips or ads'.",
+
+  "tip": {
+    "url": "https://ko-fi.com/iso_ix",
+    "label": "Support OverScope",
+    "_help": "Paste your Ko-fi, Buy Me a Coffee, GitHub Sponsors or Patreon page address, e.g. https://ko-fi.com/yourname. Leave empty to hide the link."
+  },
+
+  "ads": {
+    "enabled": false,
+    "consentReady": false,
+    "network": "",
+    "hosts": [],
+    "headHtml": "",
+    "slotHtml": "",
+    "_help": "Only switch on after choosing an ad network. hosts = the web addresses the network's code loads from (it gives you these). headHtml = the code it says to put in <head>. slotHtml = the code for one ad box. consentReady must be true, confirming a cookie-consent pop-up is set up (the network or a consent tool provides it) — ads track visitors, so the build refuses to turn them on without it."
+  }
+}

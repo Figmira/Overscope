@@ -1,0 +1,15 @@
+{
+  "name": "overscope",
+  "version": "2.1.0",
+  "private": true,
+  "description": "OverScope \u2014 unofficial Overwatch analytics by Figmira Labs. Static site for GitHub Pages.",
+  "type": "module",
+  "scripts": {
+    "update-data": "node scripts/update-data.mjs",
+    "update-data:media": "node scripts/update-data.mjs --media",
+    "test": "node --test tests/unit.test.mjs",
+    "test:browser": "node scripts/browser-check.mjs",
+    "preview": "node scripts/build-site.mjs && cd _site && python3 -m http.server 8000",
+    "build": "node scripts/build-site.mjs"
+  }
+}

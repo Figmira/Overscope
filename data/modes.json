@@ -1,0 +1,59 @@
+{
+  "_note": "Scoring mechanics written for OverScope from Overwatch's published mode rules. The official one-line objective for each mode is loaded live from OverFast /gamemodes and shown alongside this.",
+  "control": {
+    "name": "Control",
+    "symmetric": true,
+    "scoring": "Best of three rounds; the first team to win two rounds takes the map. Each round is played on one of the map's sub-maps. A team scores by holding the single capture point until its percentage reaches 100%.",
+    "phases": ["Point unlocks", "Capture the point", "Hold to 100%", "Win two rounds"],
+    "attack": "Both teams fight for the same point.",
+    "defend": "Hold the point you own and contest any enemy capture to force overtime."
+  },
+  "escort": {
+    "name": "Escort",
+    "symmetric": false,
+    "scoring": "Attackers move a payload along a fixed route; each checkpoint reached adds time. Teams then swap sides, and the team that pushes the payload further (or finishes faster) wins.",
+    "phases": ["Move the payload", "Checkpoint 1", "Checkpoint 2", "Final delivery"],
+    "attack": "Stay next to the payload to move it and reach each checkpoint before time runs out.",
+    "defend": "Contest the payload to stop its progress and win time-out."
+  },
+  "hybrid": {
+    "name": "Hybrid",
+    "symmetric": false,
+    "scoring": "Attackers first capture a point, which unlocks a payload; they then escort it through checkpoints to the end. Teams swap sides and compare progress.",
+    "phases": ["Capture point A", "Payload unlocks", "Escort to checkpoint", "Final delivery"],
+    "attack": "Take the first point, then stay on the payload.",
+    "defend": "Hold the first point as long as possible, then stall the payload."
+  },
+  "push": {
+    "name": "Push",
+    "symmetric": true,
+    "scoring": "Both teams fight for control of a central robot that pushes a barricade toward the enemy side. Checkpoints along each route move the pushing team's spawn forward. The team that pushes its barricade furthest wins.",
+    "phases": ["Claim the robot", "Push the barricade", "Forward spawn", "Out-distance the enemy"],
+    "attack": "Escort the robot while it pushes your barricade.",
+    "defend": "Retake the robot to send it back the other way."
+  },
+  "flashpoint": {
+    "name": "Flashpoint",
+    "symmetric": true,
+    "scoring": "Capture points activate one at a time across a large map. Capturing a point scores one; the first team to three points wins.",
+    "phases": ["First point activates", "Capture", "Rotate to next point", "First to three"],
+    "attack": "Both teams race to each newly activated point.",
+    "defend": "Hold the active point and rotate quickly when a new one opens."
+  },
+  "clash": {
+    "name": "Clash",
+    "symmetric": true,
+    "scoring": "A line of capture points runs between the two spawns. Teams capture points one at a time to push the fight toward the enemy side; win by scoring enough points or by taking the point nearest the enemy spawn.",
+    "phases": ["Central point", "Push forward", "Capture next point", "Take the final point"],
+    "attack": "Capture forward to move the fight toward the enemy spawn.",
+    "defend": "Recapture to swing the line back."
+  },
+  "assault": {
+    "name": "Assault",
+    "symmetric": false,
+    "scoring": "Attackers capture two points in sequence; defenders try to stop them before time runs out.",
+    "phases": ["Capture point A", "Capture point B"],
+    "attack": "Capture each point in order.",
+    "defend": "Keep attackers off each point until time expires."
+  }
+}

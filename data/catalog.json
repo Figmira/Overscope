@@ -1,0 +1,2457 @@
+{
+ "generatedAt": "2026-11-16T04:40:45.748Z",
+ "note": "Public hero and map descriptions from Blizzard via OverFast.",
+ "heroes": {
+  "ana": {
+   "name": "Ana",
+   "role": "support",
+   "description": "One of the founding members of Overwatch, Ana uses her skills and expertise to defend her home and the people she cares for.",
+   "location": "Cairo, Egypt",
+   "age": 62,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Biotic Rifle",
+     "description": "Long-range rifle that heals allies and damages enemies.  Hold to zoom in."
+    },
+    {
+     "name": "Sleep Dart",
+     "description": "Fires a dart that puts an enemy to sleep."
+    },
+    {
+     "name": "Biotic Grenade",
+     "description": "Throws a grenade that heals and increases healing on allies, while damaging and preventing healing on enemies."
+    },
+    {
+     "name": "Nano Boost",
+     "description": "Increases an ally's damage, while reducing damage taken."
+    }
+   ]
+  },
+  "baptiste": {
+   "name": "Baptiste",
+   "role": "support",
+   "description": "An elite combat medic and ex-Talon operative, Baptiste now uses his skills to help those whose lives have been impacted by war.",
+   "location": "Tortuga, Haiti (formerly), Watchpoint: Gibraltar",
+   "age": 38,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Biotic Launcher",
+     "description": "Three-round burst gun.  Lob a healing projectile that heals all allies near the impact."
+    },
+    {
+     "name": "Regenerative Burst",
+     "description": "Activate to heal yourself and nearby allies instantly, with additional healing over time. Instant heal is doubled for targets less than half health."
+    },
+    {
+     "name": "Immortality Field",
+     "description": "Toss a device that prevents allies from dying. The device can be destroyed."
+    },
+    {
+     "name": "Amplification Matrix",
+     "description": "Project a matrix that doubles the damage and healing effects of allied projectiles."
+    },
+    {
+     "name": "Exo Boots",
+     "description": "Hold crouch to jump higher."
+    }
+   ]
+  },
+  "anran": {
+   "name": "Anran",
+   "role": "damage",
+   "description": "The star graduate of Wuxing University’s Fire College, Anran is always burning to push her limits.",
+   "location": "Wuxing University, Chengdu (Previous), Watchpoint Gibraltar (Current)",
+   "age": 22,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Zhuque Fans",
+     "description": "Hand fans that shoot fiery projectiles."
+    },
+    {
+     "name": "Fan the Flames",
+     "description": "Hot wind blast that amplifies burning damage."
+    },
+    {
+     "name": "Dancing Blaze",
+     "description": "Dodge all damage while striking nearby enemies, healing yourself for each enemy hit."
+    },
+    {
+     "name": "Inferno Rush",
+     "description": "Propel yourself forward and damage enemies you impact."
+    },
+    {
+     "name": "Vermillion Ascent",
+     "description": "Charge forward, exploding on impact and instantly igniting enemies."
+    },
+    {
+     "name": "Vermillion Revival",
+     "description": "When dead, revive yourself in a fiery explosion."
+    },
+    {
+     "name": "Ignition",
+     "description": "Hit enemies with fire attacks to burn them."
+    }
+   ]
+  },
+  "bastion": {
+   "name": "Bastion",
+   "role": "damage",
+   "description": "Once a frontline combatant in the devastating Omnic Crisis, this curious Bastion unit now explores the world, fascinated by nature but wary of a fearful humanity.",
+   "location": "Gothenburg, Sweden",
+   "age": 32,
+   "hitpoints": {
+    "total": 350,
+    "health": 250,
+    "armor": 100,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Configuration: Assault",
+     "description": "A slow-moving tank with a powerful rotary cannon."
+    },
+    {
+     "name": "Configuration: Recon",
+     "description": "Mobile, with a lightweight and highly accurate weapon."
+    },
+    {
+     "name": "A-36 Tactical Grenade",
+     "description": "Fire a bomb that bounces off walls and explodes when it impacts enemies or the ground."
+    },
+    {
+     "name": "Reconfigure",
+     "description": "Switch between weapon configurations."
+    },
+    {
+     "name": "Configuration: Artillery",
+     "description": "Become immobile and fire up to 3 powerful artillery shells."
+    }
+   ]
+  },
+  "ashe": {
+   "name": "Ashe",
+   "role": "damage",
+   "description": "Ashe is the ambitious and calculating leader of the Deadlock Rebels Gang and a respected figure in the criminal underworld.",
+   "location": "Deadlock Gorge, Arizona, USA",
+   "age": 41,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "The Viper",
+     "description": "Semi-automatic rifle.  Hold to zoom in, increasing damage and accuracy but slowing rate of fire."
+    },
+    {
+     "name": "Coach Gun",
+     "description": "Blast enemies in front of you and knock yourself backwards."
+    },
+    {
+     "name": "Dynamite",
+     "description": "Throw an explosive that detonates after a short delay or immediately when shot."
+    },
+    {
+     "name": "B.O.B.",
+     "description": "Deploy Bob. He charges forward and knocks enemies into the air, then attacks with his arm cannons."
+    }
+   ]
+  },
+  "brigitte": {
+   "name": "Brigitte",
+   "role": "support",
+   "description": "No longer sitting on the sidelines, Brigitte Lindholm has taken up arms to defend those in need of protection.",
+   "location": "Gothenburg, Sweden (formerly), Watchpoint: Gibraltar",
+   "age": 25,
+   "hitpoints": {
+    "total": 250,
+    "health": 175,
+    "armor": 75,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Rocket Flail",
+     "description": "Melee weapon with extended range."
+    },
+    {
+     "name": "Repair Pack",
+     "description": "Heals an ally for a short duration."
+    },
+    {
+     "name": "Whip Shot",
+     "description": "Launch your flail forward to knock an enemy away from you."
+    },
+    {
+     "name": "Barrier Shield",
+     "description": "Hold  to deploy a frontal energy barrier."
+    },
+    {
+     "name": "Shield Bash",
+     "description": "Available when Barrier Shield is deployed. Dash forward to knock back an enemy."
+    },
+    {
+     "name": "Rally",
+     "description": "Gain armor, empower Barrier Shield, and provide extra health to nearby allies."
+    },
+    {
+     "name": "Inspire",
+     "description": "Dealing damage to enemies heals nearby allies."
+    }
+   ]
+  },
+  "cassidy": {
+   "name": "Cassidy",
+   "role": "damage",
+   "description": "Armed with his Peacekeeper revolver, the outlaw Cole Cassidy doles out justice on his own terms.",
+   "location": "Santa Fe, New Mexico, USA (formerly), Watchpoint: Gibraltar",
+   "age": 39,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Peacekeeper",
+     "description": "Accurate, powerful revolver.  Wildly fire remaining rounds."
+    },
+    {
+     "name": "Combat Roll",
+     "description": "Roll in the direction you're moving to take reduced damage and reload."
+    },
+    {
+     "name": "Deadeye",
+     "description": "Face off against your enemies. Press Q to lock on, then Q or ABILITY 3 to fire."
+    }
+   ]
+  },
+  "dmon": {
+   "name": "D.Mon",
+   "role": "tank",
+   "description": "As MEKA’s new leader, D.Mon uses unmatched game sense to call the shots and keep her team united through any fight.",
+   "location": "MEKA Base, Busan, Korea",
+   "age": 28,
+   "hitpoints": {
+    "total": 700,
+    "health": 425,
+    "armor": 275,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Plasma Saber ",
+     "description": "Fast energy melee weapon."
+    },
+    {
+     "name": "Portable Fusion Repeater",
+     "description": "Heavy machine gun."
+    },
+    {
+     "name": "Power Barrier",
+     "description": "Hold  to deploy a frontal energy barrier."
+    },
+    {
+     "name": "Surging Strike",
+     "description": "While Power Barrier is deployed, strike forward to damage and push enemies back."
+    },
+    {
+     "name": "Fusion Repeater",
+     "description": "Activate a rapid-fire machine gun."
+    },
+    {
+     "name": "Propulsors",
+     "description": "Consume fuel to surge in any horizontal direction."
+    },
+    {
+     "name": "Eject!",
+     "description": "Eject out of your mech when it is destroyed."
+    },
+    {
+     "name": "Limit Break",
+     "description": "Unleash a sweeping slash that grants self overhealth and amplifies damage taken by enemies."
+    },
+    {
+     "name": "Call Mech",
+     "description": "Reassemble mech."
+    }
+   ]
+  },
+  "doctrine": {
+   "name": "Doctrine",
+   "role": "support",
+   "description": "A cyberneticist turned supervillain, Doctrine uses his fleet of life-draining drones to decree destiny.",
+   "location": "Watchpoint: Grímsvötn",
+   "age": 77,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Eternal Scepter",
+     "description": "Mid-range weapon that heals allies and damages enemies.  Infused: Fires a larger piercing blast."
+    },
+    {
+     "name": "Infuse",
+     "description": "Add a powerful effect to your next ability."
+    },
+    {
+     "name": "Invigorating Drones",
+     "description": "Deploy drones to an ally, granting attack speed and healing.  Infused: Also deploy drones to yourself."
+    },
+    {
+     "name": "Shrouded Momentum",
+     "description": "Rush horizontally with damage reduction.  Infused: Gain free-flight."
+    },
+    {
+     "name": "Deliverance",
+     "description": "Launch a swarm of drones that reduces enemy maximum health and grants allies overhealth."
+    }
+   ]
+  },
+  "domina": {
+   "name": "Domina",
+   "role": "tank",
+   "description": "As Vishkar Corporation’s most prized negotiator, Domina uses her masterful command of hard-light to take control of every situation.",
+   "location": "London, England (Formerly), Utopea, India",
+   "age": 32,
+   "hitpoints": {
+    "total": 650,
+    "health": 250,
+    "armor": 0,
+    "shields": 400
+   },
+   "abilities": [
+    {
+     "name": "Photon Magnum",
+     "description": "Medium-range beam that culminates in a high impact shot."
+    },
+    {
+     "name": "Barrier Array",
+     "description": "Construct a segmented barrier."
+    },
+    {
+     "name": "Sonic Repulsors",
+     "description": "Push enemies back, stunning them if they hit a wall."
+    },
+    {
+     "name": "Crystal Charge",
+     "description": "Project an explosive crystal and reactivate to detonate it."
+    },
+    {
+     "name": "Panopticon",
+     "description": "Fire a hard-light barrier that imprisons enemies and detonates on expiration."
+    }
+   ]
+  },
+  "dva": {
+   "name": "D.Va",
+   "role": "tank",
+   "description": "D.Va is a former professional gamer who now uses her skills to pilot a state-of-the-art mech in defense of her homeland.",
+   "location": "MEKA Base, Busan, South Korea (formerly), Watchpoint: Gibraltar",
+   "age": 21,
+   "hitpoints": {
+    "total": 675,
+    "health": 350,
+    "armor": 325,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Fusion Cannons",
+     "description": "Automatic short-range spread weapons."
+    },
+    {
+     "name": "Light Gun",
+     "description": "Automatic weapon."
+    },
+    {
+     "name": "Boosters",
+     "description": "Fly in the direction you are facing."
+    },
+    {
+     "name": "Defense Matrix",
+     "description": "Block projectiles in an area in front of you."
+    },
+    {
+     "name": "Micro Missiles",
+     "description": "Launch a volley of explosive rockets."
+    },
+    {
+     "name": "Self-Destruct",
+     "description": "Eject and overload your mech, causing it to explode after a short time."
+    },
+    {
+     "name": "Call Mech",
+     "description": "Call down a new mech."
+    },
+    {
+     "name": "Eject!",
+     "description": "Eject out of your mech when it is destroyed."
+    }
+   ]
+  },
+  "doomfist": {
+   "name": "Doomfist",
+   "role": "tank",
+   "description": "Doomfist was the calculating leader of Talon, a terrorist organization and paramilitary force that works in direct opposition to Overwatch.",
+   "location": "Oyo, Nigeria (formerly), Rome, Italy",
+   "age": 47,
+   "hitpoints": {
+    "total": 525,
+    "health": 525,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Hand Cannon",
+     "description": "Short-range weapon with spread. Reloads automatically."
+    },
+    {
+     "name": "Rocket Punch",
+     "description": "Hold to charge then release to launch forward and knock an enemy back. Damage increases if the enemy hits a wall."
+    },
+    {
+     "name": "Seismic Slam",
+     "description": "Leap and smash the ground."
+    },
+    {
+     "name": "Power Block",
+     "description": "Protect yourself from frontal attacks. Blocking heavy damage empowers Rocket Punch."
+    },
+    {
+     "name": "Meteor Strike",
+     "description": "Press Q to leap up into the air. Move the targeting circle, then press ABILITY 3 to strike the targeted area."
+    }
+   ]
+  },
+  "echo": {
+   "name": "Echo",
+   "role": "damage",
+   "description": "Echo is a multirole, adaptive robot with the most sophisticated artificial intelligence in the world, originally designed by Dr. Mina Liao for use during combat missions with Overwatch.",
+   "location": "Switzerland (formerly), United States (formerly), Watchpoint: Gibraltar",
+   "age": 14,
+   "hitpoints": {
+    "total": 225,
+    "health": 150,
+    "armor": 0,
+    "shields": 75
+   },
+   "abilities": [
+    {
+     "name": "Tri-Shot",
+     "description": "Fires 3 shots at once, in a triangle pattern."
+    },
+    {
+     "name": "Sticky Bombs",
+     "description": "Fire a volley of sticky bombs that detonate after a delay."
+    },
+    {
+     "name": "Flight",
+     "description": "Fly forward quickly and then free-fly briefly."
+    },
+    {
+     "name": "Focusing Beam",
+     "description": "Channel a beam for a few seconds. Deals very high damage to targets under half health."
+    },
+    {
+     "name": "Duplicate",
+     "description": "Become a copy of the targeted hero. They cannot swap heroes for the duration."
+    },
+    {
+     "name": "Glide",
+     "description": "Hold jump to glide while falling."
+    }
+   ]
+  },
+  "emre": {
+   "name": "Emre",
+   "role": "damage",
+   "description": "Emre disappeared after a lauded tenure on the Overwatch strike team. He has resurfaced years later, his body and mind manipulated by something unknown.",
+   "location": "Istanbul, Turkey (previous), Rome, Italy (current)",
+   "age": 44,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Synthetic Burst Rifle",
+     "description": "Three-round burst weapon.  Hold to zoom in, tightening accuracy and increasing fall off range."
+    },
+    {
+     "name": "Cyber Frag",
+     "description": "Throw a grenade that detonates shortly after bouncing."
+    },
+    {
+     "name": "Override Protocol",
+     "description": "An override initiates, transforming you into a living weapon."
+    },
+    {
+     "name": "Altered Vitals",
+     "description": "Passive health regeneration activates sooner and instantly restores 30 health when activated."
+    }
+   ]
+  },
+  "genji": {
+   "name": "Genji",
+   "role": "damage",
+   "description": "The cyborg ninja Genji Shimada has made peace with the augmented body he once rejected, and in doing so, he has discovered a higher humanity.",
+   "location": "Hanamura, Japan (formerly), Shambali Monastery, Nepal (formerly), Watchpoint: Gibraltar",
+   "age": 37,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Shuriken",
+     "description": "Throw an accurate burst of 3 projectiles.  Throw a fan of 3 projectiles in an arc."
+    },
+    {
+     "name": "Deflect",
+     "description": "Deflect incoming projectiles towards the direction you are aiming and block melee attacks."
+    },
+    {
+     "name": "Swift Strike",
+     "description": "Rapidly dash forward and inflict damage on enemies. Eliminations reset the cooldown."
+    },
+    {
+     "name": "Dragonblade",
+     "description": "Unsheathe a deadly melee weapon."
+    },
+    {
+     "name": "Cyber-Agility",
+     "description": "Climb on walls and double jump."
+    }
+   ]
+  },
+  "freja": {
+   "name": "Freja",
+   "role": "damage",
+   "description": "A search and rescue operative turned bounty hunter, Freja can find anyone for the right price.",
+   "location": "Copenhagen, Denmark (formerly); Unknown",
+   "age": 34,
+   "hitpoints": {
+    "total": 225,
+    "health": 225,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Bola Shot",
+     "description": "Fire an explosive bola. Hitting an enemy wraps them up and pulls in other nearby enemies."
+    },
+    {
+     "name": "Quick Dash",
+     "description": "Vault in the direction you're moving and refresh Take Aim."
+    },
+    {
+     "name": "Take Aim",
+     "description": "Slow your momentum to take aim with a high speed explosive bolt. Using Quick Dash refreshes Take Aim."
+    },
+    {
+     "name": "Updraft",
+     "description": "Launch upward with a gust of wind."
+    }
+   ]
+  },
+  "hazard": {
+   "name": "Hazard",
+   "role": "tank",
+   "description": "A radical disruptor and an unstoppable weapon, Hazard has rocketed to fame in the criminal underworld as he fights to tear the system down.",
+   "location": "Glasgow, Scotland (Formerly), Unknown",
+   "age": 24,
+   "hitpoints": {
+    "total": 650,
+    "health": 425,
+    "armor": 225,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Bonespur",
+     "description": "Fire a burst of spikes."
+    },
+    {
+     "name": "Spike Guard",
+     "description": "Protect yourself from frontal damage, firing homing spikes at nearby enemies and regenerating ammo."
+    },
+    {
+     "name": "Violent Leap",
+     "description": "Lunge forward. Activate again to slash at enemies, knocking them back."
+    },
+    {
+     "name": "Jagged Wall",
+     "description": "Launch a spiked wall that damages and knocks back nearby enemies."
+    },
+    {
+     "name": "Downpour",
+     "description": "Rain down a torrent of spikes, immobilizing enemies."
+    },
+    {
+     "name": "Vault",
+     "description": "Scale short walls and grab ledges."
+    }
+   ]
+  },
+  "hanzo": {
+   "name": "Hanzo",
+   "role": "damage",
+   "description": "Mastering his skills as a bowman and an assassin, Hanzo Shimada strives to prove himself as a warrior without peer.",
+   "location": "Hanamura, Japan (formerly)",
+   "age": 40,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Storm Bow",
+     "description": "Hold to charge then release to launch arrows further."
+    },
+    {
+     "name": "Storm Arrows",
+     "description": "The next 5 arrows ricochet and fire instantly at reduced damage."
+    },
+    {
+     "name": "Sonic Arrow",
+     "description": "Reveals enemies for a short time upon impact."
+    },
+    {
+     "name": "Lunge",
+     "description": "Double Jump."
+    },
+    {
+     "name": "Dragonstrike",
+     "description": "Launch a deadly Dragon Spirit that devastates enemies it passes through."
+    },
+    {
+     "name": "Wall Climb",
+     "description": "Jump at walls to climb up them."
+    }
+   ]
+  },
+  "illari": {
+   "name": "Illari",
+   "role": "support",
+   "description": "As the last of the Inti Warriors, Illari is a vessel for the power of the sun. She’ll do anything to make up for her past.",
+   "location": "Runasapi, Peru.",
+   "age": 18,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Solar Rifle",
+     "description": "Long range auto-charging rifle.  Medium range healing beam that consumes solar energy."
+    },
+    {
+     "name": "Captive Sun",
+     "description": "Fire an explosive ball of solar energy. Enemies hit are slowed and explode after taking significant damage."
+    },
+    {
+     "name": "Healing Pylon",
+     "description": "Deploy a pylon that heals allies."
+    },
+    {
+     "name": "Outburst",
+     "description": "Launches you in the direction you are moving, knocking back enemies. Hold jump to go higher."
+    }
+   ]
+  },
+  "jetpack-cat": {
+   "name": "Jetpack Cat",
+   "role": "support",
+   "description": "A fearless feline pilot equipped with Brigitte’s latest jet-propulsion invention, Jetpack Cat brings adorable aerial support to the battlefield.",
+   "location": "Watchpoint: Gibraltar",
+   "age": null,
+   "hitpoints": {
+    "total": 225,
+    "health": 225,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Biotic Pawjectiles",
+     "description": "Mid-range projectile spread that heals allies and damages enemies."
+    },
+    {
+     "name": "Frenetic Flight",
+     "description": "Accelerate in your movement direction. Fuel recovery is slower while carrying another player."
+    },
+    {
+     "name": "Lifeline",
+     "description": "Toggle into transport mode, allowing an ally to be towed. Increases movement speed and heals your ally."
+    },
+    {
+     "name": "Purr",
+     "description": "Pulsing area heal that increases in frequency over time. Knockback nearby enemies when activated."
+    },
+    {
+     "name": "Catnapper",
+     "description": "Dive towards a ground location, knocking down enemies and tethering the nearest one to you."
+    }
+   ]
+  },
+  "junker-queen": {
+   "name": "Junker Queen",
+   "role": "tank",
+   "description": "Armed with her axe, Carnage, and her electromagnetic gauntlet, the cutthroat leader of the Junkers is on a mission to rule the world.",
+   "location": "Junkertown, Australia",
+   "age": 31,
+   "hitpoints": {
+    "total": 525,
+    "health": 525,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Scattergun",
+     "description": "Pump action shotgun."
+    },
+    {
+     "name": "Commanding Shout",
+     "description": "Grants temporary health and movement speed to yourself and allies."
+    },
+    {
+     "name": "Carnage",
+     "description": "Wound all enemies in front of you, dealing damage over time and reducing the cooldown for each enemy hit."
+    },
+    {
+     "name": "Rampage",
+     "description": "Charge forward. Wounds enemies, dealing damage over time and preventing them from being healed."
+    },
+    {
+     "name": "Adrenaline Rush",
+     "description": "Heal from all damage over time dealt by wounds."
+    }
+   ]
+  },
+  "junkrat": {
+   "name": "Junkrat",
+   "role": "damage",
+   "description": "Junkrat is an explosives-obsessed demolitionist who lives to cause chaos and destruction.",
+   "location": "Junkertown, Australia (formerly)",
+   "age": 27,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Frag Launcher",
+     "description": "Bouncing explosive projectile weapon."
+    },
+    {
+     "name": "Concussion Mine",
+     "description": "Throw a knockback mine with LSHIFT then detonate it with ABILITY 1."
+    },
+    {
+     "name": "Steel Trap",
+     "description": "Place an immobilizing trap."
+    },
+    {
+     "name": "RIP-Tire",
+     "description": "Drive and detonate an exploding tire."
+    },
+    {
+     "name": "Total Mayhem",
+     "description": "Deals no damage to self with explosives. Drop bombs on death."
+    }
+   ]
+  },
+  "juno": {
+   "name": "Juno",
+   "role": "support",
+   "description": "The first human born on Mars, Juno uses her space-age technology to solve any problem that enters her orbit. She is determined to one day save her home planet.",
+   "location": "Red Promise Colony, Mars (formerly), Watchpoint: Gibraltar",
+   "age": 19,
+   "hitpoints": {
+    "total": 225,
+    "health": 75,
+    "armor": 0,
+    "shields": 150
+   },
+   "abilities": [
+    {
+     "name": "Mediblaster",
+     "description": "Burst fire weapon that heals allies and damages enemies."
+    },
+    {
+     "name": "Pulsar Torpedoes",
+     "description": "Press  to lock on, then SECONDARY FIRE to fire homing projectiles. Heals allies over time and damages enemies."
+    },
+    {
+     "name": "Orbital Ray",
+     "description": "Call down a ray that travels forward, healing allies and increasing their damage."
+    },
+    {
+     "name": "Hyper Ring",
+     "description": "Deploy a ring that increases movement speed of allies that pass through it."
+    },
+    {
+     "name": "Glide Boost",
+     "description": "Glide horizontally with increased movement speed."
+    },
+    {
+     "name": "Martian Overboots",
+     "description": "While airborne, press SPACE to double jump and hold SPACE to hover."
+    }
+   ]
+  },
+  "kiriko": {
+   "name": "Kiriko",
+   "role": "support",
+   "description": "As Miko of the Kanezaka shrine and daughter of the Shimada's former swordmaster, Kiriko Kamori channels both her spiritual and ninja skills to heal her fractured city.",
+   "location": "Kanezaka, Japan",
+   "age": 21,
+   "hitpoints": {
+    "total": 225,
+    "health": 225,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Healing Ofuda",
+     "description": "Channel a burst of healing talismans that can seek targeted allies."
+    },
+    {
+     "name": "Kunai",
+     "description": "Thrown long-ranged projectile."
+    },
+    {
+     "name": "Swift Step",
+     "description": "Teleport directly to an ally."
+    },
+    {
+     "name": "Protection Suzu",
+     "description": "Throw a protective charm to make allies become briefly invulnerable and cleansed of most negative effects."
+    },
+    {
+     "name": "Kitsune Rush",
+     "description": "Summon a fox spirit that rushes forward, accelerating the movement, attack speed, and cooldowns of allies that follow in its path."
+    }
+   ]
+  },
+  "lifeweaver": {
+   "name": "Lifeweaver",
+   "role": "support",
+   "description": "The brilliant creator of biolight, a technology that merges plant matter and hard light. He dreams of healing the world.",
+   "location": "Atlantic Arcology",
+   "age": 31,
+   "hitpoints": {
+    "total": 250,
+    "health": 200,
+    "armor": 0,
+    "shields": 50
+   },
+   "abilities": [
+    {
+     "name": "Healing Blossom",
+     "description": "Hold to charge a healing burst. Release to heal a targeted ally. Passively charges at a reduced rate when not in use."
+    },
+    {
+     "name": "Thorn Volley",
+     "description": "Rapidly fires pairs of projectiles."
+    },
+    {
+     "name": "Petal Platform",
+     "description": "Throw a platform that springs upwards when stepped on. Resets when not in use."
+    },
+    {
+     "name": "Rejuvenating Dash",
+     "description": "Dash towards your traveling direction and lightly heal yourself."
+    },
+    {
+     "name": "Life Grip",
+     "description": "Pull an ally to your location, protecting them as they travel."
+    },
+    {
+     "name": "Tree of Life",
+     "description": "Place a tree that instantly heals allies upon sprouting and continues healing periodically as it lives."
+    }
+   ]
+  },
+  "lucio": {
+   "name": "Lúcio",
+   "role": "support",
+   "description": "Lúcio is an international celebrity who inspires social change through his music and activism.",
+   "location": "Rio de Janeiro, Brazil",
+   "age": 28,
+   "hitpoints": {
+    "total": 225,
+    "health": 225,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Sonic Amplifier",
+     "description": "Sonic projectile launcher."
+    },
+    {
+     "name": "Crossfade",
+     "description": "Switches between two songs: Healing Boost heals nearby allies, and Speed Boost makes nearby allies move faster."
+    },
+    {
+     "name": "Amp It Up",
+     "description": "Increase the effectiveness of your current song."
+    },
+    {
+     "name": "Soundwave",
+     "description": "Create a short-range blast wave to knock enemies away from you."
+    },
+    {
+     "name": "Sound Barrier",
+     "description": "Create temporary extra health for nearby allies."
+    },
+    {
+     "name": "Wall Ride",
+     "description": "Jump onto a wall to ride along it."
+    }
+   ]
+  },
+  "mauga": {
+   "name": "Mauga",
+   "role": "tank",
+   "description": "A charismatic and cunning Samoan warrior, Mauga thrives in the chaos of the battlefield and lives every day like it’s his last.",
+   "location": "Apia, Samoa",
+   "age": 37,
+   "hitpoints": {
+    "total": 725,
+    "health": 575,
+    "armor": 150,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Overrun",
+     "description": "Charge forward and stomp to launch enemies. You are unstoppable while charging."
+    },
+    {
+     "name": "Cardiac Overdrive",
+     "description": "Gain damage reduction and nearby allies heal themselves by dealing damage."
+    },
+    {
+     "name": "Berserker",
+     "description": "Gain temporary health when dealing critical damage."
+    },
+    {
+     "name": "Cage Fight",
+     "description": "Deploy a barrier that traps yourself and enemies."
+    }
+   ]
+  },
+  "mei": {
+   "name": "Mei",
+   "role": "damage",
+   "description": "Mei is a scientist who has taken the fight to preserve the environment into her own hands.",
+   "location": "Xi’an, China (formerly)",
+   "age": 33,
+   "hitpoints": {
+    "total": 300,
+    "health": 300,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Endothermic Blaster",
+     "description": "Short-range spray weapon that slows enemies.  Long-range icicle launcher."
+    },
+    {
+     "name": "Cryo-Freeze",
+     "description": "Become invulnerable and heal yourself."
+    },
+    {
+     "name": "Ice Wall",
+     "description": "Create a wall in front of you."
+    },
+    {
+     "name": "Blizzard",
+     "description": "Launch a weather control drone that freezes enemies in a wide area."
+    }
+   ]
+  },
+  "mercy": {
+   "name": "Mercy",
+   "role": "support",
+   "description": "A guardian angel to those who come under her care, Dr. Angela Ziegler is a peerless healer, a brilliant scientist, and a staunch advocate for peace.",
+   "location": "Zürich, Switzerland (formerly), Watchpoint: Gibraltar",
+   "age": 39,
+   "hitpoints": {
+    "total": 225,
+    "health": 225,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Caduceus Staff",
+     "description": "Hold to heal an ally.  Hold to increase an ally's damage inflicted."
+    },
+    {
+     "name": "Caduceus Blaster",
+     "description": "Automatic weapon."
+    },
+    {
+     "name": "Guardian Angel",
+     "description": "Fly towards an ally. While in flight, Jump launches you forward, and Crouch launches you upward."
+    },
+    {
+     "name": "Resurrect",
+     "description": "Revive a dead teammate."
+    },
+    {
+     "name": "Angelic Descent",
+     "description": "Fall very slowly."
+    },
+    {
+     "name": "Valkyrie",
+     "description": "Gain the ability to fly. Abilities are enhanced."
+    }
+   ]
+  },
+  "mizuki": {
+   "name": "Mizuki",
+   "role": "support",
+   "description": "Born under a shadow of misfortune, Mizuki will do anything it takes to break free of his curse and decide his own fate.",
+   "location": "Tokyo, Japan (Previous), Kanezaka, Japan (Current)",
+   "age": 22,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Spirit Glaive",
+     "description": "Bouncing projectile that damages enemies."
+    },
+    {
+     "name": "Healing Kasa",
+     "description": "Throw your hat to bounce it between allies, healing them."
+    },
+    {
+     "name": "Binding Chain",
+     "description": "Launch your chain at an enemy, hindering their movement."
+    },
+    {
+     "name": "Katashiro Return",
+     "description": "Leap forward, gaining increased movement speed. Reactivate to teleport back."
+    },
+    {
+     "name": "Kekkai Sanctuary",
+     "description": "Create a sanctuary that heals allies within and absorbs enemy projectiles that pass through it."
+    },
+    {
+     "name": "Remedy Aura",
+     "description": "Heal nearby allies. Grows stronger when damaging and healing others."
+    }
+   ]
+  },
+  "moira": {
+   "name": "Moira",
+   "role": "support",
+   "description": "Equal parts brilliant and controversial, scientist Moira O'Deorain is on the cutting edge of genetic engineering, searching for a way to rewrite the fundamental building blocks of life.",
+   "location": "Oasis, Iraq",
+   "age": 50,
+   "hitpoints": {
+    "total": 225,
+    "health": 225,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Biotic Grasp",
+     "description": "Hold to heal all allies in front of you. Consumes biotic energy.  Long range beam weapon. Damage dealt heals you and replenishes your biotic energy."
+    },
+    {
+     "name": "Biotic Orb",
+     "description": "Launch a bouncing sphere that either heals nearby allies or damages nearby enemies."
+    },
+    {
+     "name": "Fade",
+     "description": "Disappear, move faster, and become invulnerable, but you cannot shoot."
+    },
+    {
+     "name": "Coalescence",
+     "description": "Fire a beam that heals allies and damages enemies."
+    }
+   ]
+  },
+  "orisa": {
+   "name": "Orisa",
+   "role": "tank",
+   "description": "Built from parts of one of Numbani's short-lived OR15 defense robots, Orisa is the city's newest protector, though she still has much to learn.",
+   "location": "Numbani, Africa",
+   "age": 1,
+   "hitpoints": {
+    "total": 600,
+    "health": 300,
+    "armor": 300,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Augmented Fusion Driver",
+     "description": "Automatic heat based weapon."
+    },
+    {
+     "name": "Energy Javelin",
+     "description": "Launch your javelin at an enemy to stun and knock them back. More effective if the enemy hits a wall."
+    },
+    {
+     "name": "Fortify",
+     "description": "Gain temporary health, reducing all damage taken and becoming unstoppable."
+    },
+    {
+     "name": "Javelin Spin",
+     "description": "Spin your javelin to destroy projectiles and block melee attacks, while also pushing enemies and increasing forward speed."
+    },
+    {
+     "name": "Terra Surge",
+     "description": "Sweep in enemies and anchor down, gaining the effects of Fortify and charging up a surge of damage. Use Q to unleash the surge early."
+    }
+   ]
+  },
+  "pharah": {
+   "name": "Pharah",
+   "role": "damage",
+   "description": "Fareeha Amari's commitment to duty runs in her blood. She comes from a long line of highly decorated soldiers and burns with the desire to serve with honor.",
+   "location": "Giza, Egypt (formerly), Watchpoint: Gibraltar",
+   "age": 34,
+   "hitpoints": {
+    "total": 225,
+    "health": 225,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Rocket Launcher",
+     "description": "Long-range explosive projectile weapon."
+    },
+    {
+     "name": "Jet Dash",
+     "description": "Boost horizontally."
+    },
+    {
+     "name": "Jump Jet",
+     "description": "Fly rapidly upwards. Grants some fuel."
+    },
+    {
+     "name": "Concussive Blast",
+     "description": "Launch an explosive blast to knock back enemies."
+    },
+    {
+     "name": "Barrage",
+     "description": "Launch a continuous volley of mini-rockets."
+    },
+    {
+     "name": "Hover Jets",
+     "description": "Hold to hover. Slows falling when fuel is empty. Fuel only regenerates while on the ground."
+    }
+   ]
+  },
+  "ramattra": {
+   "name": "Ramattra",
+   "role": "tank",
+   "description": "The brutal leader of Null Sector will stop at nothing to see his vision for the world realized.",
+   "location": "Shambali Monastery, Nepal (formerly)",
+   "age": 28,
+   "hitpoints": {
+    "total": 525,
+    "health": 425,
+    "armor": 100,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Void Accelerator (Omnic Form)",
+     "description": "Fire a stream of projectiles."
+    },
+    {
+     "name": "Void Barrier (Omnic Form)",
+     "description": "Create a barrier at the targeted location."
+    },
+    {
+     "name": "Pummel (Nemesis Form)",
+     "description": "Punch, creating a wave of piercing energy with every swing."
+    },
+    {
+     "name": "Ravenous Vortex",
+     "description": "Fire a sphere of energy that detonates on the ground, slowing and pulling down enemies. Re-activate to detonate early."
+    },
+    {
+     "name": "Annihilation",
+     "description": "Enter Nemesis Form and create a deadly swarm that lashes out at nearby enemies, persisting longer when damaging enemies."
+    }
+   ]
+  },
+  "reaper": {
+   "name": "Reaper",
+   "role": "damage",
+   "description": "Some speak of a black-robed terrorist known only as the Reaper. His identity and motives are a mystery. What is known is that where he appears, death follows.",
+   "location": "Rome, Italy",
+   "age": 60,
+   "hitpoints": {
+    "total": 300,
+    "health": 300,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Hellfire Shotguns",
+     "description": "Short-range spread weapons."
+    },
+    {
+     "name": "Shadow Step",
+     "description": "Teleport to a targeted location."
+    },
+    {
+     "name": "Wraith Form",
+     "description": "Move faster and become invulnerable, but you cannot shoot."
+    },
+    {
+     "name": "Death Blossom",
+     "description": "Damage all nearby enemies."
+    },
+    {
+     "name": "The Reaping",
+     "description": "Dealing damage heals you."
+    }
+   ]
+  },
+  "reinhardt": {
+   "name": "Reinhardt",
+   "role": "tank",
+   "description": "Reinhardt Wilhelm styles himself as a champion of a bygone age, who lives by the knightly codes of valor, justice, and courage.",
+   "location": "Stuttgart, Germany (formerly), Watchpoint: Gibraltar",
+   "age": 63,
+   "hitpoints": {
+    "total": 700,
+    "health": 400,
+    "armor": 300,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Rocket Hammer",
+     "description": "Devastating melee weapon."
+    },
+    {
+     "name": "Charge",
+     "description": "Charge forward and smash an enemy against a wall."
+    },
+    {
+     "name": "Fire Strike",
+     "description": "Launch a fiery projectile."
+    },
+    {
+     "name": "Barrier Field",
+     "description": "Hold  to deploy a frontal energy barrier."
+    },
+    {
+     "name": "Earthshatter",
+     "description": "Knock down all enemies in front of you."
+    }
+   ]
+  },
+  "roadhog": {
+   "name": "Roadhog",
+   "role": "tank",
+   "description": "Roadhog is a powerful enforcer with a well-earned reputation for random and wanton destruction.",
+   "location": "Junkertown, Australia (formerly)",
+   "age": 50,
+   "hitpoints": {
+    "total": 750,
+    "health": 750,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Scrap Gun",
+     "description": "Short-range shotgun that fires in two bursts."
+    },
+    {
+     "name": "Trash Compactor",
+     "description": "Absorb enemy projectiles, compacting them into an explosive ball of scrap."
+    },
+    {
+     "name": "Chain Hook",
+     "description": "Drag a targeted enemy towards you."
+    },
+    {
+     "name": "Take a Breather",
+     "description": "Heal yourself and reduce damage taken."
+    },
+    {
+     "name": "Whole Hog",
+     "description": "Damage and knock back enemies in front of you."
+    }
+   ]
+  },
+  "shion": {
+   "name": "Shion",
+   "role": "damage",
+   "description": "Once an omnic held captive by the Hashimoto Clan, now its most notorious Elder, Shion has transformed herself into a fearsome icon of hatred.",
+   "location": "Tokyo, Japan",
+   "age": 28,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Kira Pistols",
+     "description": "Rapid-fire anima pistols."
+    },
+    {
+     "name": "Execution",
+     "description": "Fire an X-shaped volley. Hold to tighten its spread."
+    },
+    {
+     "name": "Joyride",
+     "description": "Rev your engine. Reactivate to dismount and launch your bike forward."
+    },
+    {
+     "name": "Evade",
+     "description": "Dash and briefly gain overhealth."
+    },
+    {
+     "name": "Satsuriku Spree",
+     "description": "Rush forward 3 times in a storm of gunfire."
+    }
+   ]
+  },
+  "sierra": {
+   "name": "Sierra",
+   "role": "damage",
+   "description": "A dedicated teammate with enhanced abilities, Sierra has climbed the ranks of Helix Security. With her positive attitude, there's no challenge she can't face.",
+   "location": "Grand Mesa, Colorado",
+   "age": 25,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Helix Rifle",
+     "description": "Automatic assault weapon. Shoots in a spiral pattern, gaining accuracy with sustained fire."
+    },
+    {
+     "name": "Tracking Shot",
+     "description": "Marks an enemy. Helix Rifle shots automatically track marked enemies."
+    },
+    {
+     "name": "Tremor Charge",
+     "description": "Throw a charge that creates a shockwave on impact."
+    },
+    {
+     "name": "Anchor Drone",
+     "description": "Launch an Anchor Drone. Reactivate to grapple to it."
+    },
+    {
+     "name": "Trailblazer",
+     "description": "Deploy a drone that flies forward and drops explosives."
+    }
+   ]
+  },
+  "sigma": {
+   "name": "Sigma",
+   "role": "tank",
+   "description": "Brilliant astrophysicist Dr. Siebren de Kuiper's life changed forever when an experiment gone wrong gave him the ability to control gravity; now, Talon manipulates him to their own ends.",
+   "location": "The Hague, Netherlands (formerly), International Space Station (formerly)",
+   "age": 64,
+   "hitpoints": {
+    "total": 600,
+    "health": 350,
+    "armor": 0,
+    "shields": 250
+   },
+   "abilities": [
+    {
+     "name": "Hyperspheres",
+     "description": "Launch two charges which implode after a short duration, dealing damage in an area."
+    },
+    {
+     "name": "Kinetic Grasp",
+     "description": "Absorb projectiles in front of you and convert them into extra health."
+    },
+    {
+     "name": "Accretion",
+     "description": "Gather a mass of debris and throw it at an enemy to knock them down."
+    },
+    {
+     "name": "Experimental Barrier",
+     "description": "Hold to propel a floating barrier; release to stop. Press again to recall the barrier to you."
+    },
+    {
+     "name": "Gravitic Flux",
+     "description": "Manipulate gravity to lift enemies into the air and slam them back down."
+    }
+   ]
+  },
+  "sojourn": {
+   "name": "Sojourn",
+   "role": "damage",
+   "description": "As a leader in the bygone days of Overwatch, Vivian Chase, callsign Sojourn, is determined to ensure its new heroes don’t repeat the mistakes of the past.",
+   "location": "Toronto, Canada",
+   "age": 51,
+   "hitpoints": {
+    "total": 225,
+    "health": 225,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Railgun",
+     "description": "Rapid firing projectiles that generate energy on hit.  High impact shot that consumes stored energy and pierces enemies."
+    },
+    {
+     "name": "Power Slide",
+     "description": "Ground slide that can cancel into a high jump."
+    },
+    {
+     "name": "Disruptor Shot",
+     "description": "Launch an energy burst that deals damage to enemies within it."
+    },
+    {
+     "name": "Overclock",
+     "description": "Railgun energy auto-charges for a short duration."
+    }
+   ]
+  },
+  "soldier-76": {
+   "name": "Soldier: 76",
+   "role": "damage",
+   "description": "The target of an international manhunt, the vigilante known as Soldier: 76 wages a personal war to expose the truth behind Overwatch's collapse.",
+   "location": "Unknown",
+   "age": 58,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Heavy Pulse Rifle",
+     "description": "Automatic assault weapon."
+    },
+    {
+     "name": "Sprint",
+     "description": "Run faster while moving forward."
+    },
+    {
+     "name": "Biotic Field",
+     "description": "Deploy a field that heals you and your allies."
+    },
+    {
+     "name": "Helix Rockets",
+     "description": "Launch a volley of explosive rockets."
+    },
+    {
+     "name": "Tactical Visor",
+     "description": "Automatically aims your weapon at targets in view."
+    }
+   ]
+  },
+  "sombra": {
+   "name": "Sombra",
+   "role": "support",
+   "description": "One of the world's most notorious hackers, Sombra uses information to manipulate those in power.",
+   "location": "Dorado, Mexico",
+   "age": 32,
+   "hitpoints": {
+    "total": 225,
+    "health": 225,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Machine Pistol",
+     "description": "Short-range automatic weapon."
+    },
+    {
+     "name": "Hotfix",
+     "description": "Heal an ally over time for a set amount of health. Can also freely hack health packs and most enemy deployables."
+    },
+    {
+     "name": "Cyberspace",
+     "description": "Launch a projectile that explodes on impact, creating a zone that weakens enemies and heals allies."
+    },
+    {
+     "name": "Translocator",
+     "description": "Throw a beacon and teleport to it. Become stealthed for a short duration after teleporting."
+    },
+    {
+     "name": "EMP",
+     "description": "Deal damage to all nearby enemies equal to a percentage of their current health, hacking them and destroying barriers around you."
+    }
+   ]
+  },
+  "symmetra": {
+   "name": "Symmetra",
+   "role": "damage",
+   "description": "Symmetra literally bends reality. By manipulating hard-light constructs, she crafts the world as she wishes it to be, in hopes of engineering a perfect society.",
+   "location": "Utopaea, India",
+   "age": 30,
+   "hitpoints": {
+    "total": 275,
+    "health": 125,
+    "armor": 0,
+    "shields": 150
+   },
+   "abilities": [
+    {
+     "name": "Photon Projector",
+     "description": "Short-range beam weapon with increasing damage.  Hold to charge, release to fire explosive orb."
+    },
+    {
+     "name": "Sentry Turret",
+     "description": "Deploy a small turret that damages and slows enemies."
+    },
+    {
+     "name": "Teleporter",
+     "description": "Create two temporary teleporters that enable instant travel between them."
+    },
+    {
+     "name": "Photon Barrier",
+     "description": "Deploy a massive energy barrier."
+    }
+   ]
+  },
+  "torbjorn": {
+   "name": "Torbjörn",
+   "role": "damage",
+   "description": "At its height, Overwatch possessed one of the most advanced armaments on the planet, which could be traced to the workshop of an ingenious engineer named Torbjörn Lindholm.",
+   "location": "Gothenburg, Sweden",
+   "age": 59,
+   "hitpoints": {
+    "total": 300,
+    "health": 225,
+    "armor": 75,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Rivet Gun",
+     "description": "Slow firing, long-ranged weapon.  Inaccurate but powerful short-range weapon."
+    },
+    {
+     "name": "Forge Hammer",
+     "description": "Swing to repair your turret or damage an enemy."
+    },
+    {
+     "name": "Deploy Turret",
+     "description": "Deploy a self-building turret."
+    },
+    {
+     "name": "Overload",
+     "description": "Gain additional extra health as well as improved attack, movement, and reload speed."
+    },
+    {
+     "name": "Molten Core",
+     "description": "Create pools of molten slag that damage enemies. Deals additional damage to armor."
+    }
+   ]
+  },
+  "tracer": {
+   "name": "Tracer",
+   "role": "damage",
+   "description": "The former Overwatch agent known as Tracer is a time-jumping adventurer and an irrepressible force for good.",
+   "location": "London, England, Watchpoint: Gibraltar",
+   "age": 28,
+   "hitpoints": {
+    "total": 175,
+    "health": 175,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Pulse Pistols",
+     "description": "Short-range automatic weapons."
+    },
+    {
+     "name": "Blink",
+     "description": "Teleport in the direction you are moving."
+    },
+    {
+     "name": "Recall",
+     "description": "Travel back in time to your previous location and health."
+    },
+    {
+     "name": "Pulse Bomb",
+     "description": "Throw out a powerful sticky explosive."
+    }
+   ]
+  },
+  "vendetta": {
+   "name": "Vendetta",
+   "role": "damage",
+   "description": "As champion of the Colosseo and a member of Italy’s elite, Vendetta will stop at nothing to reclaim the throne of her family’s criminal empire. Known for her explosive rage and ruthlessness in battle, the only thing that exceeds her skill in physical combat is her boundless ambition.",
+   "location": "Rome, Italy",
+   "age": 29,
+   "hitpoints": {
+    "total": 275,
+    "health": 175,
+    "armor": 100,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Palatine Fang",
+     "description": "Hard-light greatsword. Combo swings to end with a destructive overhead slash."
+    },
+    {
+     "name": "Warding Stance",
+     "description": "Block with your sword, reducing frontal damage and deflecting melee attacks. Blocking damage depletes energy."
+    },
+    {
+     "name": "Whirlwind Dash",
+     "description": "Rush forward into a circular slash."
+    },
+    {
+     "name": "Soaring Slice",
+     "description": "Hurl your sword in the direction you are facing and then fly to it."
+    },
+    {
+     "name": "Projected Edge",
+     "description": "Available while Warding Stance is active. Consume energy to fire a wide projectile."
+    },
+    {
+     "name": "Sundering Blade",
+     "description": "Cleave through most defenses, dealing severe damage to enemies in front of you."
+    }
+   ]
+  },
+  "venture": {
+   "name": "Venture",
+   "role": "damage",
+   "description": "A globe-trotting archaeologist and explorer, Venture has a passion for solving history’s mysteries.",
+   "location": "Nova Scotia, Canada (Formerly), Roaming",
+   "age": 26,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "SMART Excavator",
+     "description": "Launch a seismic charge that bursts after a short distance."
+    },
+    {
+     "name": "Drill Dash",
+     "description": "Dash forward while above or underground, pushing enemies back. The cooldown is accelerated while Burrow is active."
+    },
+    {
+     "name": "Burrow",
+     "description": "Move underground and become invulnerable. Press or hold  LSHIFT  to emerge and damage enemies."
+    },
+    {
+     "name": "Tectonic Shock",
+     "description": "Send out damaging shockwaves."
+    }
+   ]
+  },
+  "widowmaker": {
+   "name": "Widowmaker",
+   "role": "damage",
+   "description": "Widowmaker is the perfect assassin: a patient, ruthlessly efficient killer who shows neither emotion nor remorse.",
+   "location": "Annecy, France",
+   "age": 35,
+   "hitpoints": {
+    "total": 225,
+    "health": 225,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Widow's Kiss",
+     "description": "Automatic assault weapon.  Hold for long-ranged sniper weapon."
+    },
+    {
+     "name": "Grappling Hook",
+     "description": "Launch a hook that pulls you towards a ledge."
+    },
+    {
+     "name": "Venom Mine",
+     "description": "Launch a poison trap."
+    },
+    {
+     "name": "Infra-Sight",
+     "description": "Provide your team with a view of the enemy's location."
+    }
+   ]
+  },
+  "winston": {
+   "name": "Winston",
+   "role": "tank",
+   "description": "A super-intelligent, genetically engineered gorilla, Winston is a brilliant scientist and a champion for humanity’s potential.",
+   "location": "Horizon Lunar Colony (formerly), Watchpoint: Gibraltar",
+   "age": 31,
+   "hitpoints": {
+    "total": 625,
+    "health": 425,
+    "armor": 200,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Tesla Cannon",
+     "description": "Electric frontal-cone weapon.  Hold to charge, release to fire focused electricity."
+    },
+    {
+     "name": "Jump Pack",
+     "description": "Leap forward into the air. Landing on an enemy damages them."
+    },
+    {
+     "name": "Barrier Projector",
+     "description": "Deploy a protective energy dome."
+    },
+    {
+     "name": "Primal Rage",
+     "description": "Gain immense health, but you can only leap and punch enemies."
+    }
+   ]
+  },
+  "wuyang": {
+   "name": "Wuyang",
+   "role": "support",
+   "description": "Wielder of healing technology from Wuxing University’s Water College, Wuyang is always ready to turn the tide of battle.",
+   "location": "Wuxing University, Chengdu",
+   "age": 19,
+   "hitpoints": {
+    "total": 225,
+    "health": 225,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Xuanwu Staff",
+     "description": "Fire a damaging water orb. Hold to control its trajectory and empower its explosion."
+    },
+    {
+     "name": "Restorative Stream",
+     "description": "Place a passive healing stream on an ally. Hold on the target to manually heal at an improved rate, consuming resource."
+    },
+    {
+     "name": "Rushing Torrent",
+     "description": "Ride water to move faster and jump higher."
+    },
+    {
+     "name": "Tidal Blast",
+     "description": "Protect an ally or yourself with water that detonates after a short duration. The explosion knocks down enemies and massively heals the host target."
+    },
+    {
+     "name": "Guardian Wave",
+     "description": "Send a water wave forward that increases the amount of healing received by allies and knocks back enemies."
+    }
+   ]
+  },
+  "wrecking-ball": {
+   "name": "Wrecking Ball",
+   "role": "tank",
+   "description": "A resourceful and highly intelligent mechanic and fighter, Wrecking Ball rose from the laboratories of Horizon Lunar Colony to become the Junker Queen’s champion.",
+   "location": "Horizon Lunar Colony (formerly), Junkertown (formerly)",
+   "age": 16,
+   "hitpoints": {
+    "total": 725,
+    "health": 450,
+    "armor": 125,
+    "shields": 150
+   },
+   "abilities": [
+    {
+     "name": "Quad Cannons",
+     "description": "Automatic assault weapons."
+    },
+    {
+     "name": "Grappling Claw",
+     "description": "Launch a grappling claw to rapidly swing around the area. Enables high speed collisions to damage and knockback enemies."
+    },
+    {
+     "name": "Roll",
+     "description": "Transform into a ball and increase maximum movement speed."
+    },
+    {
+     "name": "Piledriver",
+     "description": "Slam into the ground below to damage and launch enemies upward."
+    },
+    {
+     "name": "Adaptive Shield",
+     "description": "Create temporary extra health that increases with more nearby enemies. Some of the health can be transferred to allies."
+    },
+    {
+     "name": "Minefield",
+     "description": "Deploy a massive field of proximity mines."
+    }
+   ]
+  },
+  "zarya": {
+   "name": "Zarya",
+   "role": "tank",
+   "description": "Aleksandra Zaryanova is one of the world's strongest women, a celebrated athlete who sacrificed personal glory to protect her family, friends, and country in a time of war.",
+   "location": "Krasnoyarsk Front (formerly), Novoanskoye Forward Base, Siberia, Russia (formerly), Watchpoint: Gibraltar",
+   "age": 30,
+   "hitpoints": {
+    "total": 550,
+    "health": 325,
+    "armor": 0,
+    "shields": 225
+   },
+   "abilities": [
+    {
+     "name": "Particle Cannon",
+     "description": "Short-range linear beam weapon.  Energy grenade launcher."
+    },
+    {
+     "name": "Particle Barrier",
+     "description": "Create a damage barrier around you."
+    },
+    {
+     "name": "Projected Barrier",
+     "description": "Create a damage barrier around an ally."
+    },
+    {
+     "name": "Graviton Surge",
+     "description": "Launch a gravity well that pulls enemies to it."
+    },
+    {
+     "name": "Energy",
+     "description": "Damage blocked by barriers increases Particle Cannon damage."
+    }
+   ]
+  },
+  "zenyatta": {
+   "name": "Zenyatta",
+   "role": "support",
+   "description": "Zenyatta is an omnic monk who wanders the world in search of spiritual enlightenment. It is said that those who cross his path are never the same again.",
+   "location": "Shambali Monastery, Nepal (formerly)",
+   "age": 33,
+   "hitpoints": {
+    "total": 250,
+    "health": 75,
+    "armor": 0,
+    "shields": 175
+   },
+   "abilities": [
+    {
+     "name": "Orb of Destruction",
+     "description": "Energy projectile weapon.  Charge to release more projectiles."
+    },
+    {
+     "name": "Orb of Discord",
+     "description": "Launch this orb at an enemy to increase the damage they take."
+    },
+    {
+     "name": "Orb of Harmony",
+     "description": "Launch this orb at an ally to heal them."
+    },
+    {
+     "name": "Transcendence",
+     "description": "Become invulnerable, move faster, and heal nearby allies."
+    },
+    {
+     "name": "Snap Kick",
+     "description": "Quick melee damage increased by 50%, and its knockback is significantly increased."
+    }
+   ]
+  }
+ },
+ "maps": [
+  {
+   "key": "aatlis",
+   "name": "Aatlis",
+   "location": "Morocco",
+   "country": "MA",
+   "gamemodes": [
+    "flashpoint"
+   ]
+  },
+  {
+   "key": "antarctic-peninsula",
+   "name": "Antarctic Peninsula",
+   "location": "Antarctica",
+   "country": "AQ",
+   "gamemodes": [
+    "control"
+   ]
+  },
+  {
+   "key": "anubis",
+   "name": "Temple of Anubis",
+   "location": "Giza Plateau, Egypt",
+   "country": "EG",
+   "gamemodes": [
+    "assault"
+   ]
+  },
+  {
+   "key": "arena-victoriae",
+   "name": "Arena Victoriae",
+   "location": "Colosseo, Rome, Italy",
+   "country": "IT",
+   "gamemodes": [
+    "control"
+   ]
+  },
+  {
+   "key": "ayutthaya",
+   "name": "Ayutthaya",
+   "location": "Thailand",
+   "country": "TH",
+   "gamemodes": [
+    "capture-the-flag"
+   ]
+  },
+  {
+   "key": "black-forest",
+   "name": "Black Forest",
+   "location": "Germany",
+   "country": "DE",
+   "gamemodes": [
+    "elimination"
+   ]
+  },
+  {
+   "key": "blizzard-world",
+   "name": "Blizzard World",
+   "location": "Irvine, California, United States",
+   "country": "US",
+   "gamemodes": [
+    "hybrid"
+   ]
+  },
+  {
+   "key": "busan",
+   "name": "Busan",
+   "location": "South Korea",
+   "country": "KR",
+   "gamemodes": [
+    "control"
+   ]
+  },
+  {
+   "key": "castillo",
+   "name": "Castillo",
+   "location": "Mexico",
+   "country": "MX",
+   "gamemodes": [
+    "elimination"
+   ]
+  },
+  {
+   "key": "chateau-guillard",
+   "name": "Château Guillard",
+   "location": "Annecy, France",
+   "country": "FR",
+   "gamemodes": [
+    "deathmatch",
+    "team-deathmatch"
+   ]
+  },
+  {
+   "key": "circuit-royal",
+   "name": "Circuit Royal",
+   "location": "Monte Carlo, Monaco",
+   "country": "MC",
+   "gamemodes": [
+    "escort"
+   ]
+  },
+  {
+   "key": "colosseo",
+   "name": "Colosseo",
+   "location": "Rome, Italy",
+   "country": "IT",
+   "gamemodes": [
+    "push"
+   ]
+  },
+  {
+   "key": "dorado",
+   "name": "Dorado",
+   "location": "Mexico",
+   "country": "MX",
+   "gamemodes": [
+    "escort"
+   ]
+  },
+  {
+   "key": "ecopoint-antarctica",
+   "name": "Ecopoint: Antarctica",
+   "location": "Antarctica",
+   "country": "AQ",
+   "gamemodes": [
+    "elimination"
+   ]
+  },
+  {
+   "key": "eichenwalde",
+   "name": "Eichenwalde",
+   "location": "Stuttgart, Germany",
+   "country": "DE",
+   "gamemodes": [
+    "hybrid"
+   ]
+  },
+  {
+   "key": "esperanca",
+   "name": "Esperança",
+   "location": "Portugal",
+   "country": "PT",
+   "gamemodes": [
+    "push"
+   ]
+  },
+  {
+   "key": "gogadoro",
+   "name": "Gogadoro",
+   "location": "Busan, South Korea",
+   "country": "KR",
+   "gamemodes": [
+    "control"
+   ]
+  },
+  {
+   "key": "grimsvotn",
+   "name": "Grímsvötn",
+   "location": "Iceland",
+   "country": "IS",
+   "gamemodes": [
+    "escort"
+   ]
+  },
+  {
+   "key": "hanamura",
+   "name": "Hanamura",
+   "location": "Tokyo, Japan",
+   "country": "JP",
+   "gamemodes": [
+    "assault"
+   ]
+  },
+  {
+   "key": "hanaoka",
+   "name": "Hanaoka",
+   "location": "Tokyo, Japan",
+   "country": "JP",
+   "gamemodes": [
+    "clash"
+   ]
+  },
+  {
+   "key": "havana",
+   "name": "Havana",
+   "location": "Havana, Cuba",
+   "country": "CU",
+   "gamemodes": [
+    "escort"
+   ]
+  },
+  {
+   "key": "hollywood",
+   "name": "Hollywood",
+   "location": "Los Angeles, United States",
+   "country": "US",
+   "gamemodes": [
+    "hybrid"
+   ]
+  },
+  {
+   "key": "horizon",
+   "name": "Horizon Lunar Colony",
+   "location": "Earth's moon",
+   "country": "",
+   "gamemodes": [
+    "assault"
+   ]
+  },
+  {
+   "key": "ilios",
+   "name": "Ilios",
+   "location": "Greece",
+   "country": "GR",
+   "gamemodes": [
+    "control"
+   ]
+  },
+  {
+   "key": "junkertown",
+   "name": "Junkertown",
+   "location": "Central Australia",
+   "country": "AU",
+   "gamemodes": [
+    "escort"
+   ]
+  },
+  {
+   "key": "lijiang-tower",
+   "name": "Lijiang Tower",
+   "location": "China",
+   "country": "CN",
+   "gamemodes": [
+    "control"
+   ]
+  },
+  {
+   "key": "kanezaka",
+   "name": "Kanezaka",
+   "location": "Tokyo, Japan",
+   "country": "JP",
+   "gamemodes": [
+    "deathmatch",
+    "team-deathmatch"
+   ]
+  },
+  {
+   "key": "kings-row",
+   "name": "King’s Row",
+   "location": "London, United Kingdom",
+   "country": "UK",
+   "gamemodes": [
+    "hybrid"
+   ]
+  },
+  {
+   "key": "malevento",
+   "name": "Malevento",
+   "location": "Italy",
+   "country": "IT",
+   "gamemodes": [
+    "deathmatch",
+    "team-deathmatch"
+   ]
+  },
+  {
+   "key": "midtown",
+   "name": "Midtown",
+   "location": "New York, United States",
+   "country": "US",
+   "gamemodes": [
+    "hybrid"
+   ]
+  },
+  {
+   "key": "necropolis",
+   "name": "Necropolis",
+   "location": "Egypt",
+   "country": "EG",
+   "gamemodes": [
+    "elimination"
+   ]
+  },
+  {
+   "key": "nepal",
+   "name": "Nepal",
+   "location": "Nepal",
+   "country": "NP",
+   "gamemodes": [
+    "control"
+   ]
+  },
+  {
+   "key": "neon-junction",
+   "name": "Neon Junction",
+   "location": "Japan",
+   "country": "JP",
+   "gamemodes": [
+    "hybrid"
+   ]
+  },
+  {
+   "key": "new-junk-city",
+   "name": "New Junk City",
+   "location": "Central Australia",
+   "country": "AU",
+   "gamemodes": [
+    "flashpoint"
+   ]
+  },
+  {
+   "key": "new-queen-street",
+   "name": "New Queen Street",
+   "location": "Toronto, Canada",
+   "country": "CA",
+   "gamemodes": [
+    "push"
+   ]
+  },
+  {
+   "key": "numbani",
+   "name": "Numbani",
+   "location": "Numbani (near Nigeria)",
+   "country": "",
+   "gamemodes": [
+    "hybrid"
+   ]
+  },
+  {
+   "key": "oasis",
+   "name": "Oasis",
+   "location": "Iraq",
+   "country": "IQ",
+   "gamemodes": [
+    "control"
+   ]
+  },
+  {
+   "key": "paraiso",
+   "name": "Paraíso",
+   "location": "Rio de Janeiro, Brazil",
+   "country": "BR",
+   "gamemodes": [
+    "hybrid"
+   ]
+  },
+  {
+   "key": "paris",
+   "name": "Paris",
+   "location": "Paris, France",
+   "country": "FR",
+   "gamemodes": [
+    "assault"
+   ]
+  },
+  {
+   "key": "petra",
+   "name": "Petra",
+   "location": "Southern Jordan",
+   "country": "JO",
+   "gamemodes": [
+    "deathmatch",
+    "team-deathmatch"
+   ]
+  },
+  {
+   "key": "place-lacroix",
+   "name": "Place Lacroix",
+   "location": "Paris, France",
+   "country": "FR",
+   "gamemodes": [
+    "push"
+   ]
+  },
+  {
+   "key": "powder-keg-mine",
+   "name": "Powder Keg Mine",
+   "location": "Deadlock Gorge, Arizona, United States",
+   "country": "US",
+   "gamemodes": [
+    "payload-race"
+   ]
+  },
+  {
+   "key": "practice-range",
+   "name": "Practice Range",
+   "location": "Swiss HQ",
+   "country": "CH",
+   "gamemodes": [
+    "practice-range"
+   ]
+  },
+  {
+   "key": "redwood-dam",
+   "name": "Redwood Dam",
+   "location": "Gibraltar",
+   "country": "GI",
+   "gamemodes": [
+    "push"
+   ]
+  },
+  {
+   "key": "rialto",
+   "name": "Rialto",
+   "location": "Venice, Italy",
+   "country": "IT",
+   "gamemodes": [
+    "escort"
+   ]
+  },
+  {
+   "key": "route-66",
+   "name": "Route 66",
+   "location": "Albuquerque, New Mexico, United States",
+   "country": "US",
+   "gamemodes": [
+    "escort"
+   ]
+  },
+  {
+   "key": "runasapi",
+   "name": "Runasapi",
+   "location": "Peru",
+   "country": "PE",
+   "gamemodes": [
+    "push"
+   ]
+  },
+  {
+   "key": "samoa",
+   "name": "Samoa",
+   "location": "Samoa",
+   "country": "WS",
+   "gamemodes": [
+    "control"
+   ]
+  },
+  {
+   "key": "shambali-monastery",
+   "name": "Shambali Monastery",
+   "location": "Nepal",
+   "country": "NP",
+   "gamemodes": [
+    "escort"
+   ]
+  },
+  {
+   "key": "suravasa",
+   "name": "Suravasa",
+   "location": "India",
+   "country": "IN",
+   "gamemodes": [
+    "flashpoint"
+   ]
+  },
+  {
+   "key": "thames-district",
+   "name": "Thames District",
+   "location": "London, United Kingdom",
+   "country": "UK",
+   "gamemodes": [
+    "payload-race"
+   ]
+  },
+  {
+   "key": "throne-of-anubis",
+   "name": "Throne of Anubis",
+   "location": "Giza Plateau, Egypt",
+   "country": "EG",
+   "gamemodes": [
+    "clash"
+   ]
+  },
+  {
+   "key": "volskaya",
+   "name": "Volskaya Industries",
+   "location": "St. Petersburg, Russia",
+   "country": "RU",
+   "gamemodes": [
+    "assault"
+   ]
+  },
+  {
+   "key": "watchpoint-gibraltar",
+   "name": "Watchpoint: Gibraltar",
+   "location": "Gibraltar",
+   "country": "GI",
+   "gamemodes": [
+    "escort"
+   ]
+  },
+  {
+   "key": "workshop-chamber",
+   "name": "Workshop Chamber",
+   "location": "Earth",
+   "country": "",
+   "gamemodes": [
+    "workshop"
+   ]
+  },
+  {
+   "key": "workshop-expanse",
+   "name": "Workshop Expanse",
+   "location": "Earth",
+   "country": "",
+   "gamemodes": [
+    "workshop"
+   ]
+  },
+  {
+   "key": "workshop-green-screen",
+   "name": "Workshop Green Screen",
+   "location": "Earth",
+   "country": "",
+   "gamemodes": [
+    "workshop"
+   ]
+  },
+  {
+   "key": "workshop-island",
+   "name": "Workshop Island",
+   "location": "Earth",
+   "country": "",
+   "gamemodes": [
+    "workshop"
+   ]
+  },
+  {
+   "key": "wuxing-university",
+   "name": "Wuxing University",
+   "location": "Chengdu, Sichuan, China",
+   "country": "CN",
+   "gamemodes": [
+    "control"
+   ]
+  }
+ ]
+}
