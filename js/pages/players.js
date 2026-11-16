@@ -73,6 +73,7 @@ async function drawVsRank() {
 }
 
 async function onClick(e) {
+  const dp = e.target.closest('[data-deepplat]'); if (dp) { deep.platform = dp.dataset.deepplat; return drawDeep(); }
   const h = e.target.closest('[data-hero]'); if (h) return go('#/heroes/' + h.dataset.hero);
   const t = e.target.closest('[data-mode]'); if (t) { $('#main').dataset.mode = t.dataset.mode; return drawStats(); }
   const f = e.target.closest('[data-fav]');
@@ -198,19 +199,25 @@ async function drawHistory() {
   } catch (e) { el.innerHTML = head + errorBox(e); }
 }
 
+const deep = { platform: '' };
 async function drawDeep() {
   const out = $('#deepOut'); if (!out) return;
   const hero = $('#deepHero').value, mode = $('#deepMode').value;
   out.innerHTML = loadingBox(3);
   try {
-    const r = await api(`/api/players/${encodeURIComponent(current.id)}/career?` + qs({ gamemode: mode, hero }));
-    const groups = r.data[hero];
-    if (!groups?.length) { out.innerHTML = emptyBox(`No ${mode === 'competitive' ? 'Competitive' : 'Quick Play'} data for ${esc(heroInfo(hero).name)}`, 'This hero has not been played in this mode, or the profile hides it.'); return; }
+    // Detailed stats are kept per platform; load both and use the one(s) this hero was actually played on.
+    const tries = await Promise.all(['pc', 'console'].map(platform => api(`/api/players/${encodeURIComponent(current.id)}/career?` + qs({ gamemode: mode, hero, platform })).then(r => ({ platform, groups: r.data[hero] || [] }), () => ({ platform, groups: [] }))));
+    const played = g => g.find(x => x.key === 'game')?.stats.find(s => s.key === 'time_played')?.value || 0;
+    const usable = tries.filter(t => t.groups.length && played(t.groups) > 0).sort((a, b) => played(b.groups) - played(a.groups));
+    if (!usable.length) { out.innerHTML = emptyBox(`No ${mode === 'competitive' ? 'Competitive' : 'Quick Play'} data for ${esc(heroInfo(hero).name)}`, 'This hero has not been played in this mode, or the profile hides it.'); return; }
+    if (!usable.some(t => t.platform === deep.platform)) deep.platform = usable[0].platform;
+    const groups = usable.find(t => t.platform === deep.platform).groups;
     const order = ['average', 'hero_specific', 'best', 'combat', 'game', 'assists', 'match_awards', 'miscellaneous'];
     groups.sort((a, b) => (order.indexOf(a.key) + 99) % 99 - (order.indexOf(b.key) + 99) % 99);
     const fmt = (k, v) => /time|played/.test(k) && v > 300 ? hours(v) : /accuracy|percentage|win_percentage/.test(k) ? pct(v, 0) : num(v, v % 1 ? 2 : 0);
-    out.innerHTML = `<div class="deep">${heroPortrait(hero, 'deep-portrait')}<div class="deep-groups">${groups.map(g => `<div class="deep-group"><h3>${esc(cap(g.label))}</h3><dl>${g.stats.slice(0, 12).map(s => `<dt>${esc(cap(s.label))}</dt><dd>${esc(fmt(s.key, s.value))}</dd>`).join('')}</dl></div>`).join('')}</div></div>
-      <p class="source-note">Blizzard career statistics for ${esc(heroInfo(hero).name)} (${esc(modeLabel(mode, current))}) via OverFast /players/…/stats/career.</p>`;
+    const platPick = usable.length > 1 ? `<div class="seg sm deep-plat">${usable.map(t => `<button class="${t.platform === deep.platform ? 'on' : ''}" data-deepplat="${t.platform}">${t.platform === 'pc' ? 'PC' : 'Console'}</button>`).join('')}</div>` : '';
+    out.innerHTML = `${platPick}<div class="deep">${heroPortrait(hero, 'deep-portrait')}<div class="deep-groups">${groups.map(g => `<div class="deep-group"><h3>${esc(cap(g.label))}</h3><dl>${g.stats.slice(0, 12).map(s => `<dt>${esc(cap(s.label))}</dt><dd>${esc(fmt(s.key, s.value))}</dd>`).join('')}</dl></div>`).join('')}</div></div>
+      <p class="source-note">Blizzard career statistics for ${esc(heroInfo(hero).name)} (${esc(modeLabel(mode, current))}, ${deep.platform === 'pc' ? 'PC' : 'console'}) via OverFast.</p>`;
   } catch (e) { out.innerHTML = errorBox(e); }
 }
 

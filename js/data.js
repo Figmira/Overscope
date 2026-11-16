@@ -243,7 +243,7 @@ export async function playerProfile(rawId) {
   await Promise.all(['competitive', 'quickplay'].map(async gamemode => {
     try {
       const d = (await getJSON(of(`/players/${encodeURIComponent(id)}/stats/summary`, { gamemode }), 5 * 60_000)).data || {};
-      const heroesList = Object.entries(d.heroes || {}).map(([k, v]) => ({ hero: k, ...normaliseBlock(v) })).filter(h => h.timePlayed).sort((a, b) => b.timePlayed - a.timePlayed);
+      const heroesList = Object.entries(d.heroes || {}).map(([k, v]) => ({ hero: k, ...normaliseBlock(v) })).filter(h => h.timePlayed >= 60).sort((a, b) => b.timePlayed - a.timePlayed); // under a minute = no real data
       p.stats[gamemode] = { general: normaliseBlock(d.general), roles: Object.fromEntries(Object.entries(d.roles || {}).map(([k, v]) => [k, normaliseBlock(v)])), heroes: heroesList };
     } catch (e) { p.stats[gamemode] = { error: e.message, status: e.status }; }
   }));
@@ -260,10 +260,11 @@ export async function playerCompHeroes(rawId, { platform = 'pc' } = {}) {
   return Object.entries(d.heroes || {}).map(([k, v]) => ({ hero: k, ...normaliseBlock(v) })).filter(h => h.gamesPlayed);
 }
 const CAREER_GROUPS = { average: 'Per 10 minutes', best: 'Best in a game / life', combat: 'Combat totals', assists: 'Assists', game: 'Games', hero_specific: 'Hero-specific', match_awards: 'Match awards', miscellaneous: 'Miscellaneous' };
-export async function playerCareer(rawId, { gamemode = 'competitive', hero = '' } = {}) {
+export async function playerCareer(rawId, { gamemode = 'competitive', hero = '', platform = '' } = {}) {
   const id = safeDecode(str(rawId));
-  if (!ID_RE.test(id) || !['competitive', 'quickplay'].includes(gamemode) || (hero && !/^[a-z0-9-]{2,40}$/.test(hero))) throw new ApiError('Invalid request', 400);
-  const r = await getJSON(of(`/players/${encodeURIComponent(id)}/stats/career`, { gamemode, hero: hero || undefined }), 5 * 60_000);
+  if (!ID_RE.test(id) || !['competitive', 'quickplay'].includes(gamemode) || (hero && !/^[a-z0-9-]{2,40}$/.test(hero)) || (platform && !PLATFORMS.includes(platform))) throw new ApiError('Invalid request', 400);
+  // Without a platform the source silently answers for PC only, so callers pass one.
+  const r = await getJSON(of(`/players/${encodeURIComponent(id)}/stats/career`, { gamemode, hero: hero || undefined, platform: platform || undefined }), 5 * 60_000);
   const out = {};
   for (const [h, groups] of Object.entries(r.data || {})) {
     if (!groups || typeof groups !== 'object') continue;
