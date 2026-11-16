@@ -1,6 +1,6 @@
 # Browser check results
 
-Run 2026-11-16T18:49:11.326Z in Chromium via Playwright. The static site was served exactly as GitHub Pages serves it (under /overscope/); all data was fetched live by the browser.
+Run 2026-11-16T19:53:26.105Z in Chromium via Playwright. The static site was served exactly as GitHub Pages serves it (under /overscope/); all data was fetched live by the browser.
 
 ## Pages
 
@@ -58,11 +58,11 @@ Run 2026-11-16T18:49:11.326Z in Chromium via Playwright. The static site was ser
 - PASS — Competitive: sort by win rate: top win rate 54.9%
 - PASS — Stadium: select powers & share link: 2 slots filled; url /stadium/tracer?p=Flash+Fist%7CQuantum+Clip&keep=1
 - PASS — Maps: map detail shows objective + hero-on-map data: opened /maps/aatlis?queue=competitive
-- PASS — News: items link to Blizzard: 15 items, first https://overwatch.blizzard.com/news/24316733/directors-take-5v5-and-6v6-better-together
-- FAIL — Players: nonexistent BattleTag handled: No public profile for this BattleTagBlizzard has no public career profile for ThisPlayerDoesNotExist#99999 right now, so
+- PASS — News: items link to Blizzard: 15 items, first https://overwatch.blizzard.com/en-us/news/patch-notes/#patch-2026-11-16
+- PASS — Players: nonexistent BattleTag handled: explains there is no public profile
 - PASS — Meta by rank: heatmap shows one column per rank: 8 ranks, 432 cells
 - PASS — Patch impact: hidden until a patch has before/after data, shown once it does: hidden (no before/after data yet)
-- PASS — Privacy: the site makes no requests except to OverFast, Blizzard media and its own files: hosts contacted: 127.0.0.1:37195, overfast-api.tekrop.fr, blz-contentstack-images.akamaized.net, d15f34w2p8l1cc.cloudfront.net, bnetcmsus-a.akamaihd.net, static.playoverwatch.com
+- PASS — Privacy: the site makes no requests except to OverFast, Blizzard media and its own files: hosts contacted: 127.0.0.1:34647, overfast-api.tekrop.fr, blz-contentstack-images.akamaized.net, d15f34w2p8l1cc.cloudfront.net, bnetcmsus-a.akamaihd.net, static.playoverwatch.com
 - PASS — Favorites: star a player, see them on the Players page, then un-star: listed: TeKrop (then removed)
 - PASS — Favorites: star a hero and filter the roster: Favorites filter → Winston
 - PASS — Player profile: rank history + hero deep dive render: deep-dive groups: Per 10 minutes, Hero-specific, Best in a game / life, Combat totals, Games, Assists, Match awards · history: Rank & stat historysaved in this browser only First snapshot saved 2026-11-16Eac

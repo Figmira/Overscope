@@ -8,6 +8,21 @@ export const ROLE_NAME = { tank: 'Tank', damage: 'Damage', support: 'Support' };
 // Only queues with published data are offered (no Open Queue: nobody publishes its hero rates).
 export const QUEUE_KEYS = ['competitive', 'quickplay'];
 // Blizzard's hero rates cover Role Queue only: 'Competitive - Role Queue' and 'Quick Play - Role Queue'.
+// Blizzard's data keeps counting seasons from Overwatch 2 (season 25 = 2026 Season 5).
+// From 2026 the game numbers six seasons per year, starting again at Season 1.
+export const seasonName = n => (!n ? '' : n >= 21 ? `Season ${((n - 21) % 6) + 1}${n >= 27 ? ` (${2026 + Math.floor((n - 21) / 6)})` : ''}` : `Season ${n}`);
+/** Current season from Blizzard's news titles, e.g. "Reign of Talon – Season 5: A Grim Doctrine". */
+export function seasonFromNews(items = []) {
+  for (const it of items) {
+    const m = /Season\s+(\d+)(?::\s*(.+))?$/i.exec(it.title || '') || /Season\s+(\d+)\b/i.exec(it.title || '') || /\bS(\d+)\s+Mid/i.exec(it.title || '');
+    if (!m) continue;
+    const named = items.map(x => new RegExp(`Season\\s+${m[1]}:\\s*(.+)$`, 'i').exec(x.title || '')?.[1]?.trim()).find(x => x && x.split(/\s+/).length <= 4);
+    const name = named || '';
+    const arc = /([A-Z][A-Za-z' ]+?)\s+[–-]\s+S(?:eason\s+)?\d+/.exec(it.title || '')?.[1] || '';
+    return { number: Number(m[1]), name, arc };
+  }
+  return null;
+}
 export const QUEUE_NAME = { competitive: 'Competitive · Role Queue', quickplay: 'Quick Play · Role Queue' };
 export const QUEUE_SHORT = { competitive: 'Competitive', quickplay: 'Quick Play' };
 // Platform names shown to users. (Blizzard's filter is technically by input device.)

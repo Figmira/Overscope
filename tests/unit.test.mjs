@@ -95,3 +95,32 @@ test('BattleTag spelling: typed form first, common capitalisations covered, boun
   assert.ok(v.length <= 24);
   assert.deepEqual(tagVariants('NoTag'), ['NoTag']);
 });
+
+test('head to head: even band, lower-is-better, minimum games and weighted verdict', async () => {
+  const { lead, compareMetrics, careerMetrics, writeSummary } = await import('../js/h2h.js');
+  const perTen = { key: 'eliminations_avg_per_10_min', pct: false, lower: false };
+  assert.equal(lead(perTen, 20, 19.2), 'even');            // 4% gap
+  assert.equal(lead(perTen, 20, 18.9), 'a');               // 5.5% gap
+  assert.equal(lead({ key: 'deaths_avg_per_10_min', pct: false, lower: true }, 6, 8), 'a'); // fewer deaths wins
+  assert.equal(lead({ key: 'sleep_dart_accuracy', pct: true, lower: false }, 40, 38.5), 'even'); // under 2 points
+  const career = (games, win, deaths, darts, acc) => [
+    { key: 'game', stats: [{ key: 'games_played', value: games }, { key: 'win_percentage', value: win }] },
+    { key: 'average', stats: [{ key: 'deaths_avg_per_10_min', value: deaths }, { key: 'eliminations_avg_per_10_min', value: 10 }] },
+    { key: 'hero_specific', stats: [{ key: 'enemies_slept_avg_per_10_min', value: darts }, { key: 'sleep_dart_accuracy', value: acc }, { key: 'enemies_slept_most_in_game', value: 9 }] },
+  ];
+  const a = careerMetrics(career(30, 55, 5, 3, 45)), b = careerMetrics(career(30, 50, 7, 2, 35));
+  assert.ok(!('enemies_slept_most_in_game' in a), 'records are not compared');
+  const res = compareMetrics(a, b);
+  assert.equal(res.winner, 'a');
+  assert.equal(res.scoreA, 8); // win x2 + deaths x2 + darts x2 + accuracy x2
+  assert.match(writeSummary(res, 'Iso', 'Kenobi', 'Ana'), /^Iso performs better on Ana/);
+  const few = compareMetrics(careerMetrics(career(3, 55, 5, 3, 45)), b);
+  assert.equal(few.winner, '');
+  assert.match(writeSummary(few, 'Iso', 'Kenobi', 'Ana'), /No call on Ana/);
+  // only a single-weight stat differs (eliminations 10 vs 11): 0-1 is within 1 point -> too close to call
+  const x = careerMetrics(career(30, 50, 7, 3, 35)), y = careerMetrics(career(30, 50, 7, 3, 35));
+  y.eliminations_avg_per_10_min.value = 11;
+  const close = compareMetrics(x, y);
+  assert.equal(close.winner, 'close');
+  assert.match(writeSummary(close, 'Iso', 'Kenobi', 'Ana'), /^Too close to call on Ana/);
+});

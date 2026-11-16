@@ -17,7 +17,7 @@ export async function render({ main, route, signal }) {
     ${view === 'table' && prefs.queue === 'quickplay'
       ? `<header class="page-top"><p class="eyebrow">Quick Play · Role Queue</p><h1>Quick Play <em>hero meta</em></h1><p>Blizzard's official hero pick and win rates for Quick Play (Role Queue), covering games since the start of the current patch. Blizzard publishes no ban rates or rank split for Quick Play.</p></header>`
       : view === 'table'
-        ? `<header class="page-top"><p class="eyebrow">Competitive · Role Queue</p><h1>Competitive <em>hero meta</em></h1><p>Blizzard's official hero pick, win and ban rates for Competitive Role Queue, covering games since the start of the current patch. Open Queue has no published hero rates; see <a href="#/open-queue">Open Queue</a> for player stats.</p></header>`
+        ? `<header class="page-top"><p class="eyebrow">Competitive · Role Queue</p><h1>Competitive <em>hero meta</em></h1><p>Blizzard's official hero pick, win and ban rates for Competitive Role Queue, covering games since the start of the current patch. Blizzard publishes no Open Queue hero rates.</p></header>`
         : `<header class="page-top"><p class="eyebrow">Hero meta · Role Queue</p><h1>Meta <em>analysis</em></h1><p>Blizzard's official hero rates for Role Queue (Competitive and Quick Play), covering games since the start of the current patch. Each queue is its own dataset.</p></header>`}
     <div class="toolbar"><div class="seg big" role="tablist">${views.map(([k, v]) => `<button class="${view === k ? 'on' : ''}" data-view="${k}">${v}</button>`).join('')}</div></div>
     <div id="compBody"></div></div>`;

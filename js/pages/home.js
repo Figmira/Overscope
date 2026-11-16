@@ -1,10 +1,11 @@
-import { favorites, relay, safeLink , INPUT_NAME, INPUT_SHORT, RANK_LABEL, RANK_SHORT } from '../lib.js';
+import { favorites, relay, safeLink, seasonFromNews, INPUT_NAME, INPUT_SHORT, RANK_LABEL, RANK_SHORT } from '../lib.js';
 import { $, $$, esc, pct, api, prefs, setPref, statsPath, qs, heroInfo, heroPortrait, heroArt, heroCutout, hasCutout, mapImage, getManifest, icon, roleIcon, badge, errorBox, loadingBox, emptyBox, fmtDate, timeAgo, ROLE_NAME, QUEUE_NAME, QUEUE_SHORT, REGION_NAME, sourceNote, openQueueUnavailable, toast } from '../lib.js';
 import { heroes as loadHeroes, maps as loadMaps, news as loadNews, go } from '../app.js';
 import { scatter, trend, legend, ring } from '../charts.js';
 
 const CORE_MODES = ['control', 'escort', 'hybrid', 'push', 'flashpoint', 'clash'];
-const state = { role: '', mapKey: '', mapQueue: 'competitive', thumbStart: 0, chart: 'auto' };
+const scope = () => QUEUE_NAME[prefs.queue] + (prefs.queue === 'competitive' ? ' · ' + RANK_LABEL(prefs.division) : '');
+const state = { role: '', mapKey: '', mapQueue: 'competitive', thumbStart: 0, chart: 'auto', chartRole: '' };
 
 export async function render({ main, signal }) {
   const m = getManifest();
@@ -17,11 +18,12 @@ export async function render({ main, signal }) {
     <div class="banner-copy">
       <p class="eyebrow">Overwatch analytics</p>
       <h1>THE COMPLETE<br>OVERWATCH <em>INSIGHTS HUB</em></h1>
-      <p>Player stats, including Open Queue. Hero meta for Competitive Role Queue and Quick Play. Stadium powers. Maps and official patch notes. All in one place.</p>
+      <p>Player stats. Hero meta for Competitive Role Queue and Quick Play. Stadium powers. Maps and official patch notes. All in one place.</p>
       <div class="cta"><a class="btn primary" href="#/competitive">${icon('i-bars')}Explore meta${icon('i-arrow')}</a><a class="btn ghost" href="#/stadium">${icon('i-stadium')}View Stadium${icon('i-arrow')}</a></div>
     </div>
     <a class="patch-card" href="#/news?kind=patch" id="patchCard">
-      <small>Current patch</small><strong id="patchDate">Loading…</strong>
+      <small id="patchSeason">Current season</small>
+      <small>Latest patch</small><strong id="patchDate">Loading…</strong>
       <span class="live" id="patchLive">Official patch notes</span>
       <span class="more">Patch notes ${icon('i-arrow')}</span>
       <span class="patch-art">${heroArt('winston', 'patch-hero')}</span>
@@ -30,8 +32,7 @@ export async function render({ main, signal }) {
 
   main.innerHTML = `<div class="home">
     <div class="mode-row">
-      <div class="mode-bar comp"><h2>${icon('i-laurel')}Competitive</h2><div id="queueTabs"></div></div>
-      <div class="mode-bar stad"><h2>${icon('i-stadium')}Stadium</h2>
+      <div class="mode-bar comp"><h2>${icon('i-laurel')}Hero meta</h2><div id="queueTabs"></div>
         <div class="mode-tools">
           <label class="sel"><span>Platform</span><select data-pref="platform"><option value="pc">PC</option><option value="console">Console</option></select></label>
           <label class="sel"><span>Region</span><select data-pref="region">${Object.entries(REGION_NAME).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}</select></label>
@@ -82,6 +83,8 @@ export async function render({ main, signal }) {
     if (nav) { state.thumbStart += Number(nav.dataset.thumbs); renderMap(); return; }
     const ch = e.target.closest('[data-chart]');
     if (ch) { state.chart = ch.dataset.chart; renderChart(); return; }
+    const cr = e.target.closest('[data-chartrole]');
+    if (cr) { state.chartRole = cr.dataset.chartrole; renderChart(); return; }
     const row = e.target.closest('[data-hero]');
     if (row) go('#/heroes/' + row.dataset.hero);
   }, { signal });
@@ -115,7 +118,7 @@ async function loadStats() {
 }
 
 function metaHead() {
-  return `<header class="panel-head"><h2>${icon('i-laurel')}Hero meta<small>— ${esc(QUEUE_SHORT[prefs.queue])}</small></h2>${roleTabs()}</header>`;
+  return `<header class="panel-head"><h2>${icon('i-laurel')}Hero meta<small>— ${esc(scope())}</small></h2>${roleTabs()}</header>`;
 }
 function roleTabs() {
   return `<div class="chips">${[['', 'All roles'], ['tank', 'Tank'], ['damage', 'Damage'], ['support', 'Support']].map(([k, v]) => `<button class="chip ${state.role === k ? 'on' : ''}" aria-pressed="${state.role === k}" data-role="${k}">${v}</button>`).join('')}</div>`;
@@ -150,12 +153,12 @@ function renderMeta() {
         ${hasTrend ? `<span class="trend-cell">${d == null ? '<span class="na" title="Not in the earliest saved day">—</span>' : d > 0.05 ? `<span class="up">▲ ${d.toFixed(1)}</span>` : d < -0.05 ? `<span class="down">▼ ${Math.abs(d).toFixed(1)}</span>` : '<span class="flat">＝</span>'}</span>` : ''}
       </div>`;
     }).join('')}
-  </div><footer class="panel-foot"><span class="muted">${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])}${prefs.queue === 'competitive' && prefs.division ? ' · ' + esc(prefs.division) : ''} · official Blizzard rates</span><a href="#/competitive?queue=${prefs.queue}">View full hero meta ${icon('i-arrow')}</a></footer>`;
+  </div><footer class="panel-foot"><span class="muted">${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])}${prefs.queue === 'competitive' && prefs.division ? ' · ' + esc(RANK_LABEL(prefs.division)) : ''} · official Blizzard rates</span><a href="#/competitive?queue=${prefs.queue}">View full hero meta ${icon('i-arrow')}</a></footer>`;
 }
 
 function renderKpi() {
   const el = $('#kpiComp');
-  const head = `<div class="kpi-emblem">${icon('i-laurel')}</div><div class="kpi-title"><h2>Competitive overview <small>— ${esc(QUEUE_SHORT[prefs.queue])}</small></h2><p>${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])}${stats?.source ? ' · updated ' + esc(timeAgo(stats.source.fetchedAt)) : ''}</p></div>`;
+  const head = `<div class="kpi-emblem">${icon('i-laurel')}</div><div class="kpi-title"><h2>Overview <small>— ${esc(scope())}</small></h2><p>${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])}${stats?.source ? ' · updated ' + esc(timeAgo(stats.source.fetchedAt)) : ''}</p></div>`;
   if (statsErr) { el.innerHTML = `<div class="kpi-in">${head}<p class="kpi-msg">Live statistics are unavailable: ${esc(statsErr.message)}</p></div>`; return; }
   if (!stats) return;
   if (!stats.available) { el.innerHTML = `<div class="kpi-in">${head}<p class="kpi-msg">No verified Open Queue dataset exists. Nothing is shown rather than borrowing Role Queue numbers.</p></div>`; return; }
@@ -193,7 +196,9 @@ function renderChart() {
     el.innerHTML = head(`Meta trend <small>— pick rate on ${days} saved days since ${esc(fmtDate(trendData.days[0]))}</small>`) + `<div class="chart-wrap">${trend(trendData.snapshots, top)}</div>`;
     return;
   }
-  el.innerHTML = head('Meta snapshot <small>— pick vs win</small>') + `<div class="chart-wrap">${scatter(stats.rows)}${legend({ rings: true })}</div>`;
+  const roleChips = `<div class="chips tiny chart-roles">${[['', 'All roles'], ['tank', 'Tank'], ['damage', 'Damage'], ['support', 'Support']].map(([k, v]) => `<button class="chip ${state.chartRole === k ? 'on' : ''}" data-chartrole="${k}">${k ? roleIcon(k) : ''}${v}</button>`).join('')}</div>`;
+  const shown = state.chartRole ? stats.rows.filter(r => heroInfo(r.hero).role === state.chartRole) : stats.rows;
+  el.innerHTML = head('Meta snapshot <small>— pick vs win</small>') + roleChips + `<div class="chart-wrap">${scatter(shown, { highlight: [...shown].sort((a, b) => b.pickrate - a.pickrate).slice(0, state.chartRole ? 3 : 0).map(r => r.hero) })}${state.chartRole ? '' : legend({ rings: true })}</div>`;
 }
 
 async function loadNewsPanels() {
@@ -203,7 +208,11 @@ async function loadNewsPanels() {
     const n = await loadNews();
     const latestPatch = n.patches[0];
     $('#patchDate').textContent = latestPatch ? fmtDate(latestPatch.date) : 'Patch notes';
-    $('#patchLive').textContent = latestPatch ? (n.stale ? 'Last saved copy' : 'Latest official notes') : 'Official archive';
+    const ago = latestPatch ? Math.round((Date.parse(new Date().toISOString().slice(0, 10)) - Date.parse(latestPatch.date)) / 86400_000) : null;
+    $('#patchLive').textContent = latestPatch ? (n.stale ? 'Last saved copy' : `Released ${ago <= 0 ? 'today' : ago === 1 ? 'yesterday' : ago + ' days ago'}`) : 'Official archive';
+    const season = seasonFromNews(n.news);
+    $('#patchSeason').textContent = season ? `${season.arc ? season.arc + ' · ' : ''}Season ${season.number}${season.name ? ': ' + season.name : ''}` : 'Current season';
+    $('#patchSeason').classList.toggle('season-on', !!season);
     $('#patchLive').classList.toggle('stale', !latestPatch || n.stale);
     if (latestPatch) $('#patchCard').href = '#/news?kind=patch';
     const items = [...n.news.slice(0, 2), ...(latestPatch ? [latestPatch] : [])].slice(0, 3);
