@@ -207,19 +207,31 @@ export async function searchPlayers(name) {
   return { total: num(r.data?.total) ?? list.length, results: list.map(p => ({ id: safeDecode(str(p.player_id)), name: str(p.name), avatar: str(p.avatar), title: str(p.title?.en_US ?? p.title ?? ''), isPublic: p.is_public !== false, lastUpdated: num(p.last_updated_at) })).filter(p => p.id) };
 }
 
-function tagVariants(id) {
+// BattleTags are case-sensitive at the data source, but people type them in any case.
+// Try the spelling as typed first, then the common patterns: lower, Capitalized, UPPER,
+// and Capitalized with one more capital inside (e.g. "OgKenobi", "MrBean").
+export function tagVariants(id) {
   const m = /^(.+)-(\d{3,6})$/.exec(id);
   if (!m) return [id];
-  const n = m[1];
-  return [...new Set([n, n[0].toUpperCase() + n.slice(1), n.toLowerCase()])].map(v => `${v}-${m[2]}`);
+  const n = m[1], lo = n.toLowerCase(), cap1 = lo[0].toUpperCase() + lo.slice(1);
+  const v = [n, lo, cap1, n.toUpperCase()];
+  for (let i = 1; i < lo.length && v.length < 24; i++) if (/[a-z]/.test(lo[i])) v.push(cap1.slice(0, i) + lo[i].toUpperCase() + lo.slice(i + 1));
+  return [...new Set(v)].map(x => `${x}-${m[2]}`);
 }
 export async function playerProfile(rawId) {
   let id = safeDecode(str(rawId)).replace('#', '-').trim();
   if (!ID_RE.test(id)) throw new ApiError('Invalid BattleTag (use Name-1234)', 400);
   let sum, lastErr;
-  for (const c of tagVariants(id)) {
-    try { sum = await getJSON(of(`/players/${encodeURIComponent(c)}/summary`), 5 * 60_000); id = c; break; }
-    catch (e) { lastErr = e; if (e.status !== 404) throw e; }
+  const variants = tagVariants(id);
+  // first the spelling as typed, then the rest in small parallel batches (stop at the first hit)
+  for (let i = 0; i < variants.length && !sum; i += i === 0 ? 1 : 4) {
+    const batch = i === 0 ? [variants[0]] : variants.slice(i, i + 4);
+    const tries = await Promise.all(batch.map(c => getJSON(of(`/players/${encodeURIComponent(c)}/summary`), 5 * 60_000).then(r => ({ c, r }), e => ({ c, e }))));
+    const hit = tries.find(t => t.r);
+    if (hit) { sum = hit.r; id = hit.c; break; }
+    const hard = tries.find(t => t.e && t.e.status !== 404);
+    if (hard) throw hard.e;
+    lastErr = tries[tries.length - 1].e;
   }
   if (!sum) throw lastErr;
   const s = sum.data || {};

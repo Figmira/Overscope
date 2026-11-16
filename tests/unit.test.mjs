@@ -86,3 +86,12 @@ test('tier list: every hero gets exactly one tier, best first, roles compared fa
   assert.equal(t[0].hero, 'a'); assert.equal(t.at(-1).hero, 'e');
   assert.equal(computeTiers([{ hero: 'zz', pickrate: 5, winrate: 50 }], () => undefined).length, 0, 'unknown role is skipped, not guessed');
 });
+
+test('BattleTag spelling: typed form first, common capitalisations covered, bounded', async () => {
+  const { tagVariants } = await import('../js/data.js');
+  const v = tagVariants('ogkenobi-1697');
+  assert.equal(v[0], 'ogkenobi-1697');
+  for (const want of ['Ogkenobi-1697', 'OGKENOBI-1697', 'OgKenobi-1697']) assert.ok(v.includes(want), want);
+  assert.ok(v.length <= 24);
+  assert.deepEqual(tagVariants('NoTag'), ['NoTag']);
+});
