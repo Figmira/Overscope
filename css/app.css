@@ -653,3 +653,8 @@ html[data-page=home] #banner-slot{display:block;height:clamp(260px,18.5vw,300px)
 /* Decorative artwork must never catch taps or long-presses (iPhone "lifts" images on long-press) */
 .cut,.cut img,.side-art,.side-art *,.banner-bg,.banner-bg img,.hd-art,.st-art{pointer-events:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 @media (max-width:860px){.side-art{display:none}} /* phone menu: no background art, links only */
+.chart .mark{stroke:#ff9c1a;stroke-width:1.5;stroke-dasharray:4 3;opacity:.8}.chart .mark-lbl{fill:#ffc04d}
+.hist-delta{display:flex;flex-wrap:wrap;gap:8px 18px;padding:8px 14px 0;font-size:13px}.hist-delta b.up{color:var(--green)}.hist-delta b.down{color:var(--red)}
+.vs-rank .tr{grid-template-columns:minmax(150px,1.6fr) .7fr .9fr 1.2fr .9fr}
+.vs-rank b.up{color:var(--green)}.vs-rank b.down{color:var(--red)}
+@media (max-width:560px){.vs-rank .tr{grid-template-columns:1.4fr .6fr .8fr .9fr .8fr;font-size:12px}.vs-rank .who small{display:none}}

@@ -107,9 +107,35 @@ async function updateRanks() {
         out.divisions[d] = rows;
       });
       await writeJSON(file, out);
-      log(`✓ ranks ${platform}/${region}: ${RANKS.length} rank tables saved`);
+      await appendRankHistory(platform, region, out.divisions, today);
+      log(`✓ ranks ${platform}/${region}: ${RANKS.length} rank tables saved (+ daily history)`);
     } catch (e) { log(`✗ ranks ${platform}/${region}: ${e.message} (previous copy kept)`); }
   }
+}
+
+// One small file per rank keeps a daily copy, so hero pages can chart a rank over time.
+// Rows are compact: [hero, pickrate, winrate, banrate]. Public aggregate data only.
+async function appendRankHistory(platform, region, divisions, day) {
+  for (const [division, rows] of Object.entries(divisions)) {
+    const file = path.join(DATA, 'history-ranks', `competitive-${platform}-${region}-${division}.json`);
+    const h = await readJSON(file, { queue: 'competitive', platform, region, division, note: "Daily copy of Blizzard's public hero-rate table for this rank. Rows: [hero, pick, win, ban].", snapshots: [] });
+    if (h.snapshots.some(x => x.day === day)) continue;
+    h.snapshots.push({ day, rows: rows.map(r => [r.hero, r.pickrate, r.winrate, r.banrate]) });
+    h.snapshots = h.snapshots.slice(-400);
+    await fs.mkdir(path.dirname(file), { recursive: true });
+    await fs.writeFile(file, JSON.stringify(h));
+  }
+}
+async function writeHistoryIndex() {
+  // Which history files exist and how many days each holds (lets pages hide empty options).
+  const idx = { generatedAt: new Date().toISOString(), allRanks: {}, ranks: {} };
+  for (const f of await fs.readdir(path.join(DATA, 'history')).catch(() => [])) {
+    const h = await readJSON(path.join(DATA, 'history', f), null); if (h) idx.allRanks[f.replace('.json', '')] = h.snapshots.length;
+  }
+  for (const f of await fs.readdir(path.join(DATA, 'history-ranks')).catch(() => [])) {
+    const h = await readJSON(path.join(DATA, 'history-ranks', f), null); if (h) idx.ranks[f.replace('.json', '')] = h.snapshots.length;
+  }
+  await writeJSON(path.join(DATA, 'history-index.json'), idx);
 }
 
 async function updateMapStats(catalog) {
@@ -208,5 +234,11 @@ await updateHistory().catch(e => log('✗ history failed:', e.message));
 const catalog = await updateCatalog().catch(e => { log('✗ catalog failed:', e.message); return null; });
 await updateRanks().catch(e => log('✗ ranks failed:', e.message));
 await updateMapStats(catalog || await readJSON(path.join(DATA, 'catalog.json'), null)).catch(e => log('✗ map stats failed:', e.message));
+// seed per-rank history from today's saved rank tables (first run after this feature was added)
+for (const f of await fs.readdir(path.join(DATA, 'ranks')).catch(() => [])) {
+  const r = await readJSON(path.join(DATA, 'ranks', f), null);
+  if (r?.divisions && r.fetchedAt) await appendRankHistory(r.platform, r.region, r.divisions, r.fetchedAt.slice(0, 10)).catch(() => {});
+}
+await writeHistoryIndex().catch(e => log('✗ history index failed:', e.message));
 if (process.argv.includes('--media') || mediaAge > 6 * 86400_000) await updateMedia().catch(e => log('✗ media failed:', e.message));
 else log(`· media list is ${Math.round(mediaAge / 3600_000)} h old — kept (rebuilt weekly or with --media)`);

@@ -1,7 +1,7 @@
 import { $, $$, esc, pct, api, prefs, setPref, statsPath, heroInfo, heroPortrait, heroArt, icon, roleIcon, roleTabs, errorBox, loadingBox, emptyBox, relay, ROLE_NAME, QUEUE_SHORT, REGION_NAME, roster, getManifest, filterSelects, isFavHero, toggleFavHero, starBtn, favorites, toast, qs, DIVISIONS, cap, timeAgo } from '../lib.js';
 import { lines, ROLE_COLOR } from '../charts.js';
 import { computeTiers } from '../tiers.js';
-import { heroes as loadHeroes, maps as loadMaps, go } from '../app.js';
+import { heroes as loadHeroes, maps as loadMaps, news, go } from '../app.js';
 
 const ui = { q: '', role: '', fav: false };
 
@@ -57,6 +57,7 @@ async function detail({ main, route, signal }) {
       </div>
     </div>
     <section class="panel" id="hdRank">${loadingBox(5)}</section>
+    <section class="panel" id="hdHist" hidden></section>
     <section class="panel" id="hdStadium">${loadingBox(3)}</section>
   </div>`;
 
@@ -116,9 +117,59 @@ async function detail({ main, route, signal }) {
       <div class="byrank"><div><h3>Win rate</h3>${chart(win, 'win rate', { ref: 50, refLabel: '50%' })}</div><div><h3>Pick rate</h3>${chart(pick, 'pick rate')}</div></div>
       <p class="source-note">One official Blizzard table per rank, via OverFast. Tiers use the <a href="#/tier-list">tier list method</a> within each rank. Blizzard does not publish a Champion table or game counts.</p>`;
   };
+  // win/pick rate over time from the daily saved copies, with patch dates marked.
+  // Shown only once at least MIN_DAYS days exist for the chosen queue/rank.
+  const MIN_DAYS = 3;
+  const hist = { queue: 'competitive', rank: 'all' };
+  const fmtDay = d => new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+  const drawHistory = async () => {
+    const el = $('#hdHist');
+    let index, patches = [];
+    try { index = await api('/api/trend/index'); } catch { el.hidden = true; return; }
+    const combo = q => `${q}-${prefs.platform}-${prefs.region}`;
+    const queues = ['competitive', 'quickplay'].filter(q => (index.allRanks?.[combo(q)] || 0) >= MIN_DAYS);
+    if (!queues.length) { el.hidden = true; return; }
+    if (!queues.includes(hist.queue)) hist.queue = queues[0];
+    const ranks = hist.queue === 'competitive' ? DIVISIONS.filter(d => (index.ranks?.[`${combo('competitive')}-${d}`] || 0) >= MIN_DAYS) : [];
+    if (hist.rank !== 'all' && !ranks.includes(hist.rank)) hist.rank = 'all';
+    let t;
+    try { t = await api('/api/trend?' + qs({ queue: hist.queue, platform: prefs.platform, region: prefs.region, division: hist.rank, role: 'all', map: 'all', days: 400 })); }
+    catch { el.hidden = true; return; }
+    const snaps = (t.snapshots || []).filter(x => x.rows.some(r => r.hero === key));
+    if (snaps.length < MIN_DAYS) { el.hidden = true; return; }
+    try { patches = (await news()).patches || []; } catch { /* markers are optional */ }
+    const days = snaps.map(x => x.day);
+    const at = d => snaps.find(x => x.day === d).rows.find(r => r.hero === key);
+    const win = days.map(d => at(d)?.winrate ?? null), pick = days.map(d => at(d)?.pickrate ?? null);
+    const inRange = patches.filter(p => p.date > days[0] && p.date <= days[days.length - 1]);
+    const marks = inRange.map(p => ({ at: days.filter(d => d < p.date).length - 0.5, label: 'Patch ' + fmtDay(p.date) }));
+    const lastPatch = inRange[0];
+    let delta = '';
+    if (lastPatch) {
+      const before = [...days].reverse().find(d => d < lastPatch.date), after = days[days.length - 1];
+      const b = at(before), a = at(after);
+      const f = v => `<b class="${v > 0.05 ? 'up' : v < -0.05 ? 'down' : ''}">${v > 0 ? '+' : ''}${v.toFixed(1)} pts</b>`;
+      if (b && a && after > lastPatch.date) delta = `<div class="hist-delta"><span>Since the ${esc(fmtDay(lastPatch.date))} patch:</span><span>Win rate ${f(a.winrate - b.winrate)}</span><span>Pick rate ${f(a.pickrate - b.pickrate)}</span></div>`;
+    }
+    const color = ROLE_COLOR[h.role] || '#56d9fb';
+    const labels = days.map(fmtDay);
+    const chart = (vals, label, extra = {}) => lines(labels, [{ name: '', color, values: vals }], { width: 520, height: 210, yFmt: v => v.toFixed(1) + '%', aria: `${h.name} ${label} over time`, marks, ...extra });
+    el.hidden = false;
+    el.innerHTML = `<header class="panel-head"><h2>${icon('i-clock')}${esc(h.name)} over time</h2><small class="muted">${esc(REGION_NAME[prefs.region])} · ${prefs.platform.toUpperCase()} · ${days.length} days saved</small></header>
+      <div class="toolbar tight">${queues.length > 1 ? `<div class="seg sm">${queues.map(q => `<button class="${q === hist.queue ? 'on' : ''}" data-histq="${q}">${QUEUE_SHORT[q]}</button>`).join('')}</div>` : ''}
+        ${ranks.length ? `<label class="sel"><span>Rank</span><select id="histRank"><option value="all">All ranks</option>${ranks.map(d => `<option value="${d}" ${d === hist.rank ? 'selected' : ''}>${cap(d)}</option>`).join('')}</select></label>` : ''}</div>
+      ${delta}
+      <div class="byrank"><div><h3>Win rate</h3>${chart(win, 'win rate', { ref: 50, refLabel: '50%' })}</div><div><h3>Pick rate</h3>${chart(pick, 'pick rate')}</div></div>
+      <p class="source-note">One copy of Blizzard's official rates is saved every day (via OverFast); dashed orange lines mark Blizzard patch days. Blizzard's own page only shows the current patch, so this history starts on the day OverScope began saving.</p>`;
+  };
   drawStats();
   drawRank();
-  main.addEventListener('change', e => { const p = e.target.dataset.pref; if (p) { setPref(p, e.target.value); drawStats(); drawMap(); drawRank(); } }, { signal });
+  drawHistory();
+  main.addEventListener('change', e => {
+    const p = e.target.dataset.pref; if (p) { setPref(p, e.target.value); drawStats(); drawMap(); drawRank(); drawHistory(); }
+    if (e.target.id === 'histRank') { hist.rank = e.target.value; drawHistory(); }
+  }, { signal });
+  main.addEventListener('click', e => { const b = e.target.closest('[data-histq]'); if (b) { hist.queue = b.dataset.histq; hist.rank = 'all'; drawHistory(); } }, { signal });
   main.addEventListener('click', e => { const f = e.target.closest('[data-favhero]'); if (f) { const on = toggleFavHero(key); f.outerHTML = starBtn(on, 'data-favhero', 'Favorite'); toast(on ? `${h.name} added to favorites` : `${h.name} removed from favorites`); } }, { signal });
 
   // map-specific performance

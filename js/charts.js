@@ -96,7 +96,7 @@ document.addEventListener('pointerleave', hideTip);
  * Identity never relies on colour alone: each line has its own dash + marker
  * shape and a direct label at its last point.
  */
-export function lines(xLabels, series, { width = 560, height = 220, yMin, yMax, yTicks, yFmt = v => v, aria = 'Line chart', ref = null, refLabel = '', xStep = 0 } = {}) {
+export function lines(xLabels, series, { width = 560, height = 220, yMin, yMax, yTicks, yFmt = v => v, aria = 'Line chart', ref = null, refLabel = '', xStep = 0, marks = [] } = {}) {
   const pad = { l: 64, r: 86, t: 14, b: 24 };
   const all = series.flatMap(s => s.values).filter(v => v != null);
   if (!all.length) return '';
@@ -114,6 +114,9 @@ export function lines(xLabels, series, { width = 560, height = 220, yMin, yMax, 
     : shape === 'diamond' ? `<path d="M${x} ${y - 5}L${x + 5} ${y}L${x} ${y + 5}L${x - 5} ${y}Z" fill="${color}" stroke="#121628" stroke-width="2"/>`
     : `<circle cx="${x}" cy="${y}" r="4" fill="${color}" stroke="#121628" stroke-width="2"/>`;
   const refLine = ref == null ? '' : `<line x1="${pad.l}" x2="${width - pad.r}" y1="${Y(ref)}" y2="${Y(ref)}" class="ref"/><text x="${width - pad.r + 6}" y="${Y(ref) + 3}" class="tick">${esc(refLabel)}</text>`;
+  // vertical markers at fractional x positions (e.g. a patch released between two saved days)
+  const XF = f => pad.l + (xLabels.length === 1 ? 0.5 : f / (xLabels.length - 1)) * (width - pad.l - pad.r);
+  const markLines = marks.map(m => `<line x1="${XF(m.at)}" x2="${XF(m.at)}" y1="${pad.t}" y2="${height - pad.b}" class="mark"/><text x="${XF(m.at) + 4}" y="${pad.t + 10}" class="tick mark-lbl">${esc(m.label)}</text>`).join('');
   const body = series.map(s => {
     const pts = s.values.map((v, i) => v == null ? null : [X(i), Y(v)]);
     const segs = []; let cur = [];
@@ -129,6 +132,6 @@ export function lines(xLabels, series, { width = 560, height = 220, yMin, yMax, 
     const w = (width - pad.l - pad.r) / Math.max(1, xLabels.length - 1);
     return `<rect x="${X(i) - w / 2}" y="${pad.t}" width="${w}" height="${height - pad.t - pad.b}" fill="transparent" data-tip="${esc(html)}" data-x="${X(i)}"/>`;
   }).join('');
-  return `<svg class="chart trend" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(aria)}">${grid}${xl}<line class="crosshair" x1="0" x2="0" y1="${pad.t}" y2="${height - pad.b}"/>${refLine}${body}${cols}</svg>`;
+  return `<svg class="chart trend" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(aria)}">${grid}${xl}<line class="crosshair" x1="0" x2="0" y1="${pad.t}" y2="${height - pad.b}"/>${refLine}${markLines}${body}${cols}</svg>`;
 }
 export const OPEN_COLOR = '#9a7cf0';

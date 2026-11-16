@@ -167,15 +167,24 @@ export async function statsByRank({ platform = 'pc', region = 'americas', live =
   return out;
 }
 
-/** Daily public snapshots saved by the GitHub Action (all ranks / all roles / all maps only). */
+/** Daily public snapshots saved by the GitHub Action: all ranks, or one rank (competitive). */
 export async function trend({ queue, platform = 'pc', region = 'americas', division = 'all', role = 'all', map = 'all', days = 14 }) {
-  if (queue === 'open') return { available: false, days: [], snapshots: [] };
-  if (division !== 'all' || role !== 'all' || map !== 'all') return { available: true, days: [], snapshots: [], note: 'History is recorded for all ranks, roles and maps only.' };
+  if (!QUEUES[queue]) return { available: false, days: [], snapshots: [] };
+  if (role !== 'all' || map !== 'all') return { available: true, days: [], snapshots: [], note: 'History is recorded for all roles and maps only.' };
+  const perRank = division !== 'all' && division !== '';
+  if (perRank && (queue !== 'competitive' || !STAT_DIVISIONS.includes(division))) return { available: true, days: [], snapshots: [] };
+  if (!PLATFORMS.includes(platform) || !REGIONS.includes(region)) throw new ApiError('Unknown platform or region', 400);
+  const path = perRank ? `data/history-ranks/${queue}-${platform}-${region}-${division}.json` : `data/history/${queue}-${platform}-${region}.json`;
   let file = null;
-  try { file = (await getJSON(site(`data/history/${queue}-${platform}-${region}.json`), 30 * 60_000)).data; }
+  try { file = (await getJSON(site(path), 30 * 60_000)).data; }
   catch (e) { if (e.status !== 404) throw e; }
-  const snaps = (file?.snapshots || []).slice(-Math.min(365, days));
-  return { available: true, queue, days: snaps.map(s => s.day), snapshots: snaps };
+  let snaps = (file?.snapshots || []).slice(-Math.min(400, days));
+  if (perRank) snaps = snaps.map(x => ({ day: x.day, rows: x.rows.map(([hero, pickrate, winrate, banrate]) => ({ hero, pickrate, winrate, banrate })) }));
+  return { available: true, queue, division: perRank ? division : 'all', days: snaps.map(x => x.day), snapshots: snaps };
+}
+/** How many saved days each history file holds (written by the GitHub Action). */
+export async function historyIndex() {
+  try { return (await getJSON(site('data/history-index.json'), 30 * 60_000)).data; } catch { return { allRanks: {}, ranks: {} }; }
 }
 
 export async function maps() {
@@ -231,6 +240,13 @@ export async function playerProfile(rawId) {
   return { data: p, fetchedAt: sum.fetchedAt };
 }
 
+/** A player's Competitive hero stats on one platform (current season, public profiles only). */
+export async function playerCompHeroes(rawId, { platform = 'pc' } = {}) {
+  const id = safeDecode(str(rawId));
+  if (!ID_RE.test(id) || !PLATFORMS.includes(platform)) throw new ApiError('Invalid request', 400);
+  const d = (await getJSON(of(`/players/${encodeURIComponent(id)}/stats/summary`, { gamemode: 'competitive', platform }), 5 * 60_000)).data || {};
+  return Object.entries(d.heroes || {}).map(([k, v]) => ({ hero: k, ...normaliseBlock(v) })).filter(h => h.gamesPlayed);
+}
 const CAREER_GROUPS = { average: 'Per 10 minutes', best: 'Best in a game / life', combat: 'Combat totals', assists: 'Assists', game: 'Games', hero_specific: 'Hero-specific', match_awards: 'Match awards', miscellaneous: 'Miscellaneous' };
 export async function playerCareer(rawId, { gamemode = 'competitive', hero = '' } = {}) {
   const id = safeDecode(str(rawId));
@@ -289,13 +305,14 @@ export async function route(path, { fresh = false } = {}) {
   switch (seg[0]) {
     case 'heroes': return seg[1] ? heroDetail(seg[1]) : p.gamemode === 'stadium' ? stadiumHeroes() : heroes();
     case 'stats': return seg[1] === 'by-rank' ? statsByRank({ ...p, live: fresh || p.live === '1' }) : statsFor(p, { fresh });
-    case 'trend': return trend({ ...p, days: Number(p.days) || 14 });
+    case 'trend': return seg[1] === 'index' ? historyIndex() : trend({ ...p, days: Number(p.days) || 14 });
     case 'maps': return maps();
     case 'news': return news({ fresh });
     case 'players':
       if (!seg[1]) return searchPlayers(p.name);
       if (seg[2] === 'history') return playerHistory(seg[1]);
       if (seg[2] === 'career') return playerCareer(seg[1], p);
+      if (seg[2] === 'comp-heroes') return playerCompHeroes(seg[1], p);
       return playerProfile(seg[1]);
     default: throw new ApiError('Unknown data request', 404);
   }
