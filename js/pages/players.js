@@ -2,6 +2,9 @@ import { $, esc, pct, api, qs, heroInfo, heroPortrait, icon, roleIcon, errorBox,
 import { heroes as loadHeroes, go } from '../app.js';
 import { lines, ROLE_COLOR, OPEN_COLOR } from '../charts.js';
 
+// Blizzard's public profile holds Competitive stats for the CURRENT season only; Quick Play is lifetime.
+const seasonOf = p => (p?.competitive?.pc || p?.competitive?.console)?.season;
+const modeLabel = (m, p) => (m === 'competitive' ? `Competitive · ${seasonOf(p) ? 'Season ' + seasonOf(p) : 'this season'}` : 'Quick Play · lifetime');
 const hours = s => (s == null ? '—' : s >= 3600 ? (s / 3600).toFixed(1) + ' h' : Math.round(s / 60) + ' min');
 const num = (v, d = 0) => (v == null ? '—' : Number(v).toLocaleString('en-US', { maximumFractionDigits: d }));
 const ROLE_STYLE = { tank: { color: ROLE_COLOR.tank, shape: 'square', dash: '' }, damage: { color: ROLE_COLOR.damage, shape: 'triangle', dash: '6 3' }, support: { color: ROLE_COLOR.support, shape: 'circle', dash: '2 3' }, open: { color: OPEN_COLOR, shape: 'diamond', dash: '9 3 2 3' } };
@@ -101,7 +104,7 @@ async function profile(id) {
 function drawStats() {
   if (!current) return;
   const mode = document.querySelector('#main').dataset.mode || 'competitive';
-  $('#modeTabs').innerHTML = ['competitive', 'quickplay'].map(m => `<button class="${m === mode ? 'on' : ''}" data-mode="${m}">${m === 'competitive' ? 'Competitive' : 'Quick Play'} career</button>`).join('');
+  $('#modeTabs').innerHTML = ['competitive', 'quickplay'].map(m => `<button class="${m === mode ? 'on' : ''}" data-mode="${m}">${esc(modeLabel(m, current))}</button>`).join('');
   const s = current.stats[mode];
   const el = $('#pStats');
   if (!s || s.error) { el.innerHTML = s?.status === 404 ? emptyBox('No career stats', 'Nothing public for this mode.') : errorBox(s?.error || 'No data'); return; }
@@ -117,7 +120,7 @@ function drawStats() {
     <div class="two">
       <section class="panel"><header class="panel-head"><h2>${icon('i-group')}Role performance</h2></header>${roles.length ? `<div class="table mini-table"><div class="tr th"><span>Role</span><span>Games</span><span>Win rate</span><span>KDA</span><span>Time</span></div>${roles.map(([r, v]) => `<div class="tr"><span>${roleIcon(r)} ${ROLE_NAME[r] || r}</span><span>${num(v.gamesPlayed)}</span><span>${pct(v.winrate)}</span><span>${v.kda ?? '—'}</span><span>${hours(v.timePlayed)}</span></div>`).join('')}</div>` : emptyBox('No role data', '')}</section>
       <section class="panel"><header class="panel-head"><h2>${icon('i-mask')}Most played heroes</h2></header>${s.heroes.length ? `<div class="table mini-table per10"><div class="tr th"><span>Hero</span><span>Time</span><span>Win rate</span><span title="Eliminations per 10 minutes">Elims/10</span><span title="Deaths per 10 minutes">Deaths/10</span></div>${s.heroes.slice(0, 10).map(h => `<div class="tr hero-row" tabindex="0" data-hero="${esc(h.hero)}"><span class="who">${heroPortrait(h.hero, 'portrait')}<b>${esc(heroInfo(h.hero).name)}</b></span><span>${hours(h.timePlayed)}</span><span>${pct(h.winrate)}</span><span>${num(h.average?.eliminations, 1)}</span><span>${num(h.average?.deaths, 1)}</span></div>`).join('')}</div>` : emptyBox('No hero data', '')}</section>
-    </div><p class="source-note">Public career profile from Blizzard via OverFast API. Values are lifetime totals for the selected mode; "/10" columns are Blizzard's per-10-minute averages.</p>`;
+    </div><p class="source-note">Public career profile from Blizzard via OverFast API. ${mode === 'competitive' ? `Competitive values cover ${esc(seasonOf(current) ? 'Season ' + seasonOf(current) : 'the current season')} only: Blizzard's public profile does not include earlier seasons.` : 'Quick Play values are lifetime totals.'} "/10" columns are Blizzard's per-10-minute averages.</p>`;
 }
 
 async function drawHistory() {
@@ -157,7 +160,7 @@ async function drawDeep() {
     groups.sort((a, b) => (order.indexOf(a.key) + 99) % 99 - (order.indexOf(b.key) + 99) % 99);
     const fmt = (k, v) => /time|played/.test(k) && v > 300 ? hours(v) : /accuracy|percentage|win_percentage/.test(k) ? pct(v, 0) : num(v, v % 1 ? 2 : 0);
     out.innerHTML = `<div class="deep">${heroPortrait(hero, 'deep-portrait')}<div class="deep-groups">${groups.map(g => `<div class="deep-group"><h3>${esc(cap(g.label))}</h3><dl>${g.stats.slice(0, 12).map(s => `<dt>${esc(cap(s.label))}</dt><dd>${esc(fmt(s.key, s.value))}</dd>`).join('')}</dl></div>`).join('')}</div></div>
-      <p class="source-note">Blizzard career statistics for ${esc(heroInfo(hero).name)} (${mode === 'competitive' ? 'Competitive' : 'Quick Play'}, lifetime) via OverFast /players/…/stats/career.</p>`;
+      <p class="source-note">Blizzard career statistics for ${esc(heroInfo(hero).name)} (${esc(modeLabel(mode, current))}) via OverFast /players/…/stats/career.</p>`;
   } catch (e) { out.innerHTML = errorBox(e); }
 }
 
@@ -179,7 +182,7 @@ async function compare(a, b) {
   const hi = (x, y) => x > y;
   const blocks = ['competitive', 'quickplay'].map(m => {
     const ga = g(A, m), gb = g(B, m);
-    return `<section class="panel"><header class="panel-head"><h2>${icon('i-bars')}${m === 'competitive' ? 'Competitive' : 'Quick Play'} career</h2></header><div class="table vs-table">
+    return `<section class="panel"><header class="panel-head"><h2>${icon('i-bars')}${m === 'competitive' ? 'Competitive · current season' : 'Quick Play · lifetime'}</h2></header><div class="table vs-table">
       ${row('Games', ga.gamesPlayed, gb.gamesPlayed)}
       ${row('Win rate', ga.winrate != null ? pct(ga.winrate) : null, gb.winrate != null ? pct(gb.winrate) : null)}${''}
       ${row('KDA', ga.kda, gb.kda)}
