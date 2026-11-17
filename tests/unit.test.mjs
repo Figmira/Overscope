@@ -158,3 +158,12 @@ test('head to head: role focus, off-role stats, records, fingerprint, scoreboard
   assert.match(parts.points.join(' '), /finishes more kills/);
   assert.match(parts.points.join(' '), /matters most for a damage/);
 });
+
+test('head to head: "deaths prevented" is higher-is-better, own deaths lower-is-better', async () => {
+  const { careerMetrics } = await import('../js/h2h.js');
+  const m = careerMetrics([{ key: 'game', stats: [{ key: 'games_played', value: 9 }] },
+    { key: 'average', stats: [{ key: 'deaths_avg_per_10_min', value: 6 }] },
+    { key: 'hero_specific', stats: [{ key: 'immortality_field_deaths_prevented_avg_per_10_min', value: 1.9 }] }]);
+  assert.equal(m.deaths_avg_per_10_min.lower, true);
+  assert.equal(m.immortality_field_deaths_prevented_avg_per_10_min.lower, false);
+});

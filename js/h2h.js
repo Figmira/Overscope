@@ -37,7 +37,8 @@ const pretty = k => {
   return s[0].toUpperCase() + s.slice(1) + (k.endsWith('_avg_per_10_min') ? ' / 10 min' : '');
 };
 const isPct = k => /accuracy|percentage/.test(k);
-const isLower = k => /deaths|damage_taken/.test(k);
+// Lower is better only for the player's own deaths and damage taken (not e.g. "deaths prevented").
+const isLower = k => !/prevent|saved|avoided/.test(k) && /^deaths_|(^|_)deaths_avg|damage_taken/.test(k);
 
 function applyRole(out, role) {
   if (!role) return out;
