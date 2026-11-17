@@ -104,21 +104,30 @@ test('head to head: even band, lower-is-better, minimum games and weighted verdi
   assert.equal(lead({ key: 'deaths_avg_per_10_min', pct: false, lower: true }, 6, 8), 'a'); // fewer deaths wins
   assert.equal(lead({ key: 'sleep_dart_accuracy', pct: true, lower: false }, 40, 38.5), 'even'); // under 2 points
   const career = (games, win, deaths, darts, acc) => [
-    { key: 'game', stats: [{ key: 'games_played', value: games }, { key: 'win_percentage', value: win }] },
+    { key: 'game', stats: [{ key: 'games_played', value: games }, { key: 'win_percentage', value: win }, { key: 'time_played', value: games * 600 }] },
     { key: 'average', stats: [{ key: 'deaths_avg_per_10_min', value: deaths }, { key: 'eliminations_avg_per_10_min', value: 10 }] },
     { key: 'hero_specific', stats: [{ key: 'enemies_slept_avg_per_10_min', value: darts }, { key: 'sleep_dart_accuracy', value: acc }, { key: 'enemies_slept_most_in_game', value: 9 }] },
   ];
-  const a = careerMetrics(career(30, 55, 5, 3, 45)), b = careerMetrics(career(30, 50, 7, 2, 35));
+  const a = careerMetrics(career(150, 60, 5, 3, 45)), b = careerMetrics(career(150, 45, 7, 2, 35));
   assert.ok(!('enemies_slept_most_in_game' in a), 'records are not compared');
   const res = compareMetrics(a, b);
   assert.equal(res.winner, 'a');
-  assert.equal(res.scoreA, 8); // win x2 + deaths x2 + darts x2 + accuracy x2
+  assert.equal(res.scoreA, 8); // win x2 (15 pts over 150 games each beats luck) + deaths x2 + darts x2 + accuracy x2
+  assert.equal(res.confidence, 'High');
+  // the same 5-point win-rate gap over 30 games each is within luck, so it is not counted
+  const small = compareMetrics(careerMetrics(career(30, 55, 5, 3, 45)), careerMetrics(career(30, 50, 7, 2, 35)));
+  assert.equal(small.rows.find(r => r.key === 'win_percentage').w, 'luck');
+  assert.equal(small.scoreA, 6);
+  assert.equal(small.confidence, 'Medium');
   assert.match(writeSummary(res, 'Iso', 'Kenobi', 'Ana'), /^Iso performs better on Ana/);
-  const few = compareMetrics(careerMetrics(career(3, 55, 5, 3, 45)), b);
+  const few = compareMetrics(careerMetrics(career(9, 55, 5, 3, 45)), b); // under 10 games
   assert.equal(few.winner, '');
   assert.match(writeSummary(few, 'Iso', 'Kenobi', 'Ana'), /No call on Ana/);
   // only a single-weight stat differs (eliminations 10 vs 11): 0-1 is within 1 point -> too close to call
   const x = careerMetrics(career(30, 50, 7, 3, 35)), y = careerMetrics(career(30, 50, 7, 3, 35));
+  // 1 hour minimum: 30 games but only 50 minutes -> no call
+  const shortTime = careerMetrics(career(30, 50, 7, 3, 35)); shortTime.__time = 3000;
+  assert.equal(compareMetrics(shortTime, y).winner, '');
   y.eliminations_avg_per_10_min.value = 11;
   const close = compareMetrics(x, y);
   assert.equal(close.winner, 'close');
@@ -128,7 +137,7 @@ test('head to head: even band, lower-is-better, minimum games and weighted verdi
 test('head to head: role focus, off-role stats, records, fingerprint, scoreboard, duo fit', async () => {
   const { careerMetrics, records, fingerprint, scoreboard, duoFit, bestHero, summaryParts, compareMetrics } = await import('../js/h2h.js');
   const groups = (heal, fb) => [
-    { key: 'game', stats: [{ key: 'games_played', value: 20 }, { key: 'win_percentage', value: 50 }] },
+    { key: 'game', stats: [{ key: 'games_played', value: 20 }, { key: 'win_percentage', value: 50 }, { key: 'time_played', value: 12000 }] },
     { key: 'average', stats: [{ key: 'healing_done_avg_per_10_min', value: heal }, { key: 'final_blows_avg_per_10_min', value: fb }, { key: 'deaths_avg_per_10_min', value: 6 }] },
     { key: 'best', stats: [{ key: 'eliminations_most_in_game', value: 30 }, { key: 'kill_streak_best', value: 12 }] },
     { key: 'hero_specific', stats: [{ key: 'enemies_slept_most_in_game', value: 9 }, { key: 'enemies_slept', value: 400 }] },
@@ -145,11 +154,11 @@ test('head to head: role focus, off-role stats, records, fingerprint, scoreboard
   const fp = fingerprint(sup, careerMetrics(groups(2500, 6), 'support'));
   const healAxis = fp.find(x => x.label === 'Healing');
   assert.deepEqual([healAxis.a, healAxis.b], [1, 0.5]);
-  const heroesA = [{ hero: 'ana', gamesPlayed: 20, winrate: 55 }, { hero: 'mercy', gamesPlayed: 3, winrate: 60 }];
-  const heroesB = [{ hero: 'ana', gamesPlayed: 20, winrate: 40 }, { hero: 'mercy', gamesPlayed: 30, winrate: 50 }];
+  const heroesA = [{ hero: 'ana', gamesPlayed: 200, winrate: 58, timePlayed: 90000 }, { hero: 'mercy', gamesPlayed: 3, winrate: 60, timePlayed: 900 }];
+  const heroesB = [{ hero: 'ana', gamesPlayed: 200, winrate: 45, timePlayed: 90000 }, { hero: 'mercy', gamesPlayed: 30, winrate: 50, timePlayed: 20000 }];
   const sb = scoreboard(heroesA, heroesB, { ana: groups(5000, 3) }, { ana: groups(5000, 3) }, () => 'support');
   assert.equal(sb.rows.length, 1, 'only heroes both have 5+ games on');
-  assert.equal(sb.rows[0].winner, 'a'); // only the x2 win rate differs (55 vs 40)
+  assert.equal(sb.rows[0].winner, 'a'); // only the x2 win rate differs (58 vs 45 over 200 games: beats luck)
   assert.equal(bestHero(heroesB).hero, 'mercy');
   const duo = duoFit({ tank: { gamesPlayed: 50, gamesWon: 30 }, damage: { gamesPlayed: 50, gamesWon: 20 } }, { tank: { gamesPlayed: 50, gamesWon: 35 }, support: { gamesPlayed: 50, gamesWon: 26 } });
   assert.deepEqual([duo[0].roleA, duo[0].roleB], ['tank', 'support']);

@@ -756,3 +756,7 @@ html[data-page=home] #banner-slot{display:block;height:clamp(260px,18.5vw,300px)
 .climb-move>b.up{color:#4ade80}.climb-move>b.down{color:#f87171}
 .patch-all{margin-top:10px}
 @media (max-width:760px){.climb-roles,.climb-cols{grid-template-columns:1fr}}
+.conf{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:8px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;vertical-align:1px;border:1px solid}
+.conf-high{color:#4ade80;border-color:rgba(74,222,128,.4)}.conf-medium{color:var(--amber);border-color:rgba(255,192,77,.4)}.conf-low{color:#f87171;border-color:rgba(248,113,113,.4)}
+.board-table .conf{margin-left:4px;padding:0 5px;font-size:9.5px}
+.board-table .tr{grid-template-columns:minmax(110px,2fr) minmax(60px,1fr) minmax(76px,1.1fr) 92px}@media (max-width:560px){.board-table .tr{grid-template-columns:minmax(92px,1.5fr) 56px minmax(64px,1fr) 78px}}

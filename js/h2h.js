@@ -4,15 +4,19 @@
 // Rules (agreed with the site owner):
 //  - Only rates are compared (per 10 minutes, percentages, per life). Totals and
 //    "best in a game" records are shown separately and never counted.
-//  - Both players need 5+ games in what is compared, or no stat is called.
+//  - Both players need 10+ games AND 1+ hour in what is compared, or no stat is called.
 //  - "Even" band: percentages need a 2-point gap; everything else a 5% gap
 //    (and at least 0.1 for small per-10 counts).
+//  - Win rate must also beat luck: the gap has to be bigger than chance could explain for
+//    those game counts (two-proportion test, 95%). Otherwise it is "even (within luck)".
+//  - Every verdict carries a confidence label from the smaller game count:
+//    Low under 20, Medium 20-49, High 50+.
 //  - Weights: win rate x2, hero ability stats x2, survival x2, the stats that matter most
 //    for the hero's role x2 ("role focus"), everything else x1.
 //  - Role-aware: healing is not judged for tank or damage heroes (it isn't their job).
 //  - If the weighted scores are within 1 point, the verdict is "too close to call".
 
-export const RULES = { minGames: 5, relBand: 0.05, pctBand: 2, minAbs: 0.1, closeScore: 1, duoMinGames: 10 };
+export const RULES = { minGames: 10, minTime: 3600, relBand: 0.05, pctBand: 2, minAbs: 0.1, closeScore: 1, duoMinGames: 10, z: 1.96 };
 export const GROUPS = {
   win: { label: 'Winning', weight: 2 },
   focus: { label: 'Role focus', weight: 2 },
@@ -87,7 +91,7 @@ export function mergeMetrics(list) {
 /** Rate metrics from the summary block (used for Role, and as a fallback). */
 export function summaryMetrics(b, role = '') {
   if (!b) return { __games: null };
-  const out = { __games: b.gamesPlayed ?? null };
+  const out = { __games: b.gamesPlayed ?? null, __time: b.timePlayed ?? 0 };
   const add = (key, group, value, label) => { if (typeof value === 'number' && Number.isFinite(value)) out[key] = { key, group, value, label, pct: isPct(key) || key === 'win_percentage', lower: isLower(key) }; };
   if (b.gamesPlayed) add('win_percentage', 'win', b.winrate, 'Win rate');
   add('deaths_avg_per_10_min', 'survival', b.average?.deaths, 'Deaths / 10 min');
@@ -99,11 +103,24 @@ export function summaryMetrics(b, role = '') {
   return applyRole(out, role);
 }
 
-/** Who leads one stat: 'a', 'b', 'even' or '' (not comparable). */
-export function lead(m, va, vb) {
+/** How big a win-rate gap (in points) luck alone could cause for these game counts (95%). */
+export function luckBand(pa, pb, na, nb) {
+  if (!na || !nb) return Infinity;
+  const p = ((pa / 100) * na + (pb / 100) * nb) / (na + nb);
+  return RULES.z * Math.sqrt(Math.max(p * (1 - p), 0.01) * (1 / na + 1 / nb)) * 100;
+}
+/** Confidence label from the smaller game count. */
+export function confidence(ga, gb) {
+  const n = Math.min(ga || 0, gb || 0);
+  return n >= 50 ? 'High' : n >= 20 ? 'Medium' : 'Low';
+}
+
+/** Who leads one stat: 'a', 'b', 'even', 'luck' (win rate gap within chance) or '' (not comparable). */
+export function lead(m, va, vb, ga = 0, gb = 0) {
   if (va == null || vb == null) return '';
   if (va === 0 && vb === 0) return 'even';
   const gap = Math.abs(va - vb);
+  if (m.key === 'win_percentage' && gap > RULES.pctBand && gap <= luckBand(va, vb, ga, gb)) return 'luck';
   const band = m.pct ? RULES.pctBand : Math.max(RULES.relBand * Math.max(Math.abs(va), Math.abs(vb)), m.key.endsWith('_avg_per_10_min') ? RULES.minAbs : 0);
   if (gap <= band) return 'even';
   return (va > vb) !== m.lower ? 'a' : 'b';
@@ -112,11 +129,12 @@ export function lead(m, va, vb) {
 /** Compare two metric sets. Returns rows grouped in display order plus the verdict. */
 export function compareMetrics(ma, mb) {
   const ga = ma.__games ?? 0, gb = mb.__games ?? 0;
-  const enough = ga >= RULES.minGames && gb >= RULES.minGames;
+  const ta = ma.__time ?? 0, tb = mb.__time ?? 0;
+  const enough = ga >= RULES.minGames && gb >= RULES.minGames && ta >= RULES.minTime && tb >= RULES.minTime;
   const keys = [...new Set([...Object.keys(ma), ...Object.keys(mb)])].filter(k => !k.startsWith('__'));
   const rows = keys.map(k => {
     const m = ma[k] || mb[k]; const va = ma[k]?.value ?? null, vb = mb[k]?.value ?? null;
-    const w = enough ? lead(m, va, vb) : '';
+    const w = enough ? lead(m, va, vb, ga, gb) : '';
     const rel = va != null && vb != null && Math.max(Math.abs(va), Math.abs(vb)) ? Math.abs(va - vb) / Math.max(Math.abs(va), Math.abs(vb)) : 0;
     return { ...m, va, vb, w, rel, weight: GROUPS[m.group].weight };
   }).filter(r => !(r.va === 0 && r.vb === 0) && !(r.va == null && r.vb == null))
@@ -124,7 +142,7 @@ export function compareMetrics(ma, mb) {
   const score = side => rows.filter(r => r.w === side).reduce((t, r) => t + r.weight, 0);
   const scoreA = score('a'), scoreB = score('b');
   const winner = !enough ? '' : Math.abs(scoreA - scoreB) <= RULES.closeScore ? 'close' : scoreA > scoreB ? 'a' : 'b';
-  return { rows, enough, gamesA: ga, gamesB: gb, scoreA, scoreB, winner };
+  return { rows, enough, gamesA: ga, gamesB: gb, timeA: ta, timeB: tb, scoreA, scoreB, winner, confidence: confidence(ga, gb) };
 }
 
 const fmtVal = (r, v) => (v == null ? '—' : r.pct ? `${(Math.round(v * 10) / 10).toFixed(1)}%` : Math.abs(v) >= 100 ? Math.round(v).toLocaleString('en-US') : Math.abs(v) >= 10 ? (Math.round(v * 10) / 10).toString() : (Math.round(v * 100) / 100).toString());
@@ -182,13 +200,16 @@ const strongest = (rows, side, n) => rows.filter(r => r.w === side).sort((x, y) 
 /** Plain-English analysis as separate points, built only from the rows, same rules every time. */
 export function summaryParts(res, nameA, nameB, subject, role = '') {
   if (!res.rows.length) return { headline: `Neither player has ${subject} stats to compare.`, points: [] };
-  if (!res.enough) return { headline: `No call on ${subject}: ${nameA} has ${res.gamesA} game${res.gamesA === 1 ? '' : 's'} and ${nameB} has ${res.gamesB}.`, points: [`OverScope only compares players once both have ${RULES.minGames}+ games, because a few games swing every rate.`] };
-  const evens = res.rows.filter(r => r.w === 'even');
+  if (!res.enough) {
+    const h = t => (t >= 3600 ? `${(t / 3600).toFixed(1)} h` : `${Math.round((t || 0) / 60)} min`);
+    return { headline: `No call on ${subject}: ${nameA} has ${res.gamesA} game${res.gamesA === 1 ? '' : 's'} (${h(res.timeA)}) and ${nameB} has ${res.gamesB} (${h(res.timeB)}).`, points: [`OverScope only compares players once both have ${RULES.minGames}+ games and 1+ hour, because a few games swing every rate.`] };
+  }
+  const evens = res.rows.filter(r => r.w === 'even' || r.w === 'luck');
   const winRow = res.rows.find(r => r.key === 'win_percentage');
   const points = [];
   let headline;
   if (res.winner === 'close') {
-    headline = `Too close to call on ${subject} (weighted score ${res.scoreA}–${res.scoreB}).`;
+    headline = `Too close to call on ${subject} (weighted score ${res.scoreA}–${res.scoreB}) · ${res.confidence} confidence.`;
     for (const [side, name] of [['a', nameA], ['b', nameB]]) {
       const s = strongest(res.rows, side, 2).map(r => reason(r, side, true));
       if (s.length) points.push(`${name}: ${list(s)}.`);
@@ -196,7 +217,7 @@ export function summaryParts(res, nameA, nameB, subject, role = '') {
   } else {
     const W = res.winner, L = W === 'a' ? 'b' : 'a';
     const wn = W === 'a' ? nameA : nameB, ln = W === 'a' ? nameB : nameA;
-    headline = `${wn} performs better on ${subject} (weighted score ${Math.max(res.scoreA, res.scoreB)}–${Math.min(res.scoreA, res.scoreB)}).`;
+    headline = `${wn} performs better on ${subject} (weighted score ${Math.max(res.scoreA, res.scoreB)}–${Math.min(res.scoreA, res.scoreB)}) · ${res.confidence} confidence.`;
     for (const r of strongest(res.rows, W, 3)) points.push(`${wn} has ${reason(r, W, true)}.`);
     const back = strongest(res.rows, L, 2).map(r => reason(r, L, true));
     if (back.length) points.push(`${ln} is stronger in ${list(back)}.`);
@@ -209,9 +230,11 @@ export function summaryParts(res, nameA, nameB, subject, role = '') {
     }
   }
   if (winRow?.w === 'even') points.push(`Win rates are within ${RULES.pctBand} points (${fmtVal(winRow, winRow.va)} vs ${fmtVal(winRow, winRow.vb)}), so results alone don't separate them.`);
-  if (evens.length > (winRow?.w === 'even' ? 1 : 0)) points.push(`${evens.length} stat${evens.length === 1 ? ' was' : 's were'} too close to separate.`);
+  if (winRow?.w === 'luck') points.push(`Win rates differ (${fmtVal(winRow, winRow.va)} vs ${fmtVal(winRow, winRow.vb)}), but with ${res.gamesA} and ${res.gamesB} games luck alone could cause a gap of up to ${luckBand(winRow.va, winRow.vb, res.gamesA, res.gamesB).toFixed(0)} points, so win rate isn't counted.`);
+  const otherEvens = evens.filter(r => r.key !== 'win_percentage').length;
+  if (otherEvens) points.push(`${otherEvens} other stat${otherEvens === 1 ? ' was' : 's were'} too close to separate.`);
   const few = Math.min(res.gamesA, res.gamesB);
-  if (few < 20) points.push(`Small sample: the player with fewer games has ${few}.`);
+  if (few < 20) points.push(`Low confidence: the player with fewer games has ${few}. Verdicts firm up around 20+ games each (Medium) and 50+ (High).`);
   return { headline, points };
 }
 export function writeSummary(res, nameA, nameB, subject, role = '') {
@@ -277,11 +300,11 @@ export function scoreboard(heroesA, heroesB, careerA, careerB, roleOf) {
   const rows = [];
   for (const ha of heroesA) {
     const hb = byB.get(ha.hero);
-    if (!hb || ha.gamesPlayed < RULES.minGames || hb.gamesPlayed < RULES.minGames) continue;
+    if (!hb || ha.gamesPlayed < RULES.minGames || hb.gamesPlayed < RULES.minGames || (ha.timePlayed ?? 0) < RULES.minTime || (hb.timePlayed ?? 0) < RULES.minTime) continue;
     const role = roleOf(ha.hero);
     const build = (groups, h) => {
       const m = groups?.length ? careerMetrics(groups, role) : summaryMetrics(h, role);
-      m.__games = h.gamesPlayed;
+      m.__games = h.gamesPlayed; m.__time = h.timePlayed ?? m.__time;
       if (m.win_percentage && h.winrate != null) m.win_percentage = { ...m.win_percentage, value: h.winrate };
       return m;
     };

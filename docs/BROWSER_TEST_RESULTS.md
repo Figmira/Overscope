@@ -1,6 +1,6 @@
 # Browser check results
 
-Run 2026-11-17T00:16:28.886Z in Chromium via Playwright. The static site was served exactly as GitHub Pages serves it (under /overscope/); all data was fetched live by the browser.
+Run 2026-11-17T01:05:48.445Z in Chromium via Playwright. The static site was served exactly as GitHub Pages serves it (under /overscope/); all data was fetched live by the browser.
 
 ## Pages
 
@@ -19,7 +19,7 @@ Run 2026-11-17T00:16:28.886Z in Chromium via Playwright. The static site was ser
 | desktop | news | 0/0 | 0 | 15 | 0 | 12 | 12 | 0 | screenshots/desktop-news.png |
 | desktop | sources | 0/0 | 0 | 0 | 0 | 1 | 0 | 1 | screenshots/desktop-sources.png |
 | desktop | meta-by-rank | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-meta-by-rank.png |
-| desktop | player-vs-player | 17/17 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-player-vs-player.png |
+| desktop | player-vs-player | 14/14 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-player-vs-player.png |
 | desktop | tier-list | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-tier-list.png |
 | desktop | static-tierlist | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-static-tierlist.png |
 | desktop | static-tier-gold | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-static-tier-gold.png |
@@ -40,7 +40,7 @@ Run 2026-11-17T00:16:28.886Z in Chromium via Playwright. The static site was ser
 | mobile | news | 0/0 | 0 | 15 | 0 | 12 | 12 | 0 | screenshots/mobile-news.png |
 | mobile | sources | 0/0 | 0 | 0 | 0 | 1 | 0 | 1 | screenshots/mobile-sources.png |
 | mobile | meta-by-rank | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-meta-by-rank.png |
-| mobile | player-vs-player | 17/17 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-player-vs-player.png |
+| mobile | player-vs-player | 14/14 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-player-vs-player.png |
 | mobile | tier-list | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-tier-list.png |
 | mobile | static-tierlist | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-static-tierlist.png |
 | mobile | static-tier-gold | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-static-tier-gold.png |
@@ -62,14 +62,14 @@ Run 2026-11-17T00:16:28.886Z in Chromium via Playwright. The static site was ser
 - PASS — Players: nonexistent BattleTag handled: explains there is no public profile
 - PASS — Meta by rank: heatmap shows one column per rank: 8 ranks, 432 cells
 - PASS — Patch impact: hidden until a patch has before/after data, shown once it does: hidden (no before/after data yet)
-- PASS — Privacy: the site makes no requests except to OverFast, Blizzard media and its own files: hosts contacted: 127.0.0.1:35857, overfast-api.tekrop.fr, blz-contentstack-images.akamaized.net, d15f34w2p8l1cc.cloudfront.net, bnetcmsus-a.akamaihd.net, static.playoverwatch.com
+- PASS — Privacy: the site makes no requests except to OverFast, Blizzard media and its own files: hosts contacted: 127.0.0.1:43597, overfast-api.tekrop.fr, blz-contentstack-images.akamaized.net, bnetcmsus-a.akamaihd.net, d15f34w2p8l1cc.cloudfront.net, static.playoverwatch.com
 - PASS — Favorites: star a player, see them on the Players page, then un-star: listed: TeKrop (then removed)
 - PASS — Favorites: star a hero and filter the roster: Favorites filter → Winston
 - PASS — Player profile: rank history + hero deep dive render: deep-dive groups: Per 10 minutes, Hero-specific, Best in a game / life, Combat totals, Games, Assists, Match awards · history: Rank & stat historysaved in this browser only First snapshot saved 2026-11-17Eac
 - PASS — Tier list: S–D tiers, every hero once, rank filter re-queries: 54 heroes across SABCD; Gold re-queried
 - PASS — Stadium: powers only (no item slots without a source): 12 powers, no item slots
 - PASS — Phone: top search button finds a player; menu links close the menu and open the page: menu OK; search button opened profile "Iso"
-- PASS — Hero page: by-rank chart + tier per rank: tiers Bronze→GM: B B B B A A A S; 2 charts
+- PASS — Hero page: by-rank chart + tier per rank: tiers Bronze→GM: B B B B A A S S; 2 charts
 - PASS — Google pages: real content, preview card, link back into the app: "Tracer", 14 rank rows, og:image set, live link → /#/heroes/tracer
 - PASS — Google pages: top search from a static page opens the app: went to /#/players/Iso-11570
 

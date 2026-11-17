@@ -63,6 +63,7 @@ function metricsFor(sc, which, career) {
   const m = groups?.length ? careerMetrics(groups, sc.role) : summaryMetrics(blockv, sc.role);
   // Games and win rate always come from the same summary the hero list uses (Blizzard's Win Percentage).
   m.__games = blockv?.gamesPlayed ?? null;
+  m.__time = blockv?.timePlayed ?? m.__time ?? 0;
   if (m.win_percentage && blockv?.winrate != null) m.win_percentage = { ...m.win_percentage, value: blockv.winrate };
   return m;
 }
@@ -97,8 +98,8 @@ function drawHead2Head(sc, cA, cB) {
   const ma = metricsFor(sc, 'a', cA), mb = metricsFor(sc, 'b', cB);
   const res = compareMetrics(ma, mb);
   const ga = sc.a?.gamesPlayed ?? 0, gb = sc.b?.gamesPlayed ?? 0;
-  const verdict = !res.enough ? `<p class="h2h-note">Not enough games to call it: ${esc(A.username)} ${num(ga)}, ${esc(B.username)} ${num(gb)} on ${esc(sc.what)}. Calls start once both have ${RULES.minGames}+ games.</p>`
-    : `<p class="h2h-verdict">${res.winner === 'close' ? `Too close to call on ${esc(sc.what)} — weighted score ${res.scoreA}–${res.scoreB}` : `<b>${esc(res.winner === 'a' ? A.username : B.username)}</b> performs better on ${esc(sc.what)} — weighted score ${Math.max(res.scoreA, res.scoreB)}–${Math.min(res.scoreA, res.scoreB)}`}</p>`;
+  const verdict = !res.enough ? `<p class="h2h-note">Not enough to call it: ${esc(A.username)} ${num(ga)} games (${sc.a ? hours(sc.a.timePlayed) : '—'}), ${esc(B.username)} ${num(gb)} games (${sc.b ? hours(sc.b.timePlayed) : '—'}) on ${esc(sc.what)}. Calls start once both have ${RULES.minGames}+ games and 1+ hour.</p>`
+    : `<p class="h2h-verdict">${res.winner === 'close' ? `Too close to call on ${esc(sc.what)} — weighted score ${res.scoreA}–${res.scoreB}` : `<b>${esc(res.winner === 'a' ? A.username : B.username)}</b> performs better on ${esc(sc.what)} — weighted score ${Math.max(res.scoreA, res.scoreB)}–${Math.min(res.scoreA, res.scoreB)}`} <span class="conf conf-${res.confidence.toLowerCase()}">${res.confidence} confidence</span></p>`;
   const parts = summaryParts(res, A.username, B.username, sc.what, sc.role ? ROLE_NAME[sc.role].toLowerCase() : '');
   const focusList = sc.role ? (ROLE_FOCUS[sc.role] || []).map(k => k.replace(/_avg_per_10_min$/, '').replace(/_/g, ' ').replace('obj ', 'objective ').replace(' done', '')).join(' and ') : '';
   // records: hero or overall only (Blizzard keeps no per-role records)
@@ -118,7 +119,7 @@ function drawHead2Head(sc, cA, cB) {
     <section class="h2h-summary"><h3>${icon('i-info')}OverScope analysis</h3>
       <p class="h2h-head">${esc(parts.headline)}</p>
       ${parts.points.length ? `<ul>${parts.points.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
-      <details class="how"><summary>How this is decided</summary><p class="muted small">Only rates are compared (per 10 minutes, percentages, per life), never totals or records. A stat counts as a lead only if the gap is 5% or more (2 points for percentages); smaller gaps are “even”. Win rate, hero ability stats, survival${focusList ? ` and the role focus for a ${esc(ROLE_NAME[sc.role].toLowerCase())} (${esc(focusList)})` : ''} count double. ${sc.role && sc.role !== 'support' ? 'Healing is not judged for tank or damage heroes. ' : ''}If the weighted scores are within 1, it's too close to call. Both players need ${RULES.minGames}+ games. Win rates are Blizzard's own Win Percentage.</p></details>
+      <details class="how"><summary>How this is decided</summary><p class="muted small">Only rates are compared (per 10 minutes, percentages, per life), never totals or records. A stat counts as a lead only if the gap is 5% or more (2 points for percentages); smaller gaps are “even”. Win rate must also be bigger than luck could explain for the two game counts (“within luck” otherwise). Win rate, hero ability stats, survival${focusList ? ` and the role focus for a ${esc(ROLE_NAME[sc.role].toLowerCase())} (${esc(focusList)})` : ''} count double. ${sc.role && sc.role !== 'support' ? 'Healing is not judged for tank or damage heroes. ' : ''}If the weighted scores are within 1, it's too close to call. Both players need ${RULES.minGames}+ games and 1+ hour. Confidence comes from the player with fewer games: Low under 20, Medium 20–49, High 50+. Win rates are Blizzard's own Win Percentage.</p></details>
     </section>
     ${fp.length >= 3 ? `<section class="h2h-sub"><h3>${icon('i-chart')}Play-style fingerprint</h3>${radar(fp)}<p class="muted small">Each axis is scaled to whichever player is stronger on it (outer edge = the stronger one). Survival uses eliminations per life.</p></section>` : ''}
     ${state.by === 'role' ? '' : recKeys.length ? `<section class="h2h-sub"><h3>${icon('i-laurel')}Best-game records</h3><div class="table vs-table rec-table">${recKeys.map((k, i) => {
@@ -137,7 +138,7 @@ function gapRows(res) {
     const size = Math.max(8, Math.min(100, (r.rel / 0.5) * 100));
     const bar = r.w === 'a' ? `<i class="gap-a" style="width:${size}%"></i>` : r.w === 'b' ? `<i class="gap-b" style="width:${size}%"></i>` : '';
     return g + `<div class="gap-row ${r.w}"><span class="va ${r.w === 'a' ? 'win' : ''}">${formatValue(r, r.va)}</span>
-      <span class="gap-mid"><span class="gap-label">${esc(r.label)}${r.w === 'even' ? ' <small class="even-tag">even</small>' : ''}</span>
+      <span class="gap-mid"><span class="gap-label">${esc(r.label)}${r.w === 'even' ? ' <small class="even-tag">even</small>' : r.w === 'luck' ? ' <small class="even-tag">within luck</small>' : ''}</span>
         <span class="gap-track"><span class="half left">${r.w === 'a' ? bar : ''}</span><span class="half right">${r.w === 'b' ? bar : ''}</span></span></span>
       <span class="vb ${r.w === 'b' ? 'win' : ''}">${formatValue(r, r.vb)}</span></div>`;
   }).join('');
@@ -182,15 +183,15 @@ async function drawVsAverage(sc, my) {
 function drawBoard(sc, cA, cB) {
   const box = $('#h2hBoard'); if (!box) return;
   const hA = sc.sA?.heroes || [], hB = sc.sB?.heroes || [];
-  const head = `<header class="panel-head"><h2>${icon('i-mask')}Shared heroes</h2><small class="muted">${state.mode === 'competitive' ? 'Competitive' : 'Quick Play'} · heroes both have ${RULES.minGames}+ games on</small></header>`;
+  const head = `<header class="panel-head"><h2>${icon('i-mask')}Shared heroes</h2><small class="muted">${state.mode === 'competitive' ? 'Competitive' : 'Quick Play'} · heroes both have ${RULES.minGames}+ games and 1+ hour on</small></header>`;
   if (!cA) { box.innerHTML = head + '<p class="source-note" style="margin:12px 14px">Comparing every shared hero…</p>'; return; }
   const sb = scoreboard(hA, hB, cA, cB, k => heroInfo(k).role);
   const best = [[A, bestHero(hA)], [B, bestHero(hB)]];
-  if (!sb.rows.length) { box.innerHTML = head + emptyBox('No shared heroes yet', `There is no hero both players have ${RULES.minGames}+ games on in this mode.`); return; }
+  if (!sb.rows.length) { box.innerHTML = head + emptyBox('No shared heroes yet', `There is no hero both players have ${RULES.minGames}+ games and 1+ hour on in this mode.`); return; }
   const res = r => (r.winner === 'a' ? `<span class="res a">${esc(A.username)}</span>` : r.winner === 'b' ? `<span class="res b">${esc(B.username)}</span>` : '<span class="res close">Too close</span>');
   box.innerHTML = head + `<p class="h2h-verdict">${sb.winsA === sb.winsB ? `Even across shared heroes: ${sb.winsA}–${sb.winsB}` : `<b>${esc(sb.winsA > sb.winsB ? A.username : B.username)}</b> performs better on ${Math.max(sb.winsA, sb.winsB)} of ${sb.rows.length} shared heroes`}${sb.close ? ` · ${sb.close} too close to call` : ''}</p>
     <div class="table board-table"><div class="tr th"><span>Hero</span><span>Games</span><span>Better</span><span>Score</span></div>
-    ${sb.rows.map(r => `<button class="tr" data-pick="${esc(r.hero)}"><span class="who">${heroPortrait(r.hero, 'portrait')}<b>${esc(heroInfo(r.hero).name)}</b></span><span>${num(r.gamesA)} · ${num(r.gamesB)}</span>${res(r)}<span>${r.scoreA}–${r.scoreB}</span></button>`).join('')}</div>
+    ${sb.rows.map(r => `<button class="tr" data-pick="${esc(r.hero)}"><span class="who">${heroPortrait(r.hero, 'portrait')}<b>${esc(heroInfo(r.hero).name)}</b></span><span>${num(r.gamesA)} · ${num(r.gamesB)}</span>${res(r)}<span>${r.scoreA}–${r.scoreB} <small class="conf conf-${r.confidence.toLowerCase()}">${r.confidence}</small></span></button>`).join('')}</div>
     <p class="best-heroes">${best.map(([p, h]) => `<span><b>${esc(p.username)}'s best hero:</b> ${h ? `${esc(heroInfo(h.hero).name)} — ${wr(h.winrate)} in ${num(h.gamesPlayed)} games` : 'no hero with 10+ games'}</span>`).join('')}</p>
     <p class="muted small">Each hero is judged with the same rules as Head to head. Tap a hero to see the full breakdown.</p>`;
 }
