@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-17T00:54:34.928Z",
+ "checkedAt": "2026-11-17T01:05:59.851Z",
  "patches": [
   {
    "kind": "patch",
@@ -206,22 +206,22 @@
   {
    "url": "https://overwatch.blizzard.com/en-us/news/patch-notes/",
    "items": 3,
-   "fetchedAt": 1794876875105
+   "fetchedAt": 1794877560708
   },
   {
    "url": "https://overwatch.blizzard.com/en-us/news/patch-notes/live/2026/10/",
    "items": 3,
-   "fetchedAt": 1794876875132
+   "fetchedAt": 1794877560759
   },
   {
    "url": "https://overwatch.blizzard.com/en-us/news/patch-notes/live/2026/09/",
    "items": 4,
-   "fetchedAt": 1794876875450
+   "fetchedAt": 1794877561133
   },
   {
    "url": "https://overwatch.blizzard.com/en-us/news/",
    "items": 12,
-   "fetchedAt": 1794876878469
+   "fetchedAt": 1794877561530
   }
  ],
  "errors": [],
