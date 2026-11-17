@@ -49,7 +49,11 @@ async function drawVsRank() {
   const qpPlats = p.qpPlatforms || [];
   const modes = [...(compPlats.length ? ['competitive'] : []), ...(qpPlats.length ? ['quickplay'] : [])];
   if (!modes.length) { el.hidden = true; return; }
-  if (!modes.includes(vs.mode)) vs.mode = modes[0];
+  if (!modes.includes(vs.mode)) {
+    // open on the first mode that actually has heroes with enough games
+    const hasHeroes = m => (m === 'competitive' ? compPlats.map(pl => p.statsByPlatform[pl]) : qpPlats.map(pl => p.qpByPlatform[pl])).some(bk => (bk?.heroes || []).some(h => h.gamesPlayed >= MIN_GAMES));
+    vs.mode = modes.find(hasHeroes) || modes[0];
+  }
   const plats = vs.mode === 'competitive' ? compPlats : qpPlats;
   if (!plats.includes(vs.platform)) vs.platform = plats[0];
   vs.region ||= prefs.region || 'americas';
@@ -135,7 +139,7 @@ async function profile(id) {
   const el = $('#pProfile');
   el.innerHTML = loadingBox(6);
   let tracked = false;
-  try { const r = await api('/api/players/' + encodeURIComponent(id), { fresh: true }); current = r.data; }
+  try { const r = await api('/api/players/' + encodeURIComponent(id), { fresh: true }); current = r.data; vs.mode = ''; vs.platform = ''; }
   catch (e) {
     if (e.status !== 404) { el.innerHTML = errorBox(e); return; }
     // Not found by exact BattleTag: show the public players with that name instead (like Blizzard's own search).
@@ -254,6 +258,8 @@ async function compare(a, b) {
   const bad = res.find(r => r.error);
   if (bad) { el.innerHTML = bad.error.status === 404 ? emptyBox('Player not found', `No profile exists for <strong>${esc(bad.id)}</strong>.`) : errorBox(bad.error); return; }
   const [A, B] = res;
+  // BattleTags are matched case-insensitively, so compare the resolved ids.
+  if (A.id.toLowerCase() === B.id.toLowerCase()) { el.innerHTML = emptyBox('That is the same player twice', `Both BattleTags lead to <strong>${esc(A.id.replace(/-(\d+)$/, '#$1'))}</strong>. Pick two different players to compare.`); return; }
   const plat = p => p.stats.competitive?.platform || (p.competitive.pc ? 'pc' : p.competitive.console ? 'console' : null);
   const inputName = pl => (pl === 'pc' ? 'PC' : pl === 'console' ? 'Console' : '—');
   const rk = (p, r) => { const c = p.competitive[plat(p)]?.[r]; return c ? `${cap(c.division)} ${c.tier}` : '—'; };

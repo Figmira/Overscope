@@ -161,22 +161,25 @@ async function drawVsAverage(sc, my) {
   const hero = state.key, role = heroInfo(hero).role, m = sc.m;
   const line = async (p, blockv) => {
     if (!blockv?.gamesPlayed) return null;
+    // Same minimums as the head-to-head calls: too few games means a win rate says nothing yet.
+    if (blockv.gamesPlayed < RULES.minGames || (blockv.timePlayed ?? 0) < RULES.minTime) return { p, skip: `${num(blockv.gamesPlayed)} game${blockv.gamesPlayed === 1 ? '' : 's'} (${hours(blockv.timePlayed)}) — needs ${RULES.minGames}+ games and 1+ hour to compare` };
     const plat = p.stats[m]?.platform || 'pc';
     let division = '', rankText = '';
     if (m === 'competitive') {
-      const c = p.competitive[plat] || {};
-      const r = c[role] || c.open;
-      if (r?.division) { division = r.division === 'champion' ? 'grandmaster' : r.division; rankText = `${RANK_LABEL(division)}${c[role] ? '' : ' (Open Queue rank)'}`; }
+      const r = (p.competitive[plat] || {})[role];
+      // Open Queue-only players are left out: Blizzard publishes Role Queue averages only.
+      if (!r?.division) return { p, skip: `no ${ROLE_NAME[role]} Role Queue rank this season, and Blizzard publishes no Open Queue averages` };
+      division = r.division === 'champion' ? 'grandmaster' : r.division; rankText = RANK_LABEL(division);
     }
     const rows = await averageRows(m, plat, division);
     const avg = rows.find(x => x.hero === hero)?.winrate;
-    if (avg == null) return null;
+    if (avg == null) return { p, skip: 'no published average for this hero' };
     const diff = blockv.winrate - avg;
-    return { p, mine: blockv.winrate, avg, diff, label: m === 'competitive' ? (rankText ? `${rankText} average` : 'all-ranks average') : 'Quick Play average', plat };
+    return { p, mine: blockv.winrate, avg, diff, label: m === 'competitive' ? `${rankText} average` : 'Quick Play average', plat };
   };
   const out = (await Promise.all([line(A, sc.a), line(B, sc.b)])).filter(Boolean);
   if (my !== seq || !out.length) return;
-  el.innerHTML = `<div class="vs-avg">${out.map(x => `<div class="vs-avg-row"><b>${esc(x.p.username)}</b><span>${wr(x.mine)} on ${esc(heroInfo(hero).name)}</span><span class="muted">vs ${esc(x.label)} ${x.avg.toFixed(1)}%</span><span class="delta ${x.diff >= 0 ? 'up' : 'down'}">${x.diff >= 0 ? '+' : '−'}${Math.abs(x.diff).toFixed(1)} pts</span></div>`).join('')}
+  el.innerHTML = `<div class="vs-avg">${out.map(x => x.skip ? `<div class="vs-avg-row"><b>${esc(x.p.username)}</b><span class="muted">${esc(x.skip)}</span></div>` : `<div class="vs-avg-row"><b>${esc(x.p.username)}</b><span>${wr(x.mine)} on ${esc(heroInfo(hero).name)}</span><span class="muted">vs ${esc(x.label)} ${x.avg.toFixed(1)}%</span><span class="delta ${x.diff >= 0 ? 'up' : 'down'}">${x.diff >= 0 ? '+' : '−'}${Math.abs(x.diff).toFixed(1)} pts</span></div>`).join('')}
     <p class="muted small">Average = Blizzard's win rate for ${esc(heroInfo(hero).name)} across all ${m === 'competitive' ? 'players at that rank' : 'Quick Play players'} (${esc(REGION_NAME[prefs.region] || prefs.region)}, same platform, current patch). Blizzard publishes averages for win rate only, not for other stats.</p></div>`;
 }
 

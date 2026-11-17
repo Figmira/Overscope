@@ -1,6 +1,6 @@
 # Browser check results
 
-Run 2026-11-17T01:05:48.445Z in Chromium via Playwright. The static site was served exactly as GitHub Pages serves it (under /overscope/); all data was fetched live by the browser.
+Run 2026-11-17T01:38:08.198Z in Chromium via Playwright. The static site was served exactly as GitHub Pages serves it (under /overscope/); all data was fetched live by the browser.
 
 ## Pages
 
@@ -17,9 +17,9 @@ Run 2026-11-17T01:05:48.445Z in Chromium via Playwright. The static site was ser
 | desktop | map-detail | 11/11 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-map-detail.png |
 | desktop | players | 10/10 | 0 | 1 | 0 | 1 | 1 | 0 | screenshots/desktop-players.png |
 | desktop | news | 0/0 | 0 | 15 | 0 | 12 | 12 | 0 | screenshots/desktop-news.png |
-| desktop | sources | 0/0 | 0 | 0 | 0 | 1 | 0 | 1 | screenshots/desktop-sources.png |
+| desktop | sources | 0/0 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-sources.png |
 | desktop | meta-by-rank | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-meta-by-rank.png |
-| desktop | player-vs-player | 14/14 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-player-vs-player.png |
+| desktop | player-vs-player | 0/0 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-player-vs-player.png |
 | desktop | tier-list | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-tier-list.png |
 | desktop | static-tierlist | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-static-tierlist.png |
 | desktop | static-tier-gold | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-static-tier-gold.png |
@@ -38,9 +38,9 @@ Run 2026-11-17T01:05:48.445Z in Chromium via Playwright. The static site was ser
 | mobile | map-detail | 11/11 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-map-detail.png |
 | mobile | players | 10/10 | 0 | 1 | 0 | 1 | 1 | 0 | screenshots/mobile-players.png |
 | mobile | news | 0/0 | 0 | 15 | 0 | 12 | 12 | 0 | screenshots/mobile-news.png |
-| mobile | sources | 0/0 | 0 | 0 | 0 | 1 | 0 | 1 | screenshots/mobile-sources.png |
+| mobile | sources | 0/0 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-sources.png |
 | mobile | meta-by-rank | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-meta-by-rank.png |
-| mobile | player-vs-player | 14/14 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-player-vs-player.png |
+| mobile | player-vs-player | 0/0 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-player-vs-player.png |
 | mobile | tier-list | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-tier-list.png |
 | mobile | static-tierlist | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-static-tierlist.png |
 | mobile | static-tier-gold | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-static-tier-gold.png |
@@ -62,7 +62,7 @@ Run 2026-11-17T01:05:48.445Z in Chromium via Playwright. The static site was ser
 - PASS — Players: nonexistent BattleTag handled: explains there is no public profile
 - PASS — Meta by rank: heatmap shows one column per rank: 8 ranks, 432 cells
 - PASS — Patch impact: hidden until a patch has before/after data, shown once it does: hidden (no before/after data yet)
-- PASS — Privacy: the site makes no requests except to OverFast, Blizzard media and its own files: hosts contacted: 127.0.0.1:43597, overfast-api.tekrop.fr, blz-contentstack-images.akamaized.net, bnetcmsus-a.akamaihd.net, d15f34w2p8l1cc.cloudfront.net, static.playoverwatch.com
+- PASS — Privacy: the site makes no requests except to OverFast, Blizzard media and its own files: hosts contacted: 127.0.0.1:34461, overfast-api.tekrop.fr, blz-contentstack-images.akamaized.net, bnetcmsus-a.akamaihd.net, d15f34w2p8l1cc.cloudfront.net, static.playoverwatch.com
 - PASS — Favorites: star a player, see them on the Players page, then un-star: listed: TeKrop (then removed)
 - PASS — Favorites: star a hero and filter the roster: Favorites filter → Winston
 - PASS — Player profile: rank history + hero deep dive render: deep-dive groups: Per 10 minutes, Hero-specific, Best in a game / life, Combat totals, Games, Assists, Match awards · history: Rank & stat historysaved in this browser only First snapshot saved 2026-11-17Eac
@@ -114,11 +114,6 @@ Run 2026-11-17T01:05:48.445Z in Chromium via Playwright. The static site was ser
 - request: https://bnetcmsus-a.akamaihd.net/cms/blog_thumbnail/t7/T7H2VD9WNCJV1784242598664.png net::ERR_TUNNEL_CONNECTION_FAILED
 - request: https://bnetcmsus-a.akamaihd.net/cms/blog_thumbnail/um/UME93D2XL9FB1783964897556.png net::ERR_TUNNEL_CONNECTION_FAILED
 
-### desktop / sources
-
-- console: SyntaxError: Unexpected identifier 's'
-
-- error panel: SOMETHING WENT WRONG SHOWING THIS PAGE. Unexpected identifier 's'
 ### mobile / home
 
 - console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED
@@ -157,9 +152,3 @@ Run 2026-11-17T01:05:48.445Z in Chromium via Playwright. The static site was ser
 - request: https://bnetcmsus-a.akamaihd.net/cms/blog_thumbnail/26/26O1UWGBLNM81785187549340.png net::ERR_TUNNEL_CONNECTION_FAILED
 - request: https://bnetcmsus-a.akamaihd.net/cms/blog_thumbnail/t7/T7H2VD9WNCJV1784242598664.png net::ERR_TUNNEL_CONNECTION_FAILED
 - request: https://bnetcmsus-a.akamaihd.net/cms/blog_thumbnail/um/UME93D2XL9FB1783964897556.png net::ERR_TUNNEL_CONNECTION_FAILED
-
-### mobile / sources
-
-- console: SyntaxError: Unexpected identifier 's'
-
-- error panel: SOMETHING WENT WRONG SHOWING THIS PAGE. Unexpected identifier 's'

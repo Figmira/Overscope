@@ -176,3 +176,11 @@ test('head to head: "deaths prevented" is higher-is-better, own deaths lower-is-
   assert.equal(m.deaths_avg_per_10_min.lower, true);
   assert.equal(m.immortality_field_deaths_prevented_avg_per_10_min.lower, false);
 });
+
+test('every site script parses (catches broken strings like an unescaped apostrophe)', async () => {
+  const { execFileSync } = await import('node:child_process');
+  const { readdirSync } = await import('node:fs');
+  const files = ['js', 'js/pages', 'scripts'].flatMap(d => readdirSync(new URL(`../${d}/`, import.meta.url)).filter(f => /\.m?js$/.test(f)).map(f => `${d}/${f}`));
+  assert.ok(files.length > 15);
+  for (const f of files) execFileSync(process.execPath, ['--check', new URL(`../${f}`, import.meta.url).pathname]);
+});
