@@ -43,7 +43,7 @@ async function render() {
     : route.page === 'players' && route.param === 'compare' ? 'pvp'
     : route.page === 'competitive' && (route.query.get('queue') || prefs.queue) === 'quickplay' ? 'quickplay' : route.page;
   $$('[data-route]').forEach(a => a.classList.toggle('on', a.dataset.route === active));
-  $$('[data-sub]').forEach(a => a.classList.toggle('on', route.page === 'competitive' && !['compare', 'ranks', 'patch'].includes(route.query.get('view')) && (route.query.get('queue') || prefs.queue) === a.dataset.sub));
+  $$('[data-sub]').forEach(a => a.classList.toggle('on', route.page === 'competitive' && (a.dataset.sub === 'climb' ? route.query.get('view') === 'climb' : !['compare', 'ranks', 'patch', 'climb'].includes(route.query.get('view')) && (route.query.get('queue') || prefs.queue) === a.dataset.sub)));
   $('#sidebar').classList.remove('open');
   $('#menuBtn').setAttribute('aria-expanded', 'false');
   try {

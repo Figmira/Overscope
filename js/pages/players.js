@@ -36,45 +36,63 @@ export async function render({ main, route, signal }) {
   landing();
 }
 
-// ---------- You vs your rank: the player's hero win rates next to Blizzard's average at their Role Queue rank ----------
+// ---------- You vs your rank: each hero's win rate next to the average player ----------
+// Competitive: Blizzard's Role Queue average at the player's rank in that hero's role
+// (players with only an Open Queue rank are skipped: 5v5 Role Queue averages don't fit Open Queue).
+// Quick Play: Blizzard's Quick Play average on the same platform (no ranks in Quick Play).
 const MIN_GAMES = 5;
-const vs = { platform: '', region: '' };
+const vs = { mode: '', platform: '', region: '' };
 async function drawVsRank() {
   const el = $('#vsRank'); const p = current;
   const roleRanked = plat => ['tank', 'damage', 'support'].some(r => p.competitive[plat]?.[r]);
-  const plats = ['pc', 'console'].filter(roleRanked);
-  if (!plats.length) { el.hidden = true; return; } // Open Queue only: Blizzard publishes no Open Queue averages to compare with
+  const compPlats = (p.compPlatforms || []).filter(roleRanked);
+  const qpPlats = p.qpPlatforms || [];
+  const modes = [...(compPlats.length ? ['competitive'] : []), ...(qpPlats.length ? ['quickplay'] : [])];
+  if (!modes.length) { el.hidden = true; return; }
+  if (!modes.includes(vs.mode)) vs.mode = modes[0];
+  const plats = vs.mode === 'competitive' ? compPlats : qpPlats;
   if (!plats.includes(vs.platform)) vs.platform = plats[0];
   vs.region ||= prefs.region || 'americas';
-  let heroes, table;
+  const block = (vs.mode === 'competitive' ? p.statsByPlatform : p.qpByPlatform)[vs.platform];
+  const heroes = (block?.heroes || []).filter(h => h.gamesPlayed >= MIN_GAMES && h.winrate != null);
+  let byRank = null, qpRows = null;
   try {
-    [heroes, table] = await Promise.all([
-      api(`/api/players/${encodeURIComponent(p.id)}/comp-heroes?` + qs({ platform: vs.platform })),
-      api('/api/stats/by-rank?' + qs({ platform: vs.platform, region: vs.region }), { ttl: 30 * 60_000 }),
-    ]);
+    if (vs.mode === 'competitive') byRank = await api('/api/stats/by-rank?' + qs({ platform: vs.platform, region: vs.region }), { ttl: 30 * 60_000 });
+    else qpRows = (await api('/api/stats?' + qs({ queue: 'quickplay', platform: vs.platform, region: vs.region }))).rows || [];
   } catch { el.hidden = true; return; }
-  const ranks = p.competitive[vs.platform];
+  const ranks = p.competitive[vs.platform] || {};
   const rows = heroes.map(h => {
-    const role = heroInfo(h.hero).role, rk = ranks[role];
-    if (!rk || h.gamesPlayed < MIN_GAMES || h.winrate == null) return null;
+    const role = heroInfo(h.hero).role;
+    if (vs.mode === 'quickplay') { const avg = qpRows.find(r => r.hero === h.hero); return avg ? { ...h, role, avg: avg.winrate, diff: h.winrate - avg.winrate, avgLabel: 'All Quick Play' } : null; }
+    const rk = ranks[role]; if (!rk) return null;
     const div = rk.division === 'champion' ? 'grandmaster' : rk.division;
-    const avg = table.divisions?.[div]?.find(r => r.hero === h.hero);
-    return avg ? { ...h, role, rk, div, avg: avg.winrate, diff: h.winrate - avg.winrate } : null;
+    const avg = byRank.divisions?.[div]?.find(r => r.hero === h.hero);
+    return avg ? { ...h, role, rk, div, avg: avg.winrate, diff: h.winrate - avg.winrate, avgLabel: RANK_LABEL(div) } : null;
   }).filter(Boolean).sort((a, b) => b.gamesPlayed - a.gamesPlayed);
-  if (!rows.length) { el.hidden = true; return; }
-  const season = ranks.season ? seasonName(ranks.season) : 'this season';
+  const tools = `<div class="toolbar tight0">${modes.length > 1 ? `<div class="seg sm">${modes.map(m => `<button class="${m === vs.mode ? 'on' : ''}" data-vsmode="${m}">${m === 'competitive' ? 'Competitive' : 'Quick Play'}</button>`).join('')}</div>` : ''}
+      ${plats.length > 1 ? `<label class="sel"><span>Platform</span><select id="vsPlat">${plats.map(x => `<option value="${x}" ${x === vs.platform ? 'selected' : ''}>${x === 'pc' ? 'PC' : 'Console'}</option>`).join('')}</select></label>` : ''}
+      <label class="sel"><span>Region</span><select id="vsRegion">${['americas', 'europe', 'asia'].map(x => `<option value="${x}" ${x === vs.region ? 'selected' : ''}>${cap(x)}</option>`).join('')}</select></label></div>`;
   el.hidden = false;
-  el.innerHTML = `<header class="panel-head"><h2>${icon('i-laurel')}You vs your rank<small>— Role Queue</small></h2>
-      <div class="toolbar tight0">${plats.length > 1 ? `<label class="sel"><span>Platform</span><select id="vsPlat">${plats.map(x => `<option value="${x}" ${x === vs.platform ? 'selected' : ''}>${x === 'pc' ? 'PC' : 'Console'}</option>`).join('')}</select></label>` : ''}
-      <label class="sel"><span>Region</span><select id="vsRegion">${['americas', 'europe', 'asia'].map(x => `<option value="${x}" ${x === vs.region ? 'selected' : ''}>${cap(x)}</option>`).join('')}</select></label></div></header>
-    <div class="table vs-rank"><div class="tr th"><span>Hero</span><span>Your games</span><span>Your win rate</span><span>Average at your rank</span><span>Difference</span></div>
-    ${rows.map(r => `<div class="tr hero-row" tabindex="0" data-hero="${esc(r.hero)}"><span class="who">${heroPortrait(r.hero, 'portrait')}<span><b>${esc(heroInfo(r.hero).name)}</b><small>${roleIcon(r.role)}${esc(cap(r.rk.division))} ${esc(r.rk.tier ?? '')}</small></span></span>
-      <span>${num(r.gamesPlayed)}</span><span>${pct(r.winrate)}</span><span>${pct(r.avg)} <small class="muted">${esc(cap(r.div))}</small></span>
-      <span><b class="${r.diff > 0.05 ? 'up' : r.diff < -0.05 ? 'down' : ''}">${r.diff > 0 ? '+' : ''}${r.diff.toFixed(1)} pts</b></span></div>`).join('')}</div>
-    <p class="source-note">Your numbers: Competitive ${esc(season)} on ${esc(INPUT_NAME[vs.platform])} (Blizzard counts Role Queue and Open Queue games together here), heroes with ${MIN_GAMES}+ games, compared with your rank in that hero's role. Average: Blizzard's official Role Queue win rate for that rank (${esc(cap(vs.region))}, current patch)${rows.some(r => r.rk.division === 'champion') ? '; Champion is compared with Grandmaster because Blizzard publishes no separate Champion table' : ''}. Blizzard does not publish which region a player is in, so pick yours. Small game counts swing a lot.</p>`;
+  const head = `<header class="panel-head"><h2>${icon('i-laurel')}${vs.mode === 'competitive' ? 'You vs your rank' : 'You vs the average'}<small>— ${vs.mode === 'competitive' ? 'Competitive' : 'Quick Play'} · ${esc(INPUT_NAME[vs.platform])}</small></h2>${tools}</header>`;
+  if (!rows.length) { el.innerHTML = head + emptyBox('No heroes to compare', `No hero with ${MIN_GAMES}+ games has a matching average.`); return; }
+  // strongest / needs work: only clear gaps (2+ points), heroes with 10+ games first so tiny samples don't dominate
+  const solid = rows.filter(r => r.gamesPlayed >= 10).length >= 3 ? rows.filter(r => r.gamesPlayed >= 10) : rows;
+  const strong = solid.filter(r => r.diff >= 2).sort((a, b) => b.diff - a.diff).slice(0, 3);
+  const weak = solid.filter(r => r.diff <= -2).sort((a, b) => a.diff - b.diff).slice(0, 3);
+  const chip = r => `<a class="vr-chip" href="#/heroes/${esc(r.hero)}">${heroPortrait(r.hero, 'portrait')}<span><b>${esc(heroInfo(r.hero).name)}</b><small>${r.winrate}% vs ${r.avg.toFixed(1)}% · ${num(r.gamesPlayed)} games</small></span><b class="${r.diff >= 0 ? 'up' : 'down'}">${r.diff > 0 ? '+' : '−'}${Math.abs(r.diff).toFixed(1)}</b></a>`;
+  const season = ranks.season ? seasonName(ranks.season) : 'this season';
+  el.innerHTML = head + `<div class="vr-lists">
+      <div><h3 class="vr-h up">Strongest</h3>${strong.map(chip).join('') || '<p class="muted small">No hero is 2+ points above the average yet.</p>'}</div>
+      <div><h3 class="vr-h down">Needs work</h3>${weak.map(chip).join('') || '<p class="muted small">No hero is 2+ points below the average.</p>'}</div></div>
+    <details class="vr-all"><summary>All ${rows.length} heroes</summary><div class="table vs-rank"><div class="tr th"><span>Hero</span><span>Your games</span><span>Your win rate</span><span>Average</span><span>Difference</span></div>
+    ${rows.map(r => `<div class="tr hero-row" tabindex="0" data-hero="${esc(r.hero)}"><span class="who">${heroPortrait(r.hero, 'portrait')}<span><b>${esc(heroInfo(r.hero).name)}</b><small>${roleIcon(r.role)}${r.rk ? `${esc(cap(r.rk.division))} ${esc(r.rk.tier ?? '')}` : esc(ROLE_NAME[r.role] || '')}</small></span></span>
+      <span>${num(r.gamesPlayed)}</span><span>${r.winrate}%</span><span>${pct(r.avg)} <small class="muted">${esc(r.avgLabel)}</small></span>
+      <span><b class="${r.diff > 0.05 ? 'up' : r.diff < -0.05 ? 'down' : ''}">${r.diff > 0 ? '+' : ''}${r.diff.toFixed(1)} pts</b></span></div>`).join('')}</div></details>
+    <p class="source-note">${vs.mode === 'competitive' ? `Your numbers: Competitive ${esc(season)} (Blizzard counts Role Queue and Open Queue games together here), compared with Blizzard's Role Queue average at your rank in that hero's role. Players with only an Open Queue rank are left out, because Blizzard publishes no Open Queue averages.` : "Your numbers: Quick Play lifetime on this platform, compared with Blizzard's Quick Play average for all players on the same platform. Blizzard's average covers the current patch only, while your numbers are lifetime."} Heroes with ${MIN_GAMES}+ games; your win rates are Blizzard's own Win Percentage. “Strongest” and “Needs work” need a 2-point gap and prefer heroes with 10+ games.</p>`;
 }
 
 async function onClick(e) {
+  const vm = e.target.closest('[data-vsmode]'); if (vm) { vs.mode = vm.dataset.vsmode; vs.platform = ''; return drawVsRank(); }
   const cp = e.target.closest('[data-plat]'); if (cp) { const [m, pl] = cp.dataset.plat.split(':'); current.stats[m] = (m === 'competitive' ? current.statsByPlatform : current.qpByPlatform)[pl]; return drawStats(); }
   const dp = e.target.closest('[data-deepplat]'); if (dp) { deep.platform = dp.dataset.deepplat; return drawDeep(); }
   const h = e.target.closest('[data-hero]'); if (h) return go('#/heroes/' + h.dataset.hero);

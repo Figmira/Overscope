@@ -1,6 +1,6 @@
 # Browser check results
 
-Run 2026-11-16T23:29:05.588Z in Chromium via Playwright. The static site was served exactly as GitHub Pages serves it (under /overscope/); all data was fetched live by the browser.
+Run 2026-11-17T00:16:28.886Z in Chromium via Playwright. The static site was served exactly as GitHub Pages serves it (under /overscope/); all data was fetched live by the browser.
 
 ## Pages
 
@@ -15,7 +15,7 @@ Run 2026-11-16T23:29:05.588Z in Chromium via Playwright. The static site was ser
 | desktop | stadium | 46/46 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-stadium.png |
 | desktop | maps | 57/57 | 0 | 2 | 0 | 0 | 0 | 0 | screenshots/desktop-maps.png |
 | desktop | map-detail | 11/11 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-map-detail.png |
-| desktop | players | 8/8 | 0 | 1 | 0 | 1 | 1 | 0 | screenshots/desktop-players.png |
+| desktop | players | 10/10 | 0 | 1 | 0 | 1 | 1 | 0 | screenshots/desktop-players.png |
 | desktop | news | 0/0 | 0 | 15 | 0 | 12 | 12 | 0 | screenshots/desktop-news.png |
 | desktop | sources | 0/0 | 0 | 0 | 0 | 1 | 0 | 1 | screenshots/desktop-sources.png |
 | desktop | meta-by-rank | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/desktop-meta-by-rank.png |
@@ -36,7 +36,7 @@ Run 2026-11-16T23:29:05.588Z in Chromium via Playwright. The static site was ser
 | mobile | stadium | 46/46 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-stadium.png |
 | mobile | maps | 57/57 | 0 | 2 | 0 | 0 | 0 | 0 | screenshots/mobile-maps.png |
 | mobile | map-detail | 11/11 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-map-detail.png |
-| mobile | players | 8/8 | 0 | 1 | 0 | 1 | 1 | 0 | screenshots/mobile-players.png |
+| mobile | players | 10/10 | 0 | 1 | 0 | 1 | 1 | 0 | screenshots/mobile-players.png |
 | mobile | news | 0/0 | 0 | 15 | 0 | 12 | 12 | 0 | screenshots/mobile-news.png |
 | mobile | sources | 0/0 | 0 | 0 | 0 | 1 | 0 | 1 | screenshots/mobile-sources.png |
 | mobile | meta-by-rank | 54/54 | 0 | 0 | 0 | 0 | 0 | 0 | screenshots/mobile-meta-by-rank.png |
@@ -62,10 +62,10 @@ Run 2026-11-16T23:29:05.588Z in Chromium via Playwright. The static site was ser
 - PASS — Players: nonexistent BattleTag handled: explains there is no public profile
 - PASS — Meta by rank: heatmap shows one column per rank: 8 ranks, 432 cells
 - PASS — Patch impact: hidden until a patch has before/after data, shown once it does: hidden (no before/after data yet)
-- PASS — Privacy: the site makes no requests except to OverFast, Blizzard media and its own files: hosts contacted: 127.0.0.1:40015, overfast-api.tekrop.fr, blz-contentstack-images.akamaized.net, d15f34w2p8l1cc.cloudfront.net, bnetcmsus-a.akamaihd.net, static.playoverwatch.com
+- PASS — Privacy: the site makes no requests except to OverFast, Blizzard media and its own files: hosts contacted: 127.0.0.1:35857, overfast-api.tekrop.fr, blz-contentstack-images.akamaized.net, d15f34w2p8l1cc.cloudfront.net, bnetcmsus-a.akamaihd.net, static.playoverwatch.com
 - PASS — Favorites: star a player, see them on the Players page, then un-star: listed: TeKrop (then removed)
 - PASS — Favorites: star a hero and filter the roster: Favorites filter → Winston
-- PASS — Player profile: rank history + hero deep dive render: deep-dive groups: Per 10 minutes, Hero-specific, Best in a game / life, Combat totals, Games, Assists, Match awards · history: Rank & stat historysaved in this browser only First snapshot saved 2026-11-16Eac
+- PASS — Player profile: rank history + hero deep dive render: deep-dive groups: Per 10 minutes, Hero-specific, Best in a game / life, Combat totals, Games, Assists, Match awards · history: Rank & stat historysaved in this browser only First snapshot saved 2026-11-17Eac
 - PASS — Tier list: S–D tiers, every hero once, rank filter re-queries: 54 heroes across SABCD; Gold re-queried
 - PASS — Stadium: powers only (no item slots without a source): 12 powers, no item slots
 - PASS — Phone: top search button finds a player; menu links close the menu and open the page: menu OK; search button opened profile "Iso"

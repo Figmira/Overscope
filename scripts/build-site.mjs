@@ -80,7 +80,9 @@ if (ads.enabled) indexHtml = indexHtml.replace('<footer class="footer">', adSlot
 // feature is hidden everywhere (no empty pages).
 const newsFile = await readJSON('data/news.json', { patches: [] });
 const days = (histComp?.snapshots || []).map(x => x.day);
-const measurable = (newsFile.patches || []).filter(p => days.some(d => d < p.date) && days.some(d => d > p.date)).map(p => p.date);
+// The "after" copy must be at least 3 days past the patch (Blizzard's tables restart at each patch).
+const plus3 = day => new Date(Date.parse(day + 'T00:00:00Z') + 3 * 86400_000).toISOString().slice(0, 10);
+const measurable = (newsFile.patches || []).filter(p => days.some(d => d < p.date) && days.some(d => d >= plus3(p.date))).map(p => p.date);
 if (!measurable.length) {
   indexHtml = indexHtml.replace(/\s*<a href="#\/competitive\?view=patch"[^\n]*<\/a>/, '')
     .replace('<meta name="referrer"', '<meta name="overscope-patch-impact" content="off">\n  <meta name="referrer"');
