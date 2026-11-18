@@ -1,6 +1,6 @@
 # Browser check results
 
-Run 2026-11-18T19:51:00.570Z in Chromium via Playwright. The static site was served exactly as GitHub Pages serves it (under /overscope/); all data was fetched live by the browser.
+Run 2026-11-18T20:14:11.419Z in Chromium via Playwright. The static site was served exactly as GitHub Pages serves it (under /overscope/); all data was fetched live by the browser.
 
 ## Pages
 
@@ -62,7 +62,7 @@ Run 2026-11-18T19:51:00.570Z in Chromium via Playwright. The static site was ser
 - PASS — Players: nonexistent BattleTag handled: explains there is no public profile
 - PASS — Meta by rank: heatmap shows one column per rank: 8 ranks, 432 cells
 - PASS — Patch impact: hidden until a patch has before/after data, shown once it does: hidden (no before/after data yet)
-- PASS — Privacy: the site makes no requests except to OverFast, Blizzard media and its own files: hosts contacted: 127.0.0.1:46393, overfast-api.tekrop.fr, blz-contentstack-images.akamaized.net, bnetcmsus-a.akamaihd.net, d15f34w2p8l1cc.cloudfront.net, static.playoverwatch.com
+- PASS — Privacy: the site makes no requests except to OverFast, Blizzard media and its own files: hosts contacted: 127.0.0.1:41747, overfast-api.tekrop.fr, blz-contentstack-images.akamaized.net, bnetcmsus-a.akamaihd.net, d15f34w2p8l1cc.cloudfront.net, static.playoverwatch.com
 - PASS — Favorites: star a player, see them on the Players page, then un-star: listed: TeKrop (then removed)
 - PASS — Favorites: star a hero and filter the roster: Favorites filter → Winston
 - PASS — Player profile: rank history + hero deep dive render: deep-dive groups: Per 10 minutes, Hero-specific, Best in a game / life, Combat totals, Games, Assists, Match awards · history: Rank & stat historysaved in this browser only First snapshot saved 2026-11-18Eac

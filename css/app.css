@@ -763,3 +763,15 @@ html[data-page=home] #banner-slot{display:block;height:clamp(260px,18.5vw,300px)
 .page{grid-template-columns:minmax(0,1fr)}.page>*{min-width:0}#compBody .panel{overflow-x:auto}
 .footer-fresh{color:var(--ink-2);flex-basis:100%}
 .fresh-tag{color:var(--amber)}
+/* Phones/tablets: the patch card sits below the buttons instead of floating over them */
+@media (max-width:860px){
+  .banner{height:auto;min-height:0;padding-bottom:16px}
+  .patch-card{position:relative;top:auto;bottom:auto;left:auto;right:auto;transform:none;width:auto;height:auto;min-height:0;margin:16px 16px 0}
+  .patch-card #patchSeason{max-width:60%}
+}
+/* Rank tiles: two rows of four on phones so nothing is cut off */
+@media (max-width:560px){
+  .tier-strip{grid-template-columns:repeat(4,1fr);gap:6px}
+  .tier-strip small{font-size:10.5px;white-space:nowrap}
+}
+.patch-card #patchSeason{max-width:150px;text-shadow:0 1px 6px #000}@media (max-width:860px){.patch-card #patchSeason{max-width:58%}}
