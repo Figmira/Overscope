@@ -761,3 +761,5 @@ html[data-page=home] #banner-slot{display:block;height:clamp(260px,18.5vw,300px)
 .board-table .conf{margin-left:4px;padding:0 5px;font-size:9.5px}
 .board-table .tr{grid-template-columns:minmax(110px,2fr) minmax(60px,1fr) minmax(76px,1.1fr) 92px}@media (max-width:560px){.board-table .tr{grid-template-columns:minmax(92px,1.5fr) 56px minmax(64px,1fr) 78px}}
 .page{grid-template-columns:minmax(0,1fr)}.page>*{min-width:0}#compBody .panel{overflow-x:auto}
+.footer-fresh{color:var(--ink-2);flex-basis:100%}
+.fresh-tag{color:var(--amber)}

@@ -1,4 +1,4 @@
-import { favorites, relay, safeLink, seasonFromNews, INPUT_NAME, INPUT_SHORT, RANK_LABEL, RANK_SHORT } from '../lib.js';
+import { favorites, relay, safeLink, seasonFromNews, INPUT_NAME, INPUT_SHORT, RANK_LABEL, RANK_SHORT, freshness } from '../lib.js';
 import { $, $$, esc, pct, api, prefs, setPref, statsPath, qs, heroInfo, heroPortrait, heroArt, heroCutout, hasCutout, mapImage, getManifest, icon, roleIcon, badge, errorBox, loadingBox, emptyBox, fmtDate, timeAgo, ROLE_NAME, QUEUE_NAME, QUEUE_SHORT, REGION_NAME, sourceNote, openQueueUnavailable, toast } from '../lib.js';
 import { heroes as loadHeroes, maps as loadMaps, news as loadNews, go } from '../app.js';
 import { scatter, trend, legend, ring } from '../charts.js';
@@ -158,7 +158,7 @@ function renderMeta() {
 
 function renderKpi() {
   const el = $('#kpiComp');
-  const head = `<div class="kpi-emblem">${icon('i-laurel')}</div><div class="kpi-title"><h2>Overview <small>— ${esc(scope())}</small></h2><p>${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])}${stats?.source ? ' · updated ' + esc(timeAgo(stats.source.fetchedAt)) : ''}</p></div>`;
+  const head = `<div class="kpi-emblem">${icon('i-laurel')}</div><div class="kpi-title"><h2>Overview <small>— ${esc(scope())}</small></h2><p>${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])}${stats?.source ? ' · ' + esc(freshness(stats.source)) : ''}</p></div>`;
   if (statsErr) { el.innerHTML = `<div class="kpi-in">${head}<p class="kpi-msg">Live statistics are unavailable: ${esc(statsErr.message)}</p></div>`; return; }
   if (!stats) return;
   if (!stats.available) { el.innerHTML = `<div class="kpi-in">${head}<p class="kpi-msg">No verified Open Queue dataset exists. Nothing is shown rather than borrowing Role Queue numbers.</p></div>`; return; }
@@ -193,7 +193,7 @@ function renderChart() {
       return;
     }
     const top = [...stats.rows].sort((a, b) => b.pickrate - a.pickrate).slice(0, 3).map(r => r.hero);
-    el.innerHTML = head(`Meta trend <small>— pick rate on ${days} saved days since ${esc(fmtDate(trendData.days[0]))}</small>`) + `<div class="chart-wrap">${trend(trendData.snapshots, top)}</div>`;
+    el.innerHTML = head(`Meta trend <small>— pick rate on ${days} saved days since ${esc(fmtDate(trendData.days[0]))} · latest ${esc(fmtDate(trendData.days.at(-1)))}</small>`) + `<div class="chart-wrap">${trend(trendData.snapshots, top)}</div>`;
     return;
   }
   const roleChips = `<div class="chips tiny chart-roles">${[['', 'All roles'], ['tank', 'Tank'], ['damage', 'Damage'], ['support', 'Support']].map(([k, v]) => `<button class="chip ${state.chartRole === k ? 'on' : ''}" data-chartrole="${k}">${k ? roleIcon(k) : ''}${v}</button>`).join('')}</div>`;

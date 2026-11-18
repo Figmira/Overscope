@@ -1,4 +1,4 @@
-import { $, esc, pct, api, prefs, setPref, statsPath, qs, heroInfo, heroPortrait, icon, roleIcon, roleTabs, errorBox, loadingBox, emptyBox, ROLE_NAME, QUEUE_NAME, QUEUE_SHORT, REGION_NAME, queueTabs, filterSelects, sourceNote, openQueueUnavailable, DIVISIONS, cap, fmtDate, timeAgo, safeLink , INPUT_NAME, INPUT_SHORT, RANK_LABEL, RANK_SHORT } from '../lib.js';
+import { $, esc, pct, api, prefs, setPref, statsPath, qs, heroInfo, heroPortrait, icon, roleIcon, roleTabs, errorBox, loadingBox, emptyBox, ROLE_NAME, QUEUE_NAME, QUEUE_SHORT, REGION_NAME, queueTabs, filterSelects, sourceNote, openQueueUnavailable, DIVISIONS, cap, fmtDate, timeAgo, safeLink , INPUT_NAME, INPUT_SHORT, RANK_LABEL, RANK_SHORT, LIVE_AGE } from '../lib.js';
 import { news as loadNews } from '../app.js';
 import { heroes as loadHeroes, go } from '../app.js';
 import { scatter, legend } from '../charts.js';
@@ -109,7 +109,7 @@ async function drawRanks() {
   // sequential, single hue: low = dark navy, high = bright cyan
   const cell = v => { if (v == null) return '<span class="hm na">—</span>'; const t = hi === lo ? 0.5 : (v - lo) / (hi - lo); return `<span class="hm" style="--t:${t.toFixed(3)}" data-tip="${pct(v)}"><b class="${t > 0.55 ? 'dark' : ''}">${v.toFixed(1)}</b></span>`; };
   const label = { pickrate: 'pick rate', winrate: 'win rate', banrate: 'ban rate' }[ui.metric];
-  $('#rankHeat').innerHTML = `<header class="panel-head"><h2>${icon('i-laurel')}Meta by rank<small>— ${label}, Competitive Role Queue</small></h2><small class="muted">${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])} · ${d.saved ? 'saved' : 'fetched'} ${esc(timeAgo(d.fetchedAt))}</small></header>
+  $('#rankHeat').innerHTML = `<header class="panel-head"><h2>${icon('i-laurel')}Meta by rank<small>— ${label}, Competitive Role Queue</small></h2><small class="muted">${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])} · ${d.saved ? `Blizzard's table saved ${esc(timeAgo(d.fetchedAt))}` : esc(LIVE_AGE)}</small></header>
     <div class="scroll-x"><div class="heat" style="--cols:${divs.length}"><span class="hh">Hero</span>${divs.map(x => `<span class="hh">${esc(RANK_SHORT(x))}</span>`).join('')}
     ${heroes.map(k => `<span class="who hero-row" data-hero="${esc(k)}" tabindex="0">${heroPortrait(k, 'portrait')}<b>${esc(heroInfo(k).name)}</b></span>${divs.map(x => cell(map[x].get(k)?.[ui.metric])).join('')}`).join('')}</div></div>
     <div class="heat-legend"><span>${lo.toFixed(1)}%</span><i></i><span>${hi.toFixed(1)}%</span><small>Darker = lower, brighter = higher. Numbers in every cell.</small></div>

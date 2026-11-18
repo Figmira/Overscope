@@ -1,4 +1,4 @@
-import { $, $$, esc, pct, api, prefs, setPref, statsPath, heroInfo, heroPortrait, heroArt, icon, roleIcon, roleTabs, errorBox, loadingBox, emptyBox, relay, ROLE_NAME, QUEUE_SHORT, REGION_NAME, roster, getManifest, filterSelects, isFavHero, toggleFavHero, starBtn, favorites, toast, qs, DIVISIONS, cap, timeAgo , INPUT_NAME, INPUT_SHORT, RANK_LABEL, RANK_SHORT } from '../lib.js';
+import { $, $$, esc, pct, api, prefs, setPref, statsPath, heroInfo, heroPortrait, heroArt, icon, roleIcon, roleTabs, errorBox, loadingBox, emptyBox, relay, ROLE_NAME, QUEUE_SHORT, REGION_NAME, roster, getManifest, filterSelects, isFavHero, toggleFavHero, starBtn, favorites, toast, qs, DIVISIONS, cap, timeAgo , INPUT_NAME, INPUT_SHORT, RANK_LABEL, RANK_SHORT, LIVE_AGE } from '../lib.js';
 import { lines, ROLE_COLOR } from '../charts.js';
 import { computeTiers } from '../tiers.js';
 import { heroes as loadHeroes, maps as loadMaps, news, go } from '../app.js';
@@ -111,7 +111,7 @@ async function detail({ main, route, signal }) {
     const win = divs.map(x => rowAt(x)?.winrate ?? null), pick = divs.map(x => rowAt(x)?.pickrate ?? null);
     const tiers = divs.map(x => computeTiers(d.divisions[x], k => heroInfo(k).role).find(r => r.hero === key)?.tier || '—');
     const chart = (vals, label, extra) => lines(labels, [{ name: '', color, values: vals }], { width: 520, height: 210, yFmt: v => v.toFixed(1) + '%', aria: `${h.name} ${label} by rank`, xStep: 1, ...extra });
-    el.innerHTML = `<header class="panel-head"><h2>${icon('i-chart')}${esc(h.name)} by rank<small>— Competitive Role Queue</small></h2><small class="muted">${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])} · ${d.saved ? 'saved' : 'fetched'} ${esc(timeAgo(d.fetchedAt))}</small></header>
+    el.innerHTML = `<header class="panel-head"><h2>${icon('i-chart')}${esc(h.name)} by rank<small>— Competitive Role Queue</small></h2><small class="muted">${esc(REGION_NAME[prefs.region])} · ${esc(INPUT_NAME[prefs.platform])} · ${d.saved ? `Blizzard's table saved ${esc(timeAgo(d.fetchedAt))}` : esc(LIVE_AGE)}</small></header>
       <div class="tier-strip" aria-label="Tier at each rank">${divs.map((x, i) => `<span class="t-${esc(tiers[i])}" title="${esc(RANK_LABEL(x))}: tier ${esc(tiers[i])}"><b>${esc(tiers[i])}</b><small>${esc(RANK_SHORT(x))}</small></span>`).join('')}</div>
       <div class="byrank"><div><h3>Win rate</h3>${chart(win, 'win rate', { ref: 50, refLabel: '50%' })}</div><div><h3>Pick rate</h3>${chart(pick, 'pick rate')}</div></div>
       <p class="source-note">One official Blizzard table per rank, via OverFast. Tiers use the <a href="#/tier-list">tier list method</a> within each rank. Blizzard's top table covers Grandmaster and Champion together, and it does not publish game counts.</p>`;

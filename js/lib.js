@@ -152,10 +152,13 @@ export function fmtDate(iso) {
   const d = new Date(iso.length === 10 ? iso + 'T12:00:00Z' : iso);
   return isNaN(d) ? '' : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
+/** How old live hero rates can be: the relay keeps Blizzard's table up to 1 hour, the browser up to 30 minutes. */
+export const LIVE_AGE = 'Blizzard data up to 1½ hours old';
+export const freshness = src => (src?.stale ? `OverScope's saved copy from ${timeAgo(src.fetchedAt)}` : LIVE_AGE);
 export function sourceNote(stats) {
   if (!stats?.source) return '';
   const s = stats.source;
-  return `<p class="source-note">${s.stale ? `<b class="warn">Showing OverScope's saved daily copy (${esc(timeAgo(s.fetchedAt))}) — ${esc(s.error)}.</b> ` : ''}Source: ${esc(s.provider)} · ${esc(QUEUE_NAME[stats.queue])} · ${esc(INPUT_NAME[stats.filters.platform] || stats.filters.platform)} · ${esc(REGION_NAME[stats.filters.region])} · ${esc(stats.filters.division === 'all' || !stats.filters.division ? 'all ranks' : RANK_LABEL(stats.filters.division))} · ${stats.rows.length} heroes · fetched ${esc(timeAgo(s.fetchedAt))}. Blizzard's numbers cover games since the start of the current patch; it does not publish game counts. <a href="${esc(s.endpoint)}" target="_blank" rel="noopener">Raw data ${icon('i-ext')}</a></p>`;
+  return `<p class="source-note">${s.stale ? `<b class="warn">Showing OverScope's saved daily copy (${esc(timeAgo(s.fetchedAt))}) — ${esc(s.error)}.</b> ` : ''}Source: ${esc(s.provider)} · ${esc(QUEUE_NAME[stats.queue])} · ${esc(INPUT_NAME[stats.filters.platform] || stats.filters.platform)} · ${esc(REGION_NAME[stats.filters.region])} · ${esc(stats.filters.division === 'all' || !stats.filters.division ? 'all ranks' : RANK_LABEL(stats.filters.division))} · ${stats.rows.length} heroes · ${esc(freshness(s))}. Blizzard's numbers cover games since the start of the current patch; it does not publish game counts. <a href="${esc(s.endpoint)}" target="_blank" rel="noopener">Raw data ${icon('i-ext')}</a></p>`;
 }
 
 export function toast(msg) {
