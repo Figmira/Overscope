@@ -1,6 +1,6 @@
 # Browser check results
 
-Run 2026-11-18T20:35:26.679Z in Chromium via Playwright. The static site was served exactly as GitHub Pages serves it (under /overscope/); all data was fetched live by the browser.
+Run 2026-11-19T04:03:08.814Z in Chromium via Playwright. The static site was served exactly as GitHub Pages serves it (under /overscope/); all data was fetched live by the browser.
 
 ## Pages
 
@@ -61,15 +61,15 @@ Run 2026-11-18T20:35:26.679Z in Chromium via Playwright. The static site was ser
 - PASS — News: items link to Blizzard: 15 items, first https://overwatch.blizzard.com/en-us/news/patch-notes/#patch-2026-11-16
 - PASS — Players: nonexistent BattleTag handled: explains there is no public profile
 - PASS — Meta by rank: heatmap shows one column per rank: 8 ranks, 432 cells
-- PASS — Patch impact: hidden until a patch has before/after data, shown once it does: hidden (no before/after data yet)
-- PASS — Privacy: the site makes no requests except to OverFast, Blizzard media and its own files: hosts contacted: 127.0.0.1:46621, overfast-api.tekrop.fr, blz-contentstack-images.akamaized.net, bnetcmsus-a.akamaihd.net, d15f34w2p8l1cc.cloudfront.net, static.playoverwatch.com
+- PASS — Patch impact: hidden until a patch has before/after data, shown once it does: shown (data available)
+- PASS — Privacy: the site makes no requests except to OverFast, Blizzard media and its own files: hosts contacted: 127.0.0.1:34723, overfast-api.tekrop.fr, blz-contentstack-images.akamaized.net, bnetcmsus-a.akamaihd.net, d15f34w2p8l1cc.cloudfront.net, static.playoverwatch.com
 - PASS — Favorites: star a player, see them on the Players page, then un-star: listed: TeKrop (then removed)
 - PASS — Favorites: star a hero and filter the roster: Favorites filter → Winston
-- PASS — Player profile: rank history + hero deep dive render: deep-dive groups: Per 10 minutes, Hero-specific, Best in a game / life, Combat totals, Games, Assists, Match awards · history: Rank & stat historysaved in this browser only First snapshot saved 2026-11-18Eac
+- PASS — Player profile: rank history + hero deep dive render: deep-dive groups: Per 10 minutes, Hero-specific, Best in a game / life, Combat totals, Games, Assists, Match awards · history: Rank & stat historysaved in this browser only First snapshot saved 2026-11-19Eac
 - PASS — Tier list: S–D tiers, every hero once, rank filter re-queries: 54 heroes across SABCD; Gold re-queried
 - PASS — Stadium: powers only (no item slots without a source): 12 powers, no item slots
 - PASS — Phone: top search button finds a player; menu links close the menu and open the page: menu OK; search button opened profile "Iso"
-- PASS — Hero page: by-rank chart + tier per rank: tiers Bronze→GM: B B B B A A A S; 2 charts
+- PASS — Hero page: by-rank chart + tier per rank: tiers Bronze→GM: B B B B A A S S; 2 charts
 - PASS — Google pages: real content, preview card, link back into the app: "Tracer", 14 rank rows, og:image set, live link → /#/heroes/tracer
 - PASS — Google pages: top search from a static page opens the app: went to /#/players/Iso-11570
 

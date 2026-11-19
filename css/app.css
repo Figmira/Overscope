@@ -789,3 +789,4 @@ body>*{min-width:0}
 @media (min-width:861px){body>.shell{min-height:calc(100dvh - 58px)}}
 @media (min-width:861px) and (max-height:1000px){.side-art{min-height:0}} /* short laptop screens: art shrinks so the whole menu fits */
 @media (min-width:861px) and (max-height:820px){.sidebar a{padding:6px 11px}.sidebar a.sub{padding:3px 11px 3px 30px}.sidebar nav{gap:0}.side-art{display:none}}
+@media (max-width:860px){html[data-page=home] #banner-slot{height:auto;min-height:410px}} /* the banner grows with the season card; the slot must grow with it */

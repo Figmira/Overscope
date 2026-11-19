@@ -208,7 +208,8 @@ async function loadNewsPanels() {
     const n = await loadNews();
     const latestPatch = n.patches[0];
     $('#patchDate').textContent = latestPatch ? fmtDate(latestPatch.date) : 'Patch notes';
-    const ago = latestPatch ? Math.round((Date.parse(new Date().toISOString().slice(0, 10)) - Date.parse(latestPatch.date)) / 86400_000) : null;
+    const now = new Date(); // count days in the visitor's own time zone, not UTC
+    const ago = latestPatch ? Math.round((Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) - Date.parse(latestPatch.date)) / 86400_000) : null;
     $('#patchLive').textContent = latestPatch ? (n.stale ? 'Last saved copy' : `Released ${ago <= 0 ? 'today' : ago === 1 ? 'yesterday' : ago + ' days ago'}`) : 'Official archive';
     const season = seasonFromNews(n.news);
     $('#patchSeason').textContent = season ? `${season.arc ? season.arc + ' · ' : ''}Season ${season.number}${season.name ? ': ' + season.name : ''}` : 'Current season';
