@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-16T04:40:45.748Z",
+ "generatedAt": "2026-11-22T11:19:04.804Z",
  "note": "Public hero and map descriptions from Blizzard via OverFast.",
  "heroes": {
   "ana": {
@@ -68,49 +68,6 @@
     }
    ]
   },
-  "anran": {
-   "name": "Anran",
-   "role": "damage",
-   "description": "The star graduate of Wuxing University’s Fire College, Anran is always burning to push her limits.",
-   "location": "Wuxing University, Chengdu (Previous), Watchpoint Gibraltar (Current)",
-   "age": 22,
-   "hitpoints": {
-    "total": 250,
-    "health": 250,
-    "armor": 0,
-    "shields": 0
-   },
-   "abilities": [
-    {
-     "name": "Zhuque Fans",
-     "description": "Hand fans that shoot fiery projectiles."
-    },
-    {
-     "name": "Fan the Flames",
-     "description": "Hot wind blast that amplifies burning damage."
-    },
-    {
-     "name": "Dancing Blaze",
-     "description": "Dodge all damage while striking nearby enemies, healing yourself for each enemy hit."
-    },
-    {
-     "name": "Inferno Rush",
-     "description": "Propel yourself forward and damage enemies you impact."
-    },
-    {
-     "name": "Vermillion Ascent",
-     "description": "Charge forward, exploding on impact and instantly igniting enemies."
-    },
-    {
-     "name": "Vermillion Revival",
-     "description": "When dead, revive yourself in a fiery explosion."
-    },
-    {
-     "name": "Ignition",
-     "description": "Hit enemies with fire attacks to burn them."
-    }
-   ]
-  },
   "bastion": {
    "name": "Bastion",
    "role": "damage",
@@ -143,37 +100,6 @@
     {
      "name": "Configuration: Artillery",
      "description": "Become immobile and fire up to 3 powerful artillery shells."
-    }
-   ]
-  },
-  "ashe": {
-   "name": "Ashe",
-   "role": "damage",
-   "description": "Ashe is the ambitious and calculating leader of the Deadlock Rebels Gang and a respected figure in the criminal underworld.",
-   "location": "Deadlock Gorge, Arizona, USA",
-   "age": 41,
-   "hitpoints": {
-    "total": 250,
-    "health": 250,
-    "armor": 0,
-    "shields": 0
-   },
-   "abilities": [
-    {
-     "name": "The Viper",
-     "description": "Semi-automatic rifle.  Hold to zoom in, increasing damage and accuracy but slowing rate of fire."
-    },
-    {
-     "name": "Coach Gun",
-     "description": "Blast enemies in front of you and knock yourself backwards."
-    },
-    {
-     "name": "Dynamite",
-     "description": "Throw an explosive that detonates after a short delay or immediately when shot."
-    },
-    {
-     "name": "B.O.B.",
-     "description": "Deploy Bob. He charges forward and knocks enemies into the air, then attacks with his arm cannons."
     }
    ]
   },
@@ -220,6 +146,80 @@
     }
    ]
   },
+  "anran": {
+   "name": "Anran",
+   "role": "damage",
+   "description": "The star graduate of Wuxing University’s Fire College, Anran is always burning to push her limits.",
+   "location": "Wuxing University, Chengdu (Previous), Watchpoint Gibraltar (Current)",
+   "age": 22,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Zhuque Fans",
+     "description": "Hand fans that shoot fiery projectiles."
+    },
+    {
+     "name": "Fan the Flames",
+     "description": "Hot wind blast that amplifies burning damage."
+    },
+    {
+     "name": "Dancing Blaze",
+     "description": "Dodge all damage while striking nearby enemies, healing yourself for each enemy hit."
+    },
+    {
+     "name": "Inferno Rush",
+     "description": "Propel yourself forward and damage enemies you impact."
+    },
+    {
+     "name": "Vermillion Ascent",
+     "description": "Charge forward, exploding on impact and instantly igniting enemies."
+    },
+    {
+     "name": "Vermillion Revival",
+     "description": "When dead, revive yourself in a fiery explosion."
+    },
+    {
+     "name": "Ignition",
+     "description": "Hit enemies with fire attacks to burn them."
+    }
+   ]
+  },
+  "ashe": {
+   "name": "Ashe",
+   "role": "damage",
+   "description": "Ashe is the ambitious and calculating leader of the Deadlock Rebels Gang and a respected figure in the criminal underworld.",
+   "location": "Deadlock Gorge, Arizona, USA",
+   "age": 41,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "The Viper",
+     "description": "Semi-automatic rifle.  Hold to zoom in, increasing damage and accuracy but slowing rate of fire."
+    },
+    {
+     "name": "Coach Gun",
+     "description": "Blast enemies in front of you and knock yourself backwards."
+    },
+    {
+     "name": "Dynamite",
+     "description": "Throw an explosive that detonates after a short delay or immediately when shot."
+    },
+    {
+     "name": "B.O.B.",
+     "description": "Deploy Bob. He charges forward and knocks enemies into the air, then attacks with his arm cannons."
+    }
+   ]
+  },
   "cassidy": {
    "name": "Cassidy",
    "role": "damage",
@@ -240,6 +240,10 @@
     {
      "name": "Combat Roll",
      "description": "Roll in the direction you're moving to take reduced damage and reload."
+    },
+    {
+     "name": "Flashbang",
+     "description": "Hinder enemies in front of you, slowing them and disabling movement abilities."
     },
     {
      "name": "Deadeye",
@@ -368,6 +372,41 @@
     }
    ]
   },
+  "doomfist": {
+   "name": "Doomfist",
+   "role": "tank",
+   "description": "Doomfist was the calculating leader of Talon, a terrorist organization and paramilitary force that works in direct opposition to Overwatch.",
+   "location": "Oyo, Nigeria (formerly), Rome, Italy",
+   "age": 47,
+   "hitpoints": {
+    "total": 525,
+    "health": 525,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Hand Cannon",
+     "description": "Short-range weapon with spread. Reloads automatically."
+    },
+    {
+     "name": "Rocket Punch",
+     "description": "Hold to charge then release to launch forward and knock an enemy back. Damage increases if the enemy hits a wall."
+    },
+    {
+     "name": "Seismic Slam",
+     "description": "Leap and smash the ground."
+    },
+    {
+     "name": "Power Block",
+     "description": "Protect yourself from frontal attacks. Blocking heavy damage empowers Rocket Punch."
+    },
+    {
+     "name": "Meteor Strike",
+     "description": "Press Q to leap up into the air. Move the targeting circle, then press ABILITY 3 to strike the targeted area."
+    }
+   ]
+  },
   "dva": {
    "name": "D.Va",
    "role": "tank",
@@ -412,41 +451,6 @@
     {
      "name": "Eject!",
      "description": "Eject out of your mech when it is destroyed."
-    }
-   ]
-  },
-  "doomfist": {
-   "name": "Doomfist",
-   "role": "tank",
-   "description": "Doomfist was the calculating leader of Talon, a terrorist organization and paramilitary force that works in direct opposition to Overwatch.",
-   "location": "Oyo, Nigeria (formerly), Rome, Italy",
-   "age": 47,
-   "hitpoints": {
-    "total": 525,
-    "health": 525,
-    "armor": 0,
-    "shields": 0
-   },
-   "abilities": [
-    {
-     "name": "Hand Cannon",
-     "description": "Short-range weapon with spread. Reloads automatically."
-    },
-    {
-     "name": "Rocket Punch",
-     "description": "Hold to charge then release to launch forward and knock an enemy back. Damage increases if the enemy hits a wall."
-    },
-    {
-     "name": "Seismic Slam",
-     "description": "Leap and smash the ground."
-    },
-    {
-     "name": "Power Block",
-     "description": "Protect yourself from frontal attacks. Blocking heavy damage empowers Rocket Punch."
-    },
-    {
-     "name": "Meteor Strike",
-     "description": "Press Q to leap up into the air. Move the targeting circle, then press ABILITY 3 to strike the targeted area."
     }
    ]
   },
@@ -520,6 +524,37 @@
     }
    ]
   },
+  "freja": {
+   "name": "Freja",
+   "role": "damage",
+   "description": "A search and rescue operative turned bounty hunter, Freja can find anyone for the right price.",
+   "location": "Copenhagen, Denmark (formerly); Unknown",
+   "age": 34,
+   "hitpoints": {
+    "total": 225,
+    "health": 225,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Bola Shot",
+     "description": "Fire an explosive bola. Hitting an enemy wraps them up and pulls in other nearby enemies."
+    },
+    {
+     "name": "Quick Dash",
+     "description": "Vault in the direction you're moving and refresh Take Aim."
+    },
+    {
+     "name": "Take Aim",
+     "description": "Slow your momentum to take aim with a high speed explosive bolt. Using Quick Dash refreshes Take Aim."
+    },
+    {
+     "name": "Updraft",
+     "description": "Launch upward with a gust of wind."
+    }
+   ]
+  },
   "genji": {
    "name": "Genji",
    "role": "damage",
@@ -552,76 +587,6 @@
     {
      "name": "Cyber-Agility",
      "description": "Climb on walls and double jump."
-    }
-   ]
-  },
-  "freja": {
-   "name": "Freja",
-   "role": "damage",
-   "description": "A search and rescue operative turned bounty hunter, Freja can find anyone for the right price.",
-   "location": "Copenhagen, Denmark (formerly); Unknown",
-   "age": 34,
-   "hitpoints": {
-    "total": 225,
-    "health": 225,
-    "armor": 0,
-    "shields": 0
-   },
-   "abilities": [
-    {
-     "name": "Bola Shot",
-     "description": "Fire an explosive bola. Hitting an enemy wraps them up and pulls in other nearby enemies."
-    },
-    {
-     "name": "Quick Dash",
-     "description": "Vault in the direction you're moving and refresh Take Aim."
-    },
-    {
-     "name": "Take Aim",
-     "description": "Slow your momentum to take aim with a high speed explosive bolt. Using Quick Dash refreshes Take Aim."
-    },
-    {
-     "name": "Updraft",
-     "description": "Launch upward with a gust of wind."
-    }
-   ]
-  },
-  "hazard": {
-   "name": "Hazard",
-   "role": "tank",
-   "description": "A radical disruptor and an unstoppable weapon, Hazard has rocketed to fame in the criminal underworld as he fights to tear the system down.",
-   "location": "Glasgow, Scotland (Formerly), Unknown",
-   "age": 24,
-   "hitpoints": {
-    "total": 650,
-    "health": 425,
-    "armor": 225,
-    "shields": 0
-   },
-   "abilities": [
-    {
-     "name": "Bonespur",
-     "description": "Fire a burst of spikes."
-    },
-    {
-     "name": "Spike Guard",
-     "description": "Protect yourself from frontal damage, firing homing spikes at nearby enemies and regenerating ammo."
-    },
-    {
-     "name": "Violent Leap",
-     "description": "Lunge forward. Activate again to slash at enemies, knocking them back."
-    },
-    {
-     "name": "Jagged Wall",
-     "description": "Launch a spiked wall that damages and knocks back nearby enemies."
-    },
-    {
-     "name": "Downpour",
-     "description": "Rain down a torrent of spikes, immobilizing enemies."
-    },
-    {
-     "name": "Vault",
-     "description": "Scale short walls and grab ledges."
     }
    ]
   },
@@ -661,6 +626,45 @@
     {
      "name": "Wall Climb",
      "description": "Jump at walls to climb up them."
+    }
+   ]
+  },
+  "hazard": {
+   "name": "Hazard",
+   "role": "tank",
+   "description": "A radical disruptor and an unstoppable weapon, Hazard has rocketed to fame in the criminal underworld as he fights to tear the system down.",
+   "location": "Glasgow, Scotland (Formerly), Unknown",
+   "age": 24,
+   "hitpoints": {
+    "total": 650,
+    "health": 425,
+    "armor": 225,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Bonespur",
+     "description": "Fire a burst of spikes."
+    },
+    {
+     "name": "Spike Guard",
+     "description": "Protect yourself from frontal damage, firing homing spikes at nearby enemies and regenerating ammo."
+    },
+    {
+     "name": "Violent Leap",
+     "description": "Lunge forward. Activate again to slash at enemies, knocking them back."
+    },
+    {
+     "name": "Jagged Wall",
+     "description": "Launch a spiked wall that damages and knocks back nearby enemies."
+    },
+    {
+     "name": "Downpour",
+     "description": "Rain down a torrent of spikes, immobilizing enemies."
+    },
+    {
+     "name": "Vault",
+     "description": "Scale short walls and grab ledges."
     }
    ]
   },
@@ -1772,41 +1776,6 @@
     }
    ]
   },
-  "wuyang": {
-   "name": "Wuyang",
-   "role": "support",
-   "description": "Wielder of healing technology from Wuxing University’s Water College, Wuyang is always ready to turn the tide of battle.",
-   "location": "Wuxing University, Chengdu",
-   "age": 19,
-   "hitpoints": {
-    "total": 225,
-    "health": 225,
-    "armor": 0,
-    "shields": 0
-   },
-   "abilities": [
-    {
-     "name": "Xuanwu Staff",
-     "description": "Fire a damaging water orb. Hold to control its trajectory and empower its explosion."
-    },
-    {
-     "name": "Restorative Stream",
-     "description": "Place a passive healing stream on an ally. Hold on the target to manually heal at an improved rate, consuming resource."
-    },
-    {
-     "name": "Rushing Torrent",
-     "description": "Ride water to move faster and jump higher."
-    },
-    {
-     "name": "Tidal Blast",
-     "description": "Protect an ally or yourself with water that detonates after a short duration. The explosion knocks down enemies and massively heals the host target."
-    },
-    {
-     "name": "Guardian Wave",
-     "description": "Send a water wave forward that increases the amount of healing received by allies and knocks back enemies."
-    }
-   ]
-  },
   "wrecking-ball": {
    "name": "Wrecking Ball",
    "role": "tank",
@@ -1843,6 +1812,41 @@
     {
      "name": "Minefield",
      "description": "Deploy a massive field of proximity mines."
+    }
+   ]
+  },
+  "wuyang": {
+   "name": "Wuyang",
+   "role": "support",
+   "description": "Wielder of healing technology from Wuxing University’s Water College, Wuyang is always ready to turn the tide of battle.",
+   "location": "Wuxing University, Chengdu",
+   "age": 19,
+   "hitpoints": {
+    "total": 225,
+    "health": 225,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Xuanwu Staff",
+     "description": "Fire a damaging water orb. Hold to control its trajectory and empower its explosion."
+    },
+    {
+     "name": "Restorative Stream",
+     "description": "Place a passive healing stream on an ally. Hold on the target to manually heal at an improved rate, consuming resource."
+    },
+    {
+     "name": "Rushing Torrent",
+     "description": "Ride water to move faster and jump higher."
+    },
+    {
+     "name": "Tidal Blast",
+     "description": "Protect an ally or yourself with water that detonates after a short duration. The explosion knocks down enemies and massively heals the host target."
+    },
+    {
+     "name": "Guardian Wave",
+     "description": "Send a water wave forward that increases the amount of healing received by allies and knocks back enemies."
     }
    ]
   },
