@@ -3,7 +3,7 @@
  "platform": "console",
  "region": "americas",
  "note": "Blizzard's public hero-rate table for each rank (all roles, all maps). Public aggregate data only.",
- "fetchedAt": "2026-11-22T01:17:22.892Z",
+ "fetchedAt": "2026-11-23T01:40:48.258Z",
  "divisions": {
   "bronze": [
    {
@@ -983,332 +983,6 @@
     "banrate": 1.7
    }
   ],
-  "platinum": [
-   {
-    "hero": "ana",
-    "pickrate": 18.6,
-    "winrate": 46.4,
-    "banrate": 10.9
-   },
-   {
-    "hero": "anran",
-    "pickrate": 7.9,
-    "winrate": 50.3,
-    "banrate": 23.5
-   },
-   {
-    "hero": "ashe",
-    "pickrate": 11.1,
-    "winrate": 49.7,
-    "banrate": 2.9
-   },
-   {
-    "hero": "baptiste",
-    "pickrate": 6.2,
-    "winrate": 47.9,
-    "banrate": 0.2
-   },
-   {
-    "hero": "bastion",
-    "pickrate": 13.9,
-    "winrate": 44.3,
-    "banrate": 10.3
-   },
-   {
-    "hero": "brigitte",
-    "pickrate": 5.8,
-    "winrate": 53.4,
-    "banrate": 0.1
-   },
-   {
-    "hero": "cassidy",
-    "pickrate": 11.1,
-    "winrate": 47.3,
-    "banrate": 2.8
-   },
-   {
-    "hero": "dmon",
-    "pickrate": 2.5,
-    "winrate": 46.7,
-    "banrate": 2.1
-   },
-   {
-    "hero": "doctrine",
-    "pickrate": 15.8,
-    "winrate": 49.5,
-    "banrate": 1.3
-   },
-   {
-    "hero": "domina",
-    "pickrate": 5.9,
-    "winrate": 52.4,
-    "banrate": 8.5
-   },
-   {
-    "hero": "doomfist",
-    "pickrate": 6.7,
-    "winrate": 52.3,
-    "banrate": 14.2
-   },
-   {
-    "hero": "dva",
-    "pickrate": 8.5,
-    "winrate": 48.8,
-    "banrate": 9.7
-   },
-   {
-    "hero": "echo",
-    "pickrate": 4.8,
-    "winrate": 50.2,
-    "banrate": 0.4
-   },
-   {
-    "hero": "emre",
-    "pickrate": 6.1,
-    "winrate": 46.1,
-    "banrate": 0.1
-   },
-   {
-    "hero": "freja",
-    "pickrate": 5.1,
-    "winrate": 48.2,
-    "banrate": 2.1
-   },
-   {
-    "hero": "genji",
-    "pickrate": 8.6,
-    "winrate": 52.4,
-    "banrate": 7.2
-   },
-   {
-    "hero": "hanzo",
-    "pickrate": 8,
-    "winrate": 50.7,
-    "banrate": 0.7
-   },
-   {
-    "hero": "hazard",
-    "pickrate": 2.1,
-    "winrate": 51,
-    "banrate": 0.5
-   },
-   {
-    "hero": "illari",
-    "pickrate": 6.1,
-    "winrate": 51,
-    "banrate": 0.1
-   },
-   {
-    "hero": "jetpack-cat",
-    "pickrate": 6.4,
-    "winrate": 47.2,
-    "banrate": 11
-   },
-   {
-    "hero": "junker-queen",
-    "pickrate": 5,
-    "winrate": 53.2,
-    "banrate": 0.7
-   },
-   {
-    "hero": "junkrat",
-    "pickrate": 11.7,
-    "winrate": 50.2,
-    "banrate": 5.2
-   },
-   {
-    "hero": "juno",
-    "pickrate": 21.8,
-    "winrate": 51.1,
-    "banrate": 0.4
-   },
-   {
-    "hero": "kiriko",
-    "pickrate": 11.2,
-    "winrate": 44.7,
-    "banrate": 1.2
-   },
-   {
-    "hero": "lifeweaver",
-    "pickrate": 13.6,
-    "winrate": 47.8,
-    "banrate": 0.5
-   },
-   {
-    "hero": "lucio",
-    "pickrate": 7.1,
-    "winrate": 51.6,
-    "banrate": 0.5
-   },
-   {
-    "hero": "mauga",
-    "pickrate": 4.6,
-    "winrate": 48.9,
-    "banrate": 25.6
-   },
-   {
-    "hero": "mei",
-    "pickrate": 12.8,
-    "winrate": 49.9,
-    "banrate": 11.6
-   },
-   {
-    "hero": "mercy",
-    "pickrate": 16.7,
-    "winrate": 49.5,
-    "banrate": 13
-   },
-   {
-    "hero": "mizuki",
-    "pickrate": 10.3,
-    "winrate": 50.9,
-    "banrate": 2.4
-   },
-   {
-    "hero": "moira",
-    "pickrate": 33.1,
-    "winrate": 49,
-    "banrate": 5.1
-   },
-   {
-    "hero": "orisa",
-    "pickrate": 13.6,
-    "winrate": 47.8,
-    "banrate": 34.6
-   },
-   {
-    "hero": "pharah",
-    "pickrate": 2.8,
-    "winrate": 50.6,
-    "banrate": 1
-   },
-   {
-    "hero": "ramattra",
-    "pickrate": 9.2,
-    "winrate": 46.6,
-    "banrate": 8.3
-   },
-   {
-    "hero": "reaper",
-    "pickrate": 11.6,
-    "winrate": 51.6,
-    "banrate": 2.7
-   },
-   {
-    "hero": "reinhardt",
-    "pickrate": 12.2,
-    "winrate": 52.8,
-    "banrate": 2.4
-   },
-   {
-    "hero": "roadhog",
-    "pickrate": 10.2,
-    "winrate": 49.6,
-    "banrate": 19.9
-   },
-   {
-    "hero": "shion",
-    "pickrate": 6.6,
-    "winrate": 49.6,
-    "banrate": 0.6
-   },
-   {
-    "hero": "sierra",
-    "pickrate": 14.2,
-    "winrate": 51.2,
-    "banrate": 43
-   },
-   {
-    "hero": "sigma",
-    "pickrate": 8,
-    "winrate": 47.2,
-    "banrate": 2.8
-   },
-   {
-    "hero": "sojourn",
-    "pickrate": 10,
-    "winrate": 44.2,
-    "banrate": 0.8
-   },
-   {
-    "hero": "soldier-76",
-    "pickrate": 19.2,
-    "winrate": 48.3,
-    "banrate": 1.7
-   },
-   {
-    "hero": "sombra",
-    "pickrate": 8.8,
-    "winrate": 50,
-    "banrate": 12.2
-   },
-   {
-    "hero": "symmetra",
-    "pickrate": 4.3,
-    "winrate": 49.7,
-    "banrate": 22.2
-   },
-   {
-    "hero": "torbjorn",
-    "pickrate": 11.7,
-    "winrate": 53.1,
-    "banrate": 9.9
-   },
-   {
-    "hero": "tracer",
-    "pickrate": 5.4,
-    "winrate": 52.1,
-    "banrate": 15.9
-   },
-   {
-    "hero": "vendetta",
-    "pickrate": 4.7,
-    "winrate": 51.7,
-    "banrate": 2.3
-   },
-   {
-    "hero": "venture",
-    "pickrate": 2.6,
-    "winrate": 52.2,
-    "banrate": 0.3
-   },
-   {
-    "hero": "widowmaker",
-    "pickrate": 5.8,
-    "winrate": 51.3,
-    "banrate": 14
-   },
-   {
-    "hero": "winston",
-    "pickrate": 4.6,
-    "winrate": 50,
-    "banrate": 2.5
-   },
-   {
-    "hero": "wrecking-ball",
-    "pickrate": 2.3,
-    "winrate": 50.4,
-    "banrate": 3.1
-   },
-   {
-    "hero": "wuyang",
-    "pickrate": 3.4,
-    "winrate": 49.5,
-    "banrate": 0.1
-   },
-   {
-    "hero": "zarya",
-    "pickrate": 4.7,
-    "winrate": 45.4,
-    "banrate": 38.8
-   },
-   {
-    "hero": "zenyatta",
-    "pickrate": 15.2,
-    "winrate": 54,
-    "banrate": 2.3
-   }
-  ],
   "emerald": [
    {
     "hero": "ana",
@@ -1633,6 +1307,332 @@
     "pickrate": 14.9,
     "winrate": 53.9,
     "banrate": 2.6
+   }
+  ],
+  "platinum": [
+   {
+    "hero": "ana",
+    "pickrate": 18.6,
+    "winrate": 46.4,
+    "banrate": 10.9
+   },
+   {
+    "hero": "anran",
+    "pickrate": 7.9,
+    "winrate": 50.3,
+    "banrate": 23.5
+   },
+   {
+    "hero": "ashe",
+    "pickrate": 11.1,
+    "winrate": 49.7,
+    "banrate": 2.9
+   },
+   {
+    "hero": "baptiste",
+    "pickrate": 6.2,
+    "winrate": 47.9,
+    "banrate": 0.2
+   },
+   {
+    "hero": "bastion",
+    "pickrate": 13.9,
+    "winrate": 44.3,
+    "banrate": 10.3
+   },
+   {
+    "hero": "brigitte",
+    "pickrate": 5.8,
+    "winrate": 53.4,
+    "banrate": 0.1
+   },
+   {
+    "hero": "cassidy",
+    "pickrate": 11.1,
+    "winrate": 47.3,
+    "banrate": 2.8
+   },
+   {
+    "hero": "dmon",
+    "pickrate": 2.5,
+    "winrate": 46.7,
+    "banrate": 2.1
+   },
+   {
+    "hero": "doctrine",
+    "pickrate": 15.8,
+    "winrate": 49.5,
+    "banrate": 1.3
+   },
+   {
+    "hero": "domina",
+    "pickrate": 5.9,
+    "winrate": 52.4,
+    "banrate": 8.5
+   },
+   {
+    "hero": "doomfist",
+    "pickrate": 6.7,
+    "winrate": 52.3,
+    "banrate": 14.2
+   },
+   {
+    "hero": "dva",
+    "pickrate": 8.5,
+    "winrate": 48.8,
+    "banrate": 9.7
+   },
+   {
+    "hero": "echo",
+    "pickrate": 4.8,
+    "winrate": 50.2,
+    "banrate": 0.4
+   },
+   {
+    "hero": "emre",
+    "pickrate": 6.1,
+    "winrate": 46.1,
+    "banrate": 0.1
+   },
+   {
+    "hero": "freja",
+    "pickrate": 5.1,
+    "winrate": 48.2,
+    "banrate": 2.1
+   },
+   {
+    "hero": "genji",
+    "pickrate": 8.6,
+    "winrate": 52.4,
+    "banrate": 7.2
+   },
+   {
+    "hero": "hanzo",
+    "pickrate": 8,
+    "winrate": 50.7,
+    "banrate": 0.7
+   },
+   {
+    "hero": "hazard",
+    "pickrate": 2.1,
+    "winrate": 51,
+    "banrate": 0.5
+   },
+   {
+    "hero": "illari",
+    "pickrate": 6.1,
+    "winrate": 51,
+    "banrate": 0.1
+   },
+   {
+    "hero": "jetpack-cat",
+    "pickrate": 6.4,
+    "winrate": 47.2,
+    "banrate": 11
+   },
+   {
+    "hero": "junker-queen",
+    "pickrate": 5,
+    "winrate": 53.2,
+    "banrate": 0.7
+   },
+   {
+    "hero": "junkrat",
+    "pickrate": 11.7,
+    "winrate": 50.2,
+    "banrate": 5.2
+   },
+   {
+    "hero": "juno",
+    "pickrate": 21.8,
+    "winrate": 51.1,
+    "banrate": 0.4
+   },
+   {
+    "hero": "kiriko",
+    "pickrate": 11.2,
+    "winrate": 44.7,
+    "banrate": 1.2
+   },
+   {
+    "hero": "lifeweaver",
+    "pickrate": 13.6,
+    "winrate": 47.8,
+    "banrate": 0.5
+   },
+   {
+    "hero": "lucio",
+    "pickrate": 7.1,
+    "winrate": 51.6,
+    "banrate": 0.5
+   },
+   {
+    "hero": "mauga",
+    "pickrate": 4.6,
+    "winrate": 48.9,
+    "banrate": 25.6
+   },
+   {
+    "hero": "mei",
+    "pickrate": 12.8,
+    "winrate": 49.9,
+    "banrate": 11.6
+   },
+   {
+    "hero": "mercy",
+    "pickrate": 16.7,
+    "winrate": 49.5,
+    "banrate": 13
+   },
+   {
+    "hero": "mizuki",
+    "pickrate": 10.3,
+    "winrate": 50.9,
+    "banrate": 2.4
+   },
+   {
+    "hero": "moira",
+    "pickrate": 33.1,
+    "winrate": 49,
+    "banrate": 5.1
+   },
+   {
+    "hero": "orisa",
+    "pickrate": 13.6,
+    "winrate": 47.8,
+    "banrate": 34.6
+   },
+   {
+    "hero": "pharah",
+    "pickrate": 2.8,
+    "winrate": 50.6,
+    "banrate": 1
+   },
+   {
+    "hero": "ramattra",
+    "pickrate": 9.2,
+    "winrate": 46.6,
+    "banrate": 8.3
+   },
+   {
+    "hero": "reaper",
+    "pickrate": 11.6,
+    "winrate": 51.6,
+    "banrate": 2.7
+   },
+   {
+    "hero": "reinhardt",
+    "pickrate": 12.2,
+    "winrate": 52.8,
+    "banrate": 2.4
+   },
+   {
+    "hero": "roadhog",
+    "pickrate": 10.2,
+    "winrate": 49.6,
+    "banrate": 19.9
+   },
+   {
+    "hero": "shion",
+    "pickrate": 6.6,
+    "winrate": 49.6,
+    "banrate": 0.6
+   },
+   {
+    "hero": "sierra",
+    "pickrate": 14.2,
+    "winrate": 51.2,
+    "banrate": 43
+   },
+   {
+    "hero": "sigma",
+    "pickrate": 8,
+    "winrate": 47.2,
+    "banrate": 2.8
+   },
+   {
+    "hero": "sojourn",
+    "pickrate": 10,
+    "winrate": 44.2,
+    "banrate": 0.8
+   },
+   {
+    "hero": "soldier-76",
+    "pickrate": 19.2,
+    "winrate": 48.3,
+    "banrate": 1.7
+   },
+   {
+    "hero": "sombra",
+    "pickrate": 8.8,
+    "winrate": 50,
+    "banrate": 12.2
+   },
+   {
+    "hero": "symmetra",
+    "pickrate": 4.3,
+    "winrate": 49.7,
+    "banrate": 22.2
+   },
+   {
+    "hero": "torbjorn",
+    "pickrate": 11.7,
+    "winrate": 53.1,
+    "banrate": 9.9
+   },
+   {
+    "hero": "tracer",
+    "pickrate": 5.4,
+    "winrate": 52.1,
+    "banrate": 15.9
+   },
+   {
+    "hero": "vendetta",
+    "pickrate": 4.7,
+    "winrate": 51.7,
+    "banrate": 2.3
+   },
+   {
+    "hero": "venture",
+    "pickrate": 2.6,
+    "winrate": 52.2,
+    "banrate": 0.3
+   },
+   {
+    "hero": "widowmaker",
+    "pickrate": 5.8,
+    "winrate": 51.3,
+    "banrate": 14
+   },
+   {
+    "hero": "winston",
+    "pickrate": 4.6,
+    "winrate": 50,
+    "banrate": 2.5
+   },
+   {
+    "hero": "wrecking-ball",
+    "pickrate": 2.3,
+    "winrate": 50.4,
+    "banrate": 3.1
+   },
+   {
+    "hero": "wuyang",
+    "pickrate": 3.4,
+    "winrate": 49.5,
+    "banrate": 0.1
+   },
+   {
+    "hero": "zarya",
+    "pickrate": 4.7,
+    "winrate": 45.4,
+    "banrate": 38.8
+   },
+   {
+    "hero": "zenyatta",
+    "pickrate": 15.2,
+    "winrate": 54,
+    "banrate": 2.3
    }
   ],
   "diamond": [
