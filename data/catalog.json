@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-22T11:19:04.804Z",
+ "generatedAt": "2026-11-28T15:28:54.986Z",
  "note": "Public hero and map descriptions from Blizzard via OverFast.",
  "heroes": {
   "ana": {
@@ -146,6 +146,37 @@
     }
    ]
   },
+  "ashe": {
+   "name": "Ashe",
+   "role": "damage",
+   "description": "Ashe is the ambitious and calculating leader of the Deadlock Rebels Gang and a respected figure in the criminal underworld.",
+   "location": "Deadlock Gorge, Arizona, USA",
+   "age": 41,
+   "hitpoints": {
+    "total": 250,
+    "health": 250,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "The Viper",
+     "description": "Semi-automatic rifle.  Hold to zoom in, increasing damage and accuracy but slowing rate of fire."
+    },
+    {
+     "name": "Coach Gun",
+     "description": "Blast enemies in front of you and knock yourself backwards."
+    },
+    {
+     "name": "Dynamite",
+     "description": "Throw an explosive that detonates after a short delay or immediately when shot."
+    },
+    {
+     "name": "B.O.B.",
+     "description": "Deploy Bob. He charges forward and knocks enemies into the air, then attacks with his arm cannons."
+    }
+   ]
+  },
   "anran": {
    "name": "Anran",
    "role": "damage",
@@ -186,37 +217,6 @@
     {
      "name": "Ignition",
      "description": "Hit enemies with fire attacks to burn them."
-    }
-   ]
-  },
-  "ashe": {
-   "name": "Ashe",
-   "role": "damage",
-   "description": "Ashe is the ambitious and calculating leader of the Deadlock Rebels Gang and a respected figure in the criminal underworld.",
-   "location": "Deadlock Gorge, Arizona, USA",
-   "age": 41,
-   "hitpoints": {
-    "total": 250,
-    "health": 250,
-    "armor": 0,
-    "shields": 0
-   },
-   "abilities": [
-    {
-     "name": "The Viper",
-     "description": "Semi-automatic rifle.  Hold to zoom in, increasing damage and accuracy but slowing rate of fire."
-    },
-    {
-     "name": "Coach Gun",
-     "description": "Blast enemies in front of you and knock yourself backwards."
-    },
-    {
-     "name": "Dynamite",
-     "description": "Throw an explosive that detonates after a short delay or immediately when shot."
-    },
-    {
-     "name": "B.O.B.",
-     "description": "Deploy Bob. He charges forward and knocks enemies into the air, then attacks with his arm cannons."
     }
    ]
   },
@@ -1613,37 +1613,6 @@
     }
    ]
   },
-  "tracer": {
-   "name": "Tracer",
-   "role": "damage",
-   "description": "The former Overwatch agent known as Tracer is a time-jumping adventurer and an irrepressible force for good.",
-   "location": "London, England, Watchpoint: Gibraltar",
-   "age": 28,
-   "hitpoints": {
-    "total": 175,
-    "health": 175,
-    "armor": 0,
-    "shields": 0
-   },
-   "abilities": [
-    {
-     "name": "Pulse Pistols",
-     "description": "Short-range automatic weapons."
-    },
-    {
-     "name": "Blink",
-     "description": "Teleport in the direction you are moving."
-    },
-    {
-     "name": "Recall",
-     "description": "Travel back in time to your previous location and health."
-    },
-    {
-     "name": "Pulse Bomb",
-     "description": "Throw out a powerful sticky explosive."
-    }
-   ]
-  },
   "vendetta": {
    "name": "Vendetta",
    "role": "damage",
@@ -1917,6 +1886,37 @@
     {
      "name": "Snap Kick",
      "description": "Quick melee damage increased by 50%, and its knockback is significantly increased."
+    }
+   ]
+  },
+  "tracer": {
+   "name": "Tracer",
+   "role": "damage",
+   "description": "The former Overwatch agent known as Tracer is a time-jumping adventurer and an irrepressible force for good.",
+   "location": "London, England, Watchpoint: Gibraltar",
+   "age": 28,
+   "hitpoints": {
+    "total": 175,
+    "health": 175,
+    "armor": 0,
+    "shields": 0
+   },
+   "abilities": [
+    {
+     "name": "Pulse Pistols",
+     "description": "Short-range automatic weapons."
+    },
+    {
+     "name": "Blink",
+     "description": "Teleport in the direction you are moving."
+    },
+    {
+     "name": "Recall",
+     "description": "Travel back in time to your previous location and health."
+    },
+    {
+     "name": "Pulse Bomb",
+     "description": "Throw out a powerful sticky explosive."
     }
    ]
   }
